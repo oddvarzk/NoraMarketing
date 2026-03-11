@@ -11,8 +11,6 @@ export default function Layout() {
   const { pathname } = useLocation()
 
   useEffect(() => {
-    // Kill any pinned ScrollTrigger instances before the new page mounts
-    ScrollTrigger.getAll().forEach(st => st.kill())
     window.scrollTo({ top: 0 })
     // Re-measure after new page components have set up their own triggers
     const raf = requestAnimationFrame(() => ScrollTrigger.refresh())

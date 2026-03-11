@@ -30,6 +30,18 @@ const STEPS = [
 
 export default function ProcessSection() {
   const sectionRef = useRef<HTMLDivElement>(null)
+  const stRef = useRef<ScrollTrigger | null>(null)
+
+  // Scroll to the hold position for each step (0-indexed)
+  // Timeline breakdown: hold1(0→1) | transition(1→1.95) | hold2(1.95→2.95) | transition(2.95→3.9) | hold3(3.9→4.5)
+  const STEP_FRACTIONS = [0, 0.44, 0.88] // fraction of total scroll distance
+
+  function goToStep(stepIndex: number) {
+    const st = stRef.current
+    if (!st) return
+    const scrollTo = st.start + STEP_FRACTIONS[stepIndex] * (st.end - st.start)
+    window.scrollTo({ top: scrollTo, behavior: 'smooth' })
+  }
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -83,7 +95,7 @@ export default function ProcessSection() {
           // final hold
           .to({}, { duration: 0.6 })
 
-        ScrollTrigger.create({
+        stRef.current = ScrollTrigger.create({
           trigger: sectionRef.current,
           start: 'top top',
           end: '+=250%',
@@ -150,10 +162,16 @@ export default function ProcessSection() {
 
             <div className="flex flex-col gap-9">
               {STEPS.map((step, i) => (
-                <div key={i} data-proc-navitem className="flex items-center gap-4">
+                <button
+                  key={i}
+                  data-proc-navitem
+                  onClick={() => goToStep(i)}
+                  className="flex items-center gap-4 text-left group cursor-pointer"
+                  aria-label={`Gå til steg ${step.number}: ${step.title}`}
+                >
                   <div
                     data-proc-dot
-                    className="w-5 h-5 rounded-full flex-shrink-0 relative z-10 border-2 transition-colors"
+                    className="w-5 h-5 rounded-full flex-shrink-0 relative z-10 border-2 transition-all duration-300 group-hover:scale-110"
                     style={
                       i === 0
                         ? { backgroundColor: '#4B6EF5', borderColor: '#4B6EF5' }
@@ -165,11 +183,11 @@ export default function ProcessSection() {
                     <span className="font-bespoke text-[10px] tracking-widest text-nm-muted uppercase block">
                       {step.number}
                     </span>
-                    <span className="font-satoshi font-bold text-nm-fg text-sm leading-snug">
+                    <span className="font-satoshi font-bold text-nm-fg text-sm leading-snug group-hover:text-nm-accent transition-colors duration-200">
                       {step.title}
                     </span>
                   </div>
-                </div>
+                </button>
               ))}
             </div>
           </div>
