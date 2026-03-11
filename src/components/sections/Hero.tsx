@@ -44,7 +44,7 @@ export default function Hero() {
       // Sub text + CTAs
       tl.fromTo('[data-e-sub]',
         { opacity: 0, y: 18 },
-        { opacity: 1, y: 0, duration: 0.8 },
+        { opacity: 1, y: 0, duration: 0.8, stagger: 0.15 },
         0.75,
       )
       tl.fromTo('[data-e-cta]',
@@ -106,7 +106,7 @@ export default function Hero() {
         </div>
 
         {/* Headline — each line wrapped in overflow-hidden */}
-        <h1 className="font-satoshi font-black text-[clamp(3.2rem,7.5vw,8.5rem)] leading-[0.93] tracking-tight text-nm-light mb-10">
+        <h1 className="font-satoshi font-black text-[clamp(3.2rem,7.5vw,8.5rem)] leading-[0.93] tracking-tight text-nm-light mb-12">
           <div className="overflow-hidden">
             <span data-h-line className="block" style={{ transform: 'translateY(105%)' }}>
               Markedsføring
@@ -124,17 +124,32 @@ export default function Hero() {
           </div>
         </h1>
 
-        {/* Sub */}
-        <div data-e-sub className="flex flex-col sm:flex-row items-center gap-5 mb-12" style={{ opacity: 0 }}>
-          <p className="font-cabinet text-nm-muted text-lg leading-relaxed max-w-sm">
+        {/* Stats strip — fills the middle, builds trust */}
+        <div data-e-sub className="flex items-center gap-0 mb-12 border border-nm-border/50 rounded-sm overflow-hidden" style={{ opacity: 0 }}>
+          {[
+            { value: '5+', label: 'År i bransjen' },
+            { value: '120+', label: 'Fornøyde kunder' },
+            { value: '3×', label: 'Gjennomsnittlig ROI' },
+          ].map((s, i) => (
+            <div key={i} className={`flex flex-col items-center px-8 py-4 gap-0.5 ${i < 2 ? 'border-r border-nm-border/50' : ''}`}>
+              <span className="font-satoshi font-black text-2xl text-nm-accent">{s.value}</span>
+              <span className="font-cabinet text-nm-muted text-xs tracking-wide">{s.label}</span>
+            </div>
+          ))}
+        </div>
+
+        {/* Sub + cycling word */}
+        <div data-e-sub className="flex flex-col sm:flex-row items-center justify-center gap-5 mb-12" style={{ opacity: 0 }}>
+          <p className="font-cabinet text-nm-muted text-lg leading-relaxed max-w-sm text-center sm:text-left">
             Vi kombinerer kreativitet med strategi for å levere markedsføring som faktisk måles. Vi er spesialiserte i
           </p>
           <div className="flex items-center gap-3 flex-shrink-0">
             <span className="hidden sm:block w-px h-10 bg-nm-border" />
-            <div className="overflow-hidden h-8 flex items-center">
+            {/* Fixed width = longest word so layout never shifts */}
+            <div className="overflow-hidden h-8 flex items-center w-[22ch]">
               <span
                 ref={cycleRef}
-                className="font-bespoke font-bold text-base tracking-widest uppercase text-nm-warm block"
+                className="font-bespoke font-bold text-base tracking-widest uppercase text-nm-warm block whitespace-nowrap"
               >
                 {CYCLING_WORDS[0]}
               </span>
