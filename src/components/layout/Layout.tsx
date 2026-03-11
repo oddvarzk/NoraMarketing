@@ -11,7 +11,7 @@ export default function Layout() {
   const { pathname } = useLocation()
 
   useEffect(() => {
-    window.scrollTo({ top: 0 })
+    window.scrollTo(0, 0)
     // Re-measure after new page components have set up their own triggers
     const raf = requestAnimationFrame(() => ScrollTrigger.refresh())
     return () => cancelAnimationFrame(raf)
