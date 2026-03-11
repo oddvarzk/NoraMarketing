@@ -9,7 +9,6 @@ const CYCLING_WORDS = [
   'SEO & SEM',
 ]
 
-/** Splits a string into word-reveal spans */
 function WordReveal({ text, className = '' }: { text: string; className?: string }) {
   const words = text.split(' ')
   return (
@@ -35,7 +34,7 @@ export default function Hero() {
   const cycleRef = useRef<HTMLSpanElement>(null)
   const cycleIndex = useRef(0)
 
-  // Word reveal on mount
+  // Intro animations
   useEffect(() => {
     const ctx = gsap.context(() => {
       const words = sectionRef.current!.querySelectorAll('[data-word]')
@@ -57,7 +56,6 @@ export default function Hero() {
         { opacity: 0, x: -12 },
         { opacity: 1, x: 0, duration: 0.6, ease: 'power3.out', delay: 0.4 },
       )
-
       gsap.fromTo(
         '[data-hero-sub]',
         { opacity: 0, y: 20 },
@@ -105,46 +103,17 @@ export default function Hero() {
     return () => clearInterval(id)
   }, [])
 
-  // Parallax on scroll
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.to('[data-hero-bg]', {
-        yPercent: 30,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: 'top top',
-          end: 'bottom top',
-          scrub: 1,
-        },
-      })
-    })
-    return () => ctx.revert()
-  }, [])
-
   return (
     <section
       ref={sectionRef}
       className="relative min-h-dvh flex flex-col justify-center overflow-hidden px-6 pt-28 pb-20"
       aria-label="Introduksjon"
     >
-      {/* Decorative huge background "NM" monogram */}
-      <div
-        data-hero-bg
-        className="absolute -right-4 top-1/2 -translate-y-1/2 select-none pointer-events-none"
-        aria-hidden="true"
-      >
-        <span className="font-bespoke font-bold leading-none block" style={{ fontSize: '32vw' }}>
-          <span className="text-nm-fg/[0.022]">N</span>
-          <span className="text-nm-accent/[0.06]">M</span>
-        </span>
-      </div>
+      {/* Background: dot grid + gradient glows */}
+      <HeroBg />
 
-      {/* Mesh dots + glow */}
-      <MeshDots />
-
-      {/* Bottom fade */}
-      <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-nm-dark to-transparent pointer-events-none" />
+      {/* Bottom fade into page */}
+      <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-nm-dark to-transparent pointer-events-none" />
 
       {/* Content */}
       <div className="relative z-10 max-w-7xl mx-auto w-full">
@@ -229,51 +198,35 @@ export default function Hero() {
   )
 }
 
-function MeshDots() {
-  const ref = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      const dots = ref.current?.querySelectorAll<HTMLSpanElement>('[data-dot]')
-      dots?.forEach((d, i) => {
-        gsap.to(d, {
-          y: `${(i % 2 === 0 ? -1 : 1) * (8 + (i % 4) * 5)}`,
-          x: `${(i % 3 === 0 ? -1 : 1) * (4 + (i % 3) * 4)}`,
-          duration: 4 + i * 0.5,
-          repeat: -1,
-          yoyo: true,
-          ease: 'sine.inOut',
-        })
-      })
-    }, ref)
-    return () => ctx.revert()
-  }, [])
-
+/**
+ * Pure CSS background: a faint dot grid + two soft gradient glows.
+ * No JS, no random dots — clean and works on all screen sizes.
+ */
+function HeroBg() {
   return (
-    <div ref={ref} className="absolute inset-0 pointer-events-none" aria-hidden="true">
-      {DOT_POSITIONS.map(({ x, y, size, opacity }, i) => (
-        <span
-          key={i}
-          data-dot
-          className="absolute rounded-full bg-nm-accent"
-          style={{ left: `${x}%`, top: `${y}%`, width: size, height: size, opacity }}
-        />
-      ))}
-      <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-nm-accent/5 rounded-full blur-3xl" />
-      <div className="absolute bottom-1/3 left-1/3 w-64 h-64 bg-nm-warm/[0.04] rounded-full blur-3xl" />
+    <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+      {/* Dot grid via SVG pattern */}
+      <svg className="absolute inset-0 w-full h-full opacity-[0.18]" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <pattern id="dot-grid" x="0" y="0" width="32" height="32" patternUnits="userSpaceOnUse">
+            <circle cx="1" cy="1" r="1" fill="#4B6EF5" />
+          </pattern>
+          {/* Radial mask so dots fade to edges */}
+          <radialGradient id="dot-mask" cx="40%" cy="50%" r="60%">
+            <stop offset="0%" stopColor="white" stopOpacity="1" />
+            <stop offset="100%" stopColor="white" stopOpacity="0" />
+          </radialGradient>
+          <mask id="fade-mask">
+            <rect width="100%" height="100%" fill="url(#dot-mask)" />
+          </mask>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#dot-grid)" mask="url(#fade-mask)" />
+      </svg>
+
+      {/* Soft accent glow — top right */}
+      <div className="absolute -top-20 right-0 w-[50vw] h-[60vh] bg-nm-accent/[0.07] rounded-full blur-[120px]" />
+      {/* Warm glow — bottom left */}
+      <div className="absolute bottom-0 -left-20 w-[40vw] h-[40vh] bg-nm-warm/[0.05] rounded-full blur-[100px]" />
     </div>
   )
 }
-
-const DOT_POSITIONS = [
-  { x: 15, y: 20, size: 3, opacity: 0.4 },
-  { x: 72, y: 12, size: 2, opacity: 0.3 },
-  { x: 88, y: 35, size: 4, opacity: 0.2 },
-  { x: 55, y: 70, size: 2, opacity: 0.35 },
-  { x: 10, y: 65, size: 3, opacity: 0.25 },
-  { x: 80, y: 80, size: 2, opacity: 0.3 },
-  { x: 30, y: 85, size: 2, opacity: 0.2 },
-  { x: 65, y: 45, size: 3, opacity: 0.15 },
-  { x: 40, y: 15, size: 2, opacity: 0.3 },
-  { x: 92, y: 60, size: 2, opacity: 0.25 },
-]
