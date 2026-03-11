@@ -10,6 +10,7 @@
   }
 
   html {
+    text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -22,7 +23,6 @@
 
   h1, h2, h3, h4, h5, h6 {
     @apply font-satoshi;
-    text-rendering: optimizeLegibility;
   }
 
   a {
@@ -54,27 +54,32 @@
     background-clip: text;
   }
 
+  /* Word reveal – wrap words in .word-wrap, animate inner .word */
   .word-wrap {
     display: inline-block;
     overflow: hidden;
     vertical-align: bottom;
   }
 
-  .clip-hidden  { clip-path: inset(0 100% 0 0); }
-  .clip-visible { clip-path: inset(0 0%   0 0); }
+  /* Clip-path line reveal */
+  .clip-hidden {
+    clip-path: inset(0 100% 0 0);
+  }
+  .clip-visible {
+    clip-path: inset(0 0% 0 0);
+  }
 
+  /* Marquee / infinite scroll banner */
   .marquee-track {
     display: flex;
     width: max-content;
     animation: marquee 32s linear infinite;
-    will-change: transform;
   }
 
   .marquee-track-slow {
     display: flex;
     width: max-content;
     animation: marquee 60s linear infinite;
-    will-change: transform;
   }
 
   @keyframes marquee {
@@ -87,6 +92,7 @@
     100% { transform: translateY(100%); }
   }
 
+  /* Grain overlay */
   .grain::before {
     content: '';
     position: fixed;
@@ -98,34 +104,22 @@
     opacity: 0.028;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
     background-size: 180px 180px;
-    animation: grain-shift 0.6s steps(1) infinite;
-    will-change: transform;
-    transform: translateZ(0);
+    animation: grain-shift 0.5s steps(1) infinite;
   }
 
   @keyframes grain-shift {
-    0%   { transform: translate3d(0,   0,   0); }
-    10%  { transform: translate3d(-3%, -4%, 0); }
-    20%  { transform: translate3d(-6%,  3%, 0); }
-    30%  { transform: translate3d( 4%, -2%, 0); }
-    40%  { transform: translate3d(-3%,  5%, 0); }
-    50%  { transform: translate3d(-6%, -3%, 0); }
-    60%  { transform: translate3d( 3%,  4%, 0); }
-    70%  { transform: translate3d( 5%, -4%, 0); }
-    80%  { transform: translate3d(-5%,  2%, 0); }
-    90%  { transform: translate3d( 4%,  4%, 0); }
-    100% { transform: translate3d( 3%, -3%, 0); }
+    0%   { transform: translate(0,   0); }
+    10%  { transform: translate(-3%, -4%); }
+    20%  { transform: translate(-6%,  3%); }
+    30%  { transform: translate( 4%, -2%); }
+    40%  { transform: translate(-3%,  5%); }
+    50%  { transform: translate(-6%, -3%); }
+    60%  { transform: translate( 3%,  4%); }
+    70%  { transform: translate( 5%, -4%); }
+    80%  { transform: translate(-5%,  2%); }
+    90%  { transform: translate( 4%,  4%); }
+    100% { transform: translate( 3%, -3%); }
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    .grain::before,
-    .marquee-track,
-    .marquee-track-slow {
-      animation: none;
-    }
-    *, *::before, *::after {
-      transition-duration: 0.01ms !important;
-      animation-duration: 0.01ms !important;
-    }
-  }
 }
+

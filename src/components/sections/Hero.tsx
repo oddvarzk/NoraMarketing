@@ -173,10 +173,10 @@ function HeroBg() {
         </defs>
         <rect width="100%" height="100%" fill="url(#dot-grid)" mask="url(#dot-fade)" />
       </svg>
-      {/* Accent glow — top center */}
-      <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-[60vw] h-[50vh] bg-nm-accent/[0.07] rounded-full blur-[130px]" />
-      {/* Warm glow — bottom */}
-      <div className="absolute -bottom-20 left-1/2 -translate-x-1/2 w-[40vw] h-[30vh] bg-nm-warm/[0.04] rounded-full blur-[100px]" />
+      {/* Accent glow — hidden on mobile (blur-[130px] is expensive to composite) */}
+      <div className="hidden sm:block absolute -top-32 left-1/2 -translate-x-1/2 w-[60vw] h-[50vh] bg-nm-accent/[0.07] rounded-full blur-[130px]" />
+      {/* Warm glow — hidden on mobile */}
+      <div className="hidden sm:block absolute -bottom-20 left-1/2 -translate-x-1/2 w-[40vw] h-[30vh] bg-nm-warm/[0.04] rounded-full blur-[100px]" />
     </div>
   )
 }

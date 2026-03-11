@@ -3,7 +3,12 @@ import { Link, NavLink, useLocation } from 'react-router-dom'
 import gsap from 'gsap'
 import NMLogo from '../ui/NMLogo'
 
-const NAV_LINKS = [
+const DESKTOP_LINKS = [
+  { label: 'Tjenester', href: '/tjenester' },
+  { label: 'Hvem vi er', href: '/hvem-vi-er' },
+]
+
+const MOBILE_LINKS = [
   { label: 'Tjenester', href: '/tjenester' },
   { label: 'Hvem vi er', href: '/hvem-vi-er' },
   { label: 'Kontakt', href: '/kontakt' },
@@ -71,7 +76,7 @@ export default function Navbar() {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+        className={`fixed top-0 left-0 right-0 z-50 transition-[background-color,border-color,padding] duration-500 ${
           scrolled || menuOpen
             ? 'bg-nm-dark border-b border-nm-border/50 py-3'
             : 'bg-transparent py-5'
@@ -85,7 +90,7 @@ export default function Navbar() {
 
           {/* Desktop links */}
           <ul className="hidden md:flex items-center gap-10 absolute left-1/2 -translate-x-1/2">
-            {NAV_LINKS.map((link) => (
+            {DESKTOP_LINKS.map((link) => (
               <li key={link.href}>
                 <NavLink
                   to={link.href}
@@ -153,7 +158,7 @@ export default function Navbar() {
         {/* Nav links */}
         <nav className="flex-1 flex flex-col justify-center px-6 py-8">
           <ul className="flex flex-col">
-            {NAV_LINKS.map((link, i) => (
+            {MOBILE_LINKS.map((link, i) => (
               <li key={link.href}>
                 <NavLink
                   to={link.href}
