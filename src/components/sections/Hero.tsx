@@ -128,14 +128,15 @@ export default function Hero() {
       className="relative min-h-dvh flex flex-col justify-center overflow-hidden px-6 pt-28 pb-20"
       aria-label="Introduksjon"
     >
-      {/* Decorative huge background "NORA" */}
+      {/* Decorative huge background "NM" monogram */}
       <div
         data-hero-bg
-        className="absolute -right-8 top-1/2 -translate-y-1/2 select-none pointer-events-none"
+        className="absolute -right-4 top-1/2 -translate-y-1/2 select-none pointer-events-none"
         aria-hidden="true"
       >
-        <span className="font-bespoke font-bold text-[28vw] leading-none text-nm-fg/[0.025] block">
-          NORA
+        <span className="font-bespoke font-bold leading-none block" style={{ fontSize: '32vw' }}>
+          <span className="text-nm-fg/[0.022]">N</span>
+          <span className="text-nm-accent/[0.06]">M</span>
         </span>
       </div>
 
