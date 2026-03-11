@@ -121,21 +121,21 @@ export default function AboutTeaser() {
         </div>
 
         {/* Stats col */}
-        <div className="grid grid-cols-3 gap-4 lg:gap-6 items-stretch">
+        <div className="grid grid-cols-3 gap-3 sm:gap-4 lg:gap-6 items-stretch">
           {STATS.map((stat, i) => (
             <div
               key={stat.label}
               data-stat-card
-              className="flex flex-col gap-3 p-6 bg-nm-surface border border-nm-border/60 rounded-sm"
+              className="flex flex-col gap-2 sm:gap-3 p-4 sm:p-5 lg:p-6 bg-nm-surface border border-nm-border/60 rounded-sm"
               style={{ opacity: 0 }}
             >
               <span
                 ref={(el) => { counterRefs.current[i] = el }}
-                className="font-satoshi font-black text-4xl text-nm-accent"
+                className="font-satoshi font-black text-2xl sm:text-3xl lg:text-4xl text-nm-accent"
               >
                 0{stat.suffix}
               </span>
-              <span className="font-cabinet text-nm-muted text-sm leading-snug">
+              <span className="font-cabinet text-nm-muted text-xs sm:text-sm leading-snug">
                 {stat.label}
               </span>
             </div>
@@ -143,7 +143,7 @@ export default function AboutTeaser() {
 
           {/* Decorative bespoke word below stats */}
           <div className="col-span-3 mt-2 overflow-hidden">
-            <p className="font-bespoke font-bold text-5xl text-nm-fg/[0.04] leading-none select-none">
+            <p className="font-bespoke font-bold text-3xl sm:text-5xl text-nm-fg/[0.04] leading-none select-none">
               RESULTATER
             </p>
           </div>
