@@ -244,15 +244,6 @@ export default function Tjenester() {
                 className="group flex flex-col gap-5 p-8 bg-nm-surface/30 border border-nm-border/60 hover:border-nm-accent/50 rounded-2xl transition-all duration-300 hover:-translate-y-1 relative overflow-hidden"
                 style={{ opacity: 0 }}
               >
-                {/* Ghost number */}
-                <span
-                  className="absolute -top-3 -right-1 font-bespoke font-bold text-[6rem] leading-none pointer-events-none select-none"
-                  style={{ color: 'rgba(75,110,245,0.055)' }}
-                  aria-hidden="true"
-                >
-                  {service.number}
-                </span>
-
                 {/* Category tag */}
                 <span className="font-bespoke text-[10px] tracking-widest2 uppercase text-nm-accent self-start border border-nm-accent/30 px-3 py-1 rounded-full">
                   {service.category}
