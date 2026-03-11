@@ -15,7 +15,6 @@ const CYCLING_WORDS = [
 export default function Hero() {
   const sectionRef = useRef<HTMLElement>(null)
   const cycleRef = useRef<HTMLSpanElement>(null)
-  const dotsRef = useRef<(HTMLSpanElement | null)[]>([])
   const cycleIndex = useRef(0)
 
   // Entry animation
@@ -68,19 +67,8 @@ export default function Hero() {
     const el = cycleRef.current
     if (!el) return
 
-    const updateDots = (idx: number) => {
-      dotsRef.current.forEach((dot, i) => {
-        if (!dot) return
-        gsap.to(dot, { backgroundColor: i === idx ? '#E8A44A' : '', duration: 0.3 })
-        dot.style.opacity = i === idx ? '1' : '0.3'
-      })
-    }
-
-    updateDots(0)
-
     const cycle = () => {
       cycleIndex.current = (cycleIndex.current + 1) % CYCLING_WORDS.length
-      updateDots(cycleIndex.current)
       gsap.to(el, {
         yPercent: -110, opacity: 0, duration: 0.35, ease: 'power2.in',
         onComplete: () => {

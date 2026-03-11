@@ -58,7 +58,7 @@ export default function Footer() {
             © {year} Nora Marketing. Alle rettigheter forbeholdt.
           </p>
           <p className="text-nm-muted text-xs">
-            Organisasjonsnummer: 123 456 789
+            Oslo, Norge
           </p>
         </div>
       </div>

@@ -122,11 +122,5 @@
     100% { transform: translate( 3%, -3%); }
   }
 
-  /* Hide default cursor when custom cursor is active */
-  @media (pointer: fine) {
-    body.custom-cursor, body.custom-cursor * {
-      cursor: none !important;
-    }
-  }
 }
 
