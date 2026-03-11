@@ -6,9 +6,9 @@ import Button from '../ui/Button'
 gsap.registerPlugin(ScrollTrigger)
 
 const STATS = [
-  { raw: 5, suffix: '+', label: 'År i bransjen', tilted: false },
-  { raw: 120, suffix: '+', label: 'Fornøyde kunder', tilted: true },
-  { raw: 3, suffix: '×', label: 'Gjennomsnittlig ROI', tilted: false },
+  { raw: 5, suffix: '+', label: 'År i bransjen' },
+  { raw: 120, suffix: '+', label: 'Fornøyde kunder' },
+  { raw: 3, suffix: '×', label: 'Gjennomsnittlig ROI' },
 ]
 
 export default function AboutTeaser() {
@@ -121,21 +121,17 @@ export default function AboutTeaser() {
         </div>
 
         {/* Stats col */}
-        <div className="grid grid-cols-3 gap-4 lg:gap-6 items-start">
+        <div className="grid grid-cols-3 gap-4 lg:gap-6 items-stretch">
           {STATS.map((stat, i) => (
             <div
               key={stat.label}
               data-stat-card
-              className={`flex flex-col gap-3 p-6 bg-nm-surface border border-nm-border/60 rounded-sm transition-transform duration-300 hover:scale-105 ${
-                stat.tilted ? 'rotate-[-2deg] hover:rotate-0' : ''
-              }`}
+              className="flex flex-col gap-3 p-6 bg-nm-surface border border-nm-border/60 rounded-sm"
               style={{ opacity: 0 }}
             >
               <span
                 ref={(el) => { counterRefs.current[i] = el }}
-                className={`font-satoshi font-black text-4xl ${
-                  stat.tilted ? 'text-nm-warm' : 'text-nm-accent'
-                }`}
+                className="font-satoshi font-black text-4xl text-nm-accent"
               >
                 0{stat.suffix}
               </span>

@@ -2,7 +2,6 @@ import { Outlet, useLocation } from 'react-router-dom'
 import { useEffect } from 'react'
 import Navbar from './Navbar'
 import Footer from './Footer'
-import Cursor from '../ui/Cursor'
 
 export default function Layout() {
   const { pathname } = useLocation()
@@ -13,7 +12,6 @@ export default function Layout() {
 
   return (
     <div className="grain flex flex-col min-h-dvh">
-      <Cursor />
       <Navbar />
       <main className="flex-1">
         <Outlet />
