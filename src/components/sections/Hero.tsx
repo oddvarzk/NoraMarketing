@@ -20,6 +20,9 @@ export default function Hero() {
   // Entry animation
   useEffect(() => {
     const ctx = gsap.context(() => {
+      // Fade-up reveal — no overflow clipping, so descenders are always fully visible
+      gsap.set('[data-h-line]', { opacity: 0, y: 55 })
+
       const tl = gsap.timeline({ defaults: { ease: 'power4.out' } })
 
       // Eyebrow line + text
@@ -34,10 +37,9 @@ export default function Hero() {
         0.25,
       )
 
-      // Each headline line clips up out of its overflow-hidden wrapper
-      tl.fromTo('[data-h-line]',
-        { yPercent: 105 },
-        { yPercent: 0, duration: 1.05, stagger: 0.1 },
+      // Each headline line fades up — staggered
+      tl.to('[data-h-line]',
+        { opacity: 1, y: 0, duration: 1.05, stagger: 0.1 },
         0.15,
       )
 
@@ -107,15 +109,9 @@ export default function Hero() {
 
         {/* Headline */}
         <h1 className="font-satoshi font-black text-[clamp(3.2rem,7.5vw,8.5rem)] leading-[0.93] tracking-tight text-nm-light mb-10">
-          <div className="overflow-hidden">
-            <span data-h-line className="block" style={{ transform: 'translateY(105%)' }}>Vi gjør deg</span>
-          </div>
-          <div className="overflow-hidden">
-            <span data-h-line className="block" style={{ transform: 'translateY(105%)' }}>umulig å</span>
-          </div>
-          <div className="overflow-hidden">
-            <span data-h-line className="block text-gradient" style={{ transform: 'translateY(105%)' }}>ignorere.</span>
-          </div>
+          <span data-h-line className="block">Vi gjør deg</span>
+          <span data-h-line className="block">umulig å</span>
+          <span data-h-line className="block text-gradient" style={{ paddingBottom: '0.35em', marginBottom: '-0.35em' }}>ignorere.</span>
         </h1>
 
         {/* Sub + cycling word */}
@@ -125,7 +121,7 @@ export default function Hero() {
           </p>
           <div className="flex items-center gap-3 flex-shrink-0">
             <span className="hidden sm:block w-px h-10 bg-nm-border" />
-            <div className="overflow-hidden h-10 flex items-center w-[22ch]">
+            <div className="h-12 w-[22ch] flex items-center justify-center sm:justify-start" style={{ clipPath: 'inset(0 -9999px)' }}>
               <span
                 ref={cycleRef}
                 className="font-bespoke font-bold text-2xl tracking-widest uppercase text-nm-warm block whitespace-nowrap"

@@ -30,14 +30,14 @@ export default function Navbar() {
           : 'bg-transparent py-5'
       }`}
     >
-      <nav className="max-w-7xl mx-auto px-6 flex items-center justify-between">
+      <nav className="max-w-7xl mx-auto px-6 relative flex items-center justify-between">
         {/* Logo */}
         <Link to="/" aria-label="Nora Marketing – hjem" className="flex-shrink-0">
           <NMLogo />
         </Link>
 
-        {/* Desktop links */}
-        <ul className="hidden md:flex items-center gap-10">
+        {/* Desktop links — truly centered on the nav bar */}
+        <ul className="hidden md:flex items-center gap-10 absolute left-1/2 -translate-x-1/2">
           {NAV_LINKS.map((link) => (
             <li key={link.href}>
               <NavLink

@@ -20,9 +20,9 @@ export default function CTABanner() {
       // Clip-path reveal on heading lines
       gsap.fromTo(
         '[data-cta-line]',
-        { clipPath: 'inset(0 100% 0 0)' },
+        { clipPath: 'inset(0 100% 0.5em 0)' },
         {
-          clipPath: 'inset(0 0% 0 0)',
+          clipPath: 'inset(0 0% -0.5em 0)',
           duration: 1,
           stagger: 0.12,
           ease: 'power3.inOut',
@@ -86,10 +86,10 @@ export default function CTABanner() {
 
         {/* Heading – clip reveal line by line */}
         <h2 className="font-satoshi font-black text-5xl md:text-7xl text-nm-light leading-[0.95] tracking-tight mb-10">
-          <span data-cta-line className="block" style={{ clipPath: 'inset(0 100% 0 0)' }}>
+          <span data-cta-line className="block" style={{ clipPath: 'inset(0 100% 0.5em 0)' }}>
             La oss gjøre deg
           </span>
-          <span data-cta-line className="block text-gradient" style={{ clipPath: 'inset(0 100% 0 0)' }}>
+          <span data-cta-line className="block text-gradient" style={{ clipPath: 'inset(0 100% 0.5em 0)', paddingBottom: '0.35em', marginBottom: '-0.35em' }}>
             umulig å ignorere.
           </span>
         </h2>
