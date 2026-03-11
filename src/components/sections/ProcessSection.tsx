@@ -118,7 +118,12 @@ export default function ProcessSection() {
       }
     }, sectionRef)
 
-    return () => ctx.revert()
+    return () => {
+      // Clear GSAP's saved scroll position before reverting the pin,
+      // otherwise ctx.revert() scrolls the page back to where the pin was active.
+      ScrollTrigger.clearScrollMemory()
+      ctx.revert()
+    }
   }, [])
 
   return (
