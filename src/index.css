@@ -48,6 +48,28 @@
     background-clip: text;
   }
 
+  .text-gradient-warm {
+    background: linear-gradient(135deg, #E8A44A 0%, #C4853A 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Word reveal – wrap words in .word-wrap, animate inner .word */
+  .word-wrap {
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: bottom;
+  }
+
+  /* Clip-path line reveal */
+  .clip-hidden {
+    clip-path: inset(0 100% 0 0);
+  }
+  .clip-visible {
+    clip-path: inset(0 0% 0 0);
+  }
+
   /* Marquee / infinite scroll banner */
   .marquee-track {
     display: flex;
@@ -55,9 +77,56 @@
     animation: marquee 32s linear infinite;
   }
 
+  .marquee-track-slow {
+    display: flex;
+    width: max-content;
+    animation: marquee 60s linear infinite;
+  }
+
   @keyframes marquee {
     from { transform: translateX(0); }
     to   { transform: translateX(-50%); }
+  }
+
+  @keyframes slideDown {
+    0%   { transform: translateY(-100%); }
+    100% { transform: translateY(100%); }
+  }
+
+  /* Grain overlay */
+  .grain::before {
+    content: '';
+    position: fixed;
+    inset: -50%;
+    width: 200%;
+    height: 200%;
+    pointer-events: none;
+    z-index: 9998;
+    opacity: 0.028;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    background-size: 180px 180px;
+    animation: grain-shift 0.5s steps(1) infinite;
+  }
+
+  @keyframes grain-shift {
+    0%   { transform: translate(0,   0); }
+    10%  { transform: translate(-3%, -4%); }
+    20%  { transform: translate(-6%,  3%); }
+    30%  { transform: translate( 4%, -2%); }
+    40%  { transform: translate(-3%,  5%); }
+    50%  { transform: translate(-6%, -3%); }
+    60%  { transform: translate( 3%,  4%); }
+    70%  { transform: translate( 5%, -4%); }
+    80%  { transform: translate(-5%,  2%); }
+    90%  { transform: translate( 4%,  4%); }
+    100% { transform: translate( 3%, -3%); }
+  }
+
+  /* Hide default cursor when custom cursor is active */
+  @media (pointer: fine) {
+    body.custom-cursor, body.custom-cursor * {
+      cursor: none !important;
+    }
   }
 }
 

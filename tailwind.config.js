@@ -19,6 +19,8 @@ export default {
           muted: '#6B6B80',
           fg: '#E8E8EE',
           light: '#F4F4F8',
+          warm: '#E8A44A',
+          'warm-dim': '#C4853A',
         },
       },
       letterSpacing: {

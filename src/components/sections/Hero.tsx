@@ -1,50 +1,84 @@
 import { useEffect, useRef } from 'react'
 import { gsap } from '../../hooks/useGSAP'
-import Button from '../ui/Button'
+import MagneticButton from '../ui/MagneticButton'
 
 const CYCLING_WORDS = [
-  'DIGITAL STRATEGI',
-  'INNHOLDSMARKEDSFØRING',
-  'SOSIALE MEDIER',
+  'Digital strategi',
+  'Innholdsmarkedsføring',
+  'Sosiale medier',
   'SEO & SEM',
 ]
 
+/** Splits a string into word-reveal spans */
+function WordReveal({ text, className = '' }: { text: string; className?: string }) {
+  const words = text.split(' ')
+  return (
+    <>
+      {words.map((word, i) => (
+        <span key={i} className="word-wrap">
+          <span
+            data-word
+            className={`inline-block ${className}`}
+            style={{ transform: 'translateY(110%)' }}
+          >
+            {word}
+            {i < words.length - 1 ? '\u00A0' : ''}
+          </span>
+        </span>
+      ))}
+    </>
+  )
+}
+
 export default function Hero() {
-  const containerRef = useRef<HTMLDivElement>(null)
-  const headlineRef = useRef<HTMLHeadingElement>(null)
-  const subRef = useRef<HTMLParagraphElement>(null)
+  const sectionRef = useRef<HTMLElement>(null)
   const cycleRef = useRef<HTMLSpanElement>(null)
-  const ctaRef = useRef<HTMLDivElement>(null)
   const cycleIndex = useRef(0)
 
-  // Intro animation
+  // Word reveal on mount
   useEffect(() => {
     const ctx = gsap.context(() => {
-      const tl = gsap.timeline({ defaults: { ease: 'power3.out' } })
+      const words = sectionRef.current!.querySelectorAll('[data-word]')
+      gsap.to(words, {
+        yPercent: 0,
+        duration: 1.1,
+        stagger: 0.065,
+        ease: 'power4.out',
+        delay: 0.2,
+      })
 
-      tl.fromTo(
-        headlineRef.current,
-        { y: 60, opacity: 0 },
-        { y: 0, opacity: 1, duration: 1 },
+      gsap.fromTo(
+        '[data-eyebrow]',
+        { scaleX: 0, transformOrigin: 'left' },
+        { scaleX: 1, duration: 0.8, ease: 'power3.out', delay: 0.1 },
       )
-        .fromTo(
-          subRef.current,
-          { y: 30, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.8 },
-          '-=0.5',
-        )
-        .fromTo(
-          ctaRef.current,
-          { y: 20, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.7 },
-          '-=0.4',
-        )
-    }, containerRef)
+      gsap.fromTo(
+        '[data-eyebrow-text]',
+        { opacity: 0, x: -12 },
+        { opacity: 1, x: 0, duration: 0.6, ease: 'power3.out', delay: 0.4 },
+      )
+
+      gsap.fromTo(
+        '[data-hero-sub]',
+        { opacity: 0, y: 20 },
+        { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', delay: 0.9 },
+      )
+      gsap.fromTo(
+        '[data-hero-cta]',
+        { opacity: 0, y: 20 },
+        { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out', delay: 1.1 },
+      )
+      gsap.fromTo(
+        '[data-scroll-hint]',
+        { opacity: 0 },
+        { opacity: 1, duration: 1, delay: 1.8 },
+      )
+    }, sectionRef)
 
     return () => ctx.revert()
   }, [])
 
-  // Cycling text
+  // Cycling word swap
   useEffect(() => {
     const el = cycleRef.current
     if (!el) return
@@ -52,31 +86,36 @@ export default function Hero() {
     const cycle = () => {
       cycleIndex.current = (cycleIndex.current + 1) % CYCLING_WORDS.length
       gsap.to(el, {
+        yPercent: -120,
         opacity: 0,
-        y: -12,
-        duration: 0.35,
+        duration: 0.4,
+        ease: 'power2.in',
         onComplete: () => {
           el.textContent = CYCLING_WORDS[cycleIndex.current]
-          gsap.fromTo(el, { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.4 })
+          gsap.fromTo(
+            el,
+            { yPercent: 120, opacity: 0 },
+            { yPercent: 0, opacity: 1, duration: 0.5, ease: 'power3.out' },
+          )
         },
       })
     }
 
-    const interval = setInterval(cycle, 2800)
-    return () => clearInterval(interval)
+    const id = setInterval(cycle, 2600)
+    return () => clearInterval(id)
   }, [])
 
   // Parallax on scroll
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.to(containerRef.current, {
-        yPercent: 20,
+      gsap.to('[data-hero-bg]', {
+        yPercent: 30,
         ease: 'none',
         scrollTrigger: {
-          trigger: containerRef.current,
+          trigger: sectionRef.current,
           start: 'top top',
           end: 'bottom top',
-          scrub: true,
+          scrub: 1,
         },
       })
     })
@@ -85,152 +124,155 @@ export default function Hero() {
 
   return (
     <section
-      ref={containerRef}
-      className="relative min-h-dvh flex flex-col items-center justify-center text-center px-6 overflow-hidden"
+      ref={sectionRef}
+      className="relative min-h-dvh flex flex-col justify-center overflow-hidden px-6 pt-28 pb-20"
       aria-label="Introduksjon"
     >
-      {/* Mesh background */}
-      <MeshBackground />
+      {/* Decorative huge background "NORA" */}
+      <div
+        data-hero-bg
+        className="absolute -right-8 top-1/2 -translate-y-1/2 select-none pointer-events-none"
+        aria-hidden="true"
+      >
+        <span className="font-bespoke font-bold text-[28vw] leading-none text-nm-fg/[0.025] block">
+          NORA
+        </span>
+      </div>
 
-      {/* Gradient vignette */}
-      <div className="absolute inset-0 bg-gradient-to-b from-nm-dark/0 via-nm-dark/10 to-nm-dark pointer-events-none" />
+      {/* Mesh dots + glow */}
+      <MeshDots />
 
-      <div className="relative z-10 max-w-4xl mx-auto flex flex-col items-center gap-6">
-        <h1
-          ref={headlineRef}
-          className="font-satoshi font-black text-5xl sm:text-6xl md:text-7xl lg:text-8xl text-nm-light leading-[1.05] tracking-tight"
-          style={{ opacity: 0 }}
-        >
-          Markedsføring som faktisk gir{' '}
-          <span className="text-gradient">resultater</span>.
-        </h1>
+      {/* Bottom fade */}
+      <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-nm-dark to-transparent pointer-events-none" />
 
-        <p
-          ref={subRef}
-          className="font-cabinet text-nm-muted text-lg md:text-xl max-w-xl leading-relaxed"
-          style={{ opacity: 0 }}
-        >
-          Vi kombinerer Nora sitt design med moderne markedsføringsstrategi.
-          Vi er spesialiserte i alt innenfor
-        </p>
-
-        {/* Cycling word */}
-        <div className="h-10 flex items-center">
+      {/* Content */}
+      <div className="relative z-10 max-w-7xl mx-auto w-full">
+        {/* Eyebrow */}
+        <div className="flex items-center gap-3 mb-10">
+          <span data-eyebrow className="block w-10 h-px bg-nm-warm origin-left" />
           <span
-            ref={cycleRef}
-            className="font-bespoke font-bold text-xl md:text-2xl tracking-widest2 text-nm-accent uppercase"
+            data-eyebrow-text
+            className="font-bespoke text-xs tracking-widest2 uppercase text-nm-warm"
+            style={{ opacity: 0 }}
           >
-            {CYCLING_WORDS[0]}
+            Markedsføringsbyrå
           </span>
         </div>
 
+        {/* Headline */}
+        <h1 className="font-satoshi font-black text-[clamp(3rem,8vw,8rem)] leading-[0.92] tracking-tight text-nm-light mb-10 max-w-5xl">
+          <span className="block">
+            <WordReveal text="Markedsføring" />
+          </span>
+          <span className="block">
+            <WordReveal text="som faktisk gir" />
+          </span>
+          <span className="block">
+            <WordReveal text="resultater" className="text-gradient" />
+            <span className="word-wrap">
+              <span data-word className="inline-block" style={{ transform: 'translateY(110%)' }}>.</span>
+            </span>
+          </span>
+        </h1>
+
+        {/* Sub row */}
         <div
-          ref={ctaRef}
-          className="flex flex-wrap gap-4 justify-center mt-4"
+          data-hero-sub
+          className="flex flex-col md:flex-row md:items-end gap-8 mb-12"
           style={{ opacity: 0 }}
         >
-          <Button href="/tjenester" variant="outline" size="lg">
+          <p className="font-cabinet text-nm-muted text-lg leading-relaxed max-w-sm">
+            Vi kombinerer Nora sitt design med moderne markedsføringsstrategi.
+            Vi er spesialiserte i alt innenfor
+          </p>
+
+          <div className="flex items-center gap-3 pb-1">
+            <span className="w-px h-10 bg-nm-border flex-shrink-0" />
+            <div className="overflow-hidden h-8 flex items-center">
+              <span
+                ref={cycleRef}
+                className="font-bespoke font-bold text-lg tracking-widest uppercase text-nm-warm block"
+              >
+                {CYCLING_WORDS[0]}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* CTAs */}
+        <div data-hero-cta className="flex flex-wrap gap-4" style={{ opacity: 0 }}>
+          <MagneticButton href="/tjenester" variant="outline">
             Våre tjenester
-          </Button>
-          <Button href="/kontakt" variant="outline" size="lg">
+          </MagneticButton>
+          <MagneticButton href="/kontakt" variant="primary">
             Kom i kontakt
-          </Button>
+          </MagneticButton>
         </div>
       </div>
 
-      {/* Scroll indicator */}
-      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-40">
-        <span className="font-cabinet text-xs tracking-widest2 uppercase text-nm-muted">Scroll</span>
-        <div className="w-px h-8 bg-nm-muted animate-pulse" />
+      {/* Scroll hint */}
+      <div
+        data-scroll-hint
+        className="absolute bottom-8 left-6 flex items-center gap-3"
+        style={{ opacity: 0 }}
+        aria-hidden="true"
+      >
+        <div className="w-px h-12 overflow-hidden relative">
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-nm-muted/50 to-transparent animate-[slideDown_2s_ease-in-out_infinite]" />
+        </div>
+        <span className="font-cabinet text-[10px] tracking-widest2 uppercase text-nm-muted/50">
+          Scroll
+        </span>
       </div>
     </section>
   )
 }
 
-/** Animated polygon mesh SVG background */
-function MeshBackground() {
-  const svgRef = useRef<SVGSVGElement>(null)
+function MeshDots() {
+  const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const svg = svgRef.current
-    if (!svg) return
-    const circles = svg.querySelectorAll<SVGCircleElement>('circle[data-float]')
-
-    circles.forEach((c, i) => {
-      gsap.to(c, {
-        attr: {
-          cx: parseFloat(c.getAttribute('cx')!) + (Math.random() - 0.5) * 40,
-          cy: parseFloat(c.getAttribute('cy')!) + (Math.random() - 0.5) * 40,
-        },
-        duration: 6 + i * 0.7,
-        repeat: -1,
-        yoyo: true,
-        ease: 'sine.inOut',
+    const ctx = gsap.context(() => {
+      const dots = ref.current?.querySelectorAll<HTMLSpanElement>('[data-dot]')
+      dots?.forEach((d, i) => {
+        gsap.to(d, {
+          y: `${(i % 2 === 0 ? -1 : 1) * (8 + (i % 4) * 5)}`,
+          x: `${(i % 3 === 0 ? -1 : 1) * (4 + (i % 3) * 4)}`,
+          duration: 4 + i * 0.5,
+          repeat: -1,
+          yoyo: true,
+          ease: 'sine.inOut',
+        })
       })
-    })
+    }, ref)
+    return () => ctx.revert()
   }, [])
 
   return (
-    <svg
-      ref={svgRef}
-      className="absolute inset-0 w-full h-full opacity-20 pointer-events-none"
-      aria-hidden="true"
-      preserveAspectRatio="xMidYMid slice"
-      viewBox="0 0 1440 900"
-    >
-      <defs>
-        <radialGradient id="glow" cx="50%" cy="50%" r="60%">
-          <stop offset="0%" stopColor="#4B6EF5" stopOpacity="0.3" />
-          <stop offset="100%" stopColor="#0D0D0F" stopOpacity="0" />
-        </radialGradient>
-      </defs>
-      <rect width="1440" height="900" fill="url(#glow)" />
-      {MESH_POINTS.map(([x, y], i) => (
-        <circle
+    <div ref={ref} className="absolute inset-0 pointer-events-none" aria-hidden="true">
+      {DOT_POSITIONS.map(({ x, y, size, opacity }, i) => (
+        <span
           key={i}
-          cx={x}
-          cy={y}
-          r="1.5"
-          fill="#4B6EF5"
-          data-float
+          data-dot
+          className="absolute rounded-full bg-nm-accent"
+          style={{ left: `${x}%`, top: `${y}%`, width: size, height: size, opacity }}
         />
       ))}
-      {MESH_LINES.map(([a, b], i) => (
-        <line
-          key={i}
-          x1={MESH_POINTS[a][0]}
-          y1={MESH_POINTS[a][1]}
-          x2={MESH_POINTS[b][0]}
-          y2={MESH_POINTS[b][1]}
-          stroke="#4B6EF5"
-          strokeWidth="0.4"
-          strokeOpacity="0.5"
-        />
-      ))}
-    </svg>
+      <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-nm-accent/5 rounded-full blur-3xl" />
+      <div className="absolute bottom-1/3 left-1/3 w-64 h-64 bg-nm-warm/[0.04] rounded-full blur-3xl" />
+    </div>
   )
 }
 
-// Sparse but nicely distributed mesh data
-const MESH_POINTS: [number, number][] = [
-  [100, 80], [300, 50], [520, 120], [750, 60], [980, 90], [1200, 55], [1380, 110],
-  [60, 250], [220, 300], [440, 220], [680, 280], [900, 240], [1140, 310], [1400, 260],
-  [150, 450], [380, 500], [600, 420], [840, 470], [1060, 440], [1300, 490],
-  [80, 640], [280, 700], [500, 620], [740, 680], [960, 640], [1200, 700], [1420, 650],
-  [200, 840], [460, 800], [720, 860], [1000, 820], [1250, 870],
-  [720, 180], [1100, 160], [340, 360], [840, 380], [560, 560], [1160, 580],
-]
-
-const MESH_LINES: [number, number][] = [
-  [0,1],[1,2],[2,3],[3,4],[4,5],[5,6],
-  [7,8],[8,9],[9,10],[10,11],[11,12],[12,13],
-  [14,15],[15,16],[16,17],[17,18],[18,19],
-  [20,21],[21,22],[22,23],[23,24],[24,25],[25,26],
-  [27,28],[28,29],[29,30],[30,31],
-  [0,7],[1,8],[2,9],[3,10],[4,11],[5,12],[6,13],
-  [7,14],[8,15],[9,16],[10,17],[11,18],[12,19],
-  [14,20],[15,21],[16,22],[17,23],[18,24],[19,25],
-  [20,27],[21,28],[22,29],[23,30],[24,31],
-  [32,33],[34,35],[36,37],
-  [1,32],[5,33],[8,34],[10,35],[16,36],[18,37],
+const DOT_POSITIONS = [
+  { x: 15, y: 20, size: 3, opacity: 0.4 },
+  { x: 72, y: 12, size: 2, opacity: 0.3 },
+  { x: 88, y: 35, size: 4, opacity: 0.2 },
+  { x: 55, y: 70, size: 2, opacity: 0.35 },
+  { x: 10, y: 65, size: 3, opacity: 0.25 },
+  { x: 80, y: 80, size: 2, opacity: 0.3 },
+  { x: 30, y: 85, size: 2, opacity: 0.2 },
+  { x: 65, y: 45, size: 3, opacity: 0.15 },
+  { x: 40, y: 15, size: 2, opacity: 0.3 },
+  { x: 92, y: 60, size: 2, opacity: 0.25 },
 ]

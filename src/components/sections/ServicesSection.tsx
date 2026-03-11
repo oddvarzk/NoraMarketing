@@ -1,6 +1,7 @@
+import { useRef, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { useGSAPContext, ScrollTrigger } from '../../hooks/useGSAP'
 import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -50,52 +51,65 @@ export const SERVICES = [
 ]
 
 export default function ServicesSection() {
-  const containerRef = useGSAPContext<HTMLElement>((ctx) => {
-    ctx.add(() => {
-      const rows = document.querySelectorAll<HTMLElement>('[data-service-row]')
-      rows.forEach((row, i) => {
+  const sectionRef = useRef<HTMLElement>(null)
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        '[data-services-label]',
+        { clipPath: 'inset(0 100% 0 0)' },
+        {
+          clipPath: 'inset(0 0% 0 0)',
+          duration: 0.9,
+          ease: 'power3.inOut',
+          scrollTrigger: { trigger: '[data-services-label]', start: 'top 88%' },
+        },
+      )
+
+      const rows = sectionRef.current?.querySelectorAll<HTMLElement>('[data-service-row]')
+      rows?.forEach((row, i) => {
         gsap.fromTo(
           row,
-          { opacity: 0, x: -30 },
+          { opacity: 0, x: -40 },
           {
             opacity: 1,
             x: 0,
             duration: 0.7,
-            delay: i * 0.06,
+            delay: i * 0.05,
             ease: 'power3.out',
             scrollTrigger: {
               trigger: row,
-              start: 'top 85%',
+              start: 'top 87%',
               toggleActions: 'play none none none',
             },
           },
         )
       })
-    })
-  })
+    }, sectionRef)
+
+    return () => ctx.revert()
+  }, [])
 
   return (
     <section
-      ref={containerRef}
+      ref={sectionRef}
       id="tjenester"
       className="max-w-7xl mx-auto px-6 py-24"
       aria-labelledby="services-heading"
     >
-      {/* Section label */}
       <div className="flex items-center gap-4 mb-12">
         <span className="w-8 h-px bg-nm-accent" />
         <h2
           id="services-heading"
+          data-services-label
           className="font-bespoke font-bold text-xs tracking-widest2 uppercase text-nm-fg"
         >
           Tjenester
         </h2>
       </div>
 
-      {/* Divider line */}
       <div className="border-t border-nm-border" />
 
-      {/* Rows */}
       {SERVICES.map((service) => (
         <ServiceRow key={service.slug} service={service} />
       ))}
@@ -104,23 +118,53 @@ export default function ServicesSection() {
 }
 
 function ServiceRow({ service }: { service: (typeof SERVICES)[number] }) {
+  const rowRef = useRef<HTMLAnchorElement>(null)
+
+  const handleMouseEnter = () => {
+    const row = rowRef.current
+    if (!row) return
+    gsap.to(row.querySelector('[data-bg-num]'), {
+      opacity: 0.07, x: 0, duration: 0.4, ease: 'power2.out',
+    })
+    gsap.to(row.querySelector('[data-arrow]'), {
+      x: 6, duration: 0.3, ease: 'power2.out',
+    })
+  }
+
+  const handleMouseLeave = () => {
+    const row = rowRef.current
+    if (!row) return
+    gsap.to(row.querySelector('[data-bg-num]'), {
+      opacity: 0, x: -10, duration: 0.4, ease: 'power2.out',
+    })
+    gsap.to(row.querySelector('[data-arrow]'), {
+      x: 0, duration: 0.3, ease: 'power2.out',
+    })
+  }
+
   return (
     <Link
+      ref={rowRef}
       to={`/tjenester/${service.slug}`}
       data-service-row
-      className="group flex items-center justify-between py-7 border-b border-nm-border/60 hover:border-nm-accent/40 transition-all duration-300 cursor-pointer"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      className="group relative flex items-center justify-between py-7 border-b border-nm-border/60 hover:border-nm-accent/30 transition-colors duration-300 overflow-hidden"
     >
+      {/* Decorative bg number */}
+      <span
+        data-bg-num
+        className="absolute right-20 top-1/2 font-bespoke font-bold text-8xl leading-none text-nm-fg pointer-events-none select-none opacity-0"
+        style={{ transform: 'translateY(-50%) translateX(-10px)' }}
+        aria-hidden="true"
+      >
+        {service.number}
+      </span>
+
       <div className="flex items-center gap-6 md:gap-10">
-        {/* Arrow */}
-        <span className="text-nm-muted group-hover:text-nm-accent group-hover:translate-x-1 transition-all duration-300">
+        <span data-arrow className="text-nm-muted group-hover:text-nm-accent transition-colors duration-200">
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-            <path
-              d="M4 10h12M11 5l5 5-5 5"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
+            <path d="M4 10h12M11 5l5 5-5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </span>
         <span className="font-satoshi font-semibold text-xl md:text-2xl text-nm-fg group-hover:text-white transition-colors duration-200">
@@ -128,15 +172,14 @@ function ServiceRow({ service }: { service: (typeof SERVICES)[number] }) {
         </span>
       </div>
 
-      {/* Number + bars */}
       <div className="flex items-center gap-4 text-nm-muted">
-        <span className="font-satoshi text-sm tracking-widest">{service.number}</span>
+        <span className="font-satoshi text-sm tabular-nums tracking-widest">{service.number}</span>
         <div className="hidden md:flex items-end gap-0.5 h-5">
           {[3, 5, 4, 6, 3].map((h, i) => (
             <span
               key={i}
-              style={{ height: h * 3 }}
-              className="w-0.5 bg-nm-border group-hover:bg-nm-accent/60 transition-colors duration-300 rounded-full"
+              className="w-0.5 bg-nm-border group-hover:bg-nm-accent/50 transition-all duration-300 rounded-full"
+              style={{ height: h * 3, transitionDelay: `${i * 30}ms` }}
             />
           ))}
         </div>
