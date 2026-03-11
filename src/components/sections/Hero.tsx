@@ -15,6 +15,7 @@ const CYCLING_WORDS = [
 export default function Hero() {
   const sectionRef = useRef<HTMLElement>(null)
   const cycleRef = useRef<HTMLSpanElement>(null)
+  const dotsRef = useRef<(HTMLSpanElement | null)[]>([])
   const cycleIndex = useRef(0)
 
   // Entry animation
@@ -67,8 +68,19 @@ export default function Hero() {
     const el = cycleRef.current
     if (!el) return
 
+    const updateDots = (idx: number) => {
+      dotsRef.current.forEach((dot, i) => {
+        if (!dot) return
+        gsap.to(dot, { backgroundColor: i === idx ? '#E8A44A' : '', duration: 0.3 })
+        dot.style.opacity = i === idx ? '1' : '0.3'
+      })
+    }
+
+    updateDots(0)
+
     const cycle = () => {
       cycleIndex.current = (cycleIndex.current + 1) % CYCLING_WORDS.length
+      updateDots(cycleIndex.current)
       gsap.to(el, {
         yPercent: -110, opacity: 0, duration: 0.35, ease: 'power2.in',
         onComplete: () => {
@@ -88,79 +100,91 @@ export default function Hero() {
   return (
     <section
       ref={sectionRef}
-      className="relative min-h-dvh flex flex-col items-center justify-center overflow-hidden px-6 pt-24 pb-20 text-center"
+      className="relative min-h-dvh flex flex-col items-center justify-center overflow-hidden px-6 pt-24 pb-20"
       aria-label="Introduksjon"
     >
       <HeroBg />
       <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-nm-dark to-transparent pointer-events-none" />
 
-      <div className="relative z-10 max-w-5xl mx-auto w-full flex flex-col items-center">
+      {/* ── 3-column layout on large screens ── */}
+      <div className="relative z-10 w-full max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-[200px_1fr_200px] gap-8 lg:gap-12 items-center">
 
-        {/* Eyebrow */}
-        <div className="flex items-center gap-3 mb-12 justify-center">
-          <span data-e-line className="block w-8 h-px bg-nm-warm origin-left" />
-          <span data-e-tag className="font-bespoke text-xs tracking-widest2 uppercase text-nm-warm" style={{ opacity: 0 }}>
-            Markedsføringsbyrå
-          </span>
-          <span data-e-line className="block w-8 h-px bg-nm-warm origin-right" style={{ transformOrigin: 'right' }} />
-        </div>
-
-        {/* Headline — each line wrapped in overflow-hidden */}
-        <h1 className="font-satoshi font-black text-[clamp(3.2rem,7.5vw,8.5rem)] leading-[0.93] tracking-tight text-nm-light mb-12">
-          <div className="overflow-hidden">
-            <span data-h-line className="block" style={{ transform: 'translateY(105%)' }}>
-              Markedsføring
-            </span>
-          </div>
-          <div className="overflow-hidden">
-            <span data-h-line className="block" style={{ transform: 'translateY(105%)' }}>
-              som faktisk gir
-            </span>
-          </div>
-          <div className="overflow-hidden">
-            <span data-h-line className="block text-gradient" style={{ transform: 'translateY(105%)' }}>
-              resultater.
-            </span>
-          </div>
-        </h1>
-
-        {/* Stats strip — fills the middle, builds trust */}
-        <div data-e-sub className="flex items-center gap-0 mb-12 border border-nm-border/50 rounded-sm overflow-hidden" style={{ opacity: 0 }}>
+        {/* ── LEFT: stats ── */}
+        <div data-e-sub className="hidden lg:flex flex-col divide-y divide-nm-border/50 border border-nm-border/50 rounded-sm self-center" style={{ opacity: 0 }}>
           {[
             { value: '5+', label: 'År i bransjen' },
             { value: '120+', label: 'Fornøyde kunder' },
             { value: '3×', label: 'Gjennomsnittlig ROI' },
-          ].map((s, i) => (
-            <div key={i} className={`flex flex-col items-center px-8 py-4 gap-0.5 ${i < 2 ? 'border-r border-nm-border/50' : ''}`}>
-              <span className="font-satoshi font-black text-2xl text-nm-accent">{s.value}</span>
-              <span className="font-cabinet text-nm-muted text-xs tracking-wide">{s.label}</span>
+          ].map((s) => (
+            <div key={s.label} className="flex flex-col items-center py-5 px-4 gap-1">
+              <span className="font-satoshi font-black text-3xl text-nm-accent">{s.value}</span>
+              <span className="font-cabinet text-nm-muted text-xs text-center leading-snug">{s.label}</span>
             </div>
           ))}
         </div>
 
-        {/* Sub + cycling word */}
-        <div data-e-sub className="flex flex-col sm:flex-row items-center justify-center gap-5 mb-12" style={{ opacity: 0 }}>
-          <p className="font-cabinet text-nm-muted text-lg leading-relaxed max-w-sm text-center sm:text-left">
-            Vi kombinerer kreativitet med strategi for å levere markedsføring som faktisk måles. Vi er spesialiserte i
-          </p>
-          <div className="flex items-center gap-3 flex-shrink-0">
-            <span className="hidden sm:block w-px h-10 bg-nm-border" />
-            {/* Fixed width = longest word so layout never shifts */}
-            <div className="overflow-hidden h-8 flex items-center w-[22ch]">
-              <span
-                ref={cycleRef}
-                className="font-bespoke font-bold text-base tracking-widest uppercase text-nm-warm block whitespace-nowrap"
-              >
-                {CYCLING_WORDS[0]}
-              </span>
+        {/* ── CENTER: headline + sub + CTAs ── */}
+        <div className="flex flex-col items-center text-center">
+          {/* Eyebrow */}
+          <div className="flex items-center gap-3 mb-10 justify-center">
+            <span data-e-line className="block w-8 h-px bg-nm-warm origin-left" />
+            <span data-e-tag className="font-bespoke text-xs tracking-widest2 uppercase text-nm-warm" style={{ opacity: 0 }}>
+              Markedsføringsbyrå
+            </span>
+            <span data-e-line className="block w-8 h-px bg-nm-warm" style={{ transformOrigin: 'right' }} />
+          </div>
+
+          {/* Headline */}
+          <h1 className="font-satoshi font-black text-[clamp(3rem,6.5vw,8rem)] leading-[0.93] tracking-tight text-nm-light mb-10">
+            <div className="overflow-hidden">
+              <span data-h-line className="block" style={{ transform: 'translateY(105%)' }}>Markedsføring</span>
             </div>
+            <div className="overflow-hidden">
+              <span data-h-line className="block" style={{ transform: 'translateY(105%)' }}>som faktisk gir</span>
+            </div>
+            <div className="overflow-hidden">
+              <span data-h-line className="block text-gradient" style={{ transform: 'translateY(105%)' }}>resultater.</span>
+            </div>
+          </h1>
+
+          {/* Sub */}
+          <p data-e-sub className="font-cabinet text-nm-muted text-lg leading-relaxed max-w-md mb-10" style={{ opacity: 0 }}>
+            Vi kombinerer kreativitet med strategi for å levere markedsføring som faktisk måles i krone og øre.
+          </p>
+
+          {/* CTAs */}
+          <div data-e-cta className="flex flex-wrap gap-4 justify-center" style={{ opacity: 0 }}>
+            <MagneticButton href="/tjenester" variant="outline" size="lg">Våre tjenester</MagneticButton>
+            <MagneticButton href="/kontakt" variant="primary" size="lg">Kom i kontakt</MagneticButton>
           </div>
         </div>
 
-        {/* CTAs */}
-        <div data-e-cta className="flex flex-wrap gap-4 justify-center" style={{ opacity: 0 }}>
-          <MagneticButton href="/tjenester" variant="outline" size="lg">Våre tjenester</MagneticButton>
-          <MagneticButton href="/kontakt" variant="primary" size="lg">Kom i kontakt</MagneticButton>
+        {/* ── RIGHT: cycling specialty ── */}
+        <div data-e-sub className="hidden lg:flex flex-col items-center justify-center gap-4 border border-nm-border/50 rounded-sm py-8 px-4 self-center" style={{ opacity: 0 }}>
+          <span className="font-cabinet text-xs tracking-widest2 uppercase text-nm-muted/60">
+            Spesialiserte i
+          </span>
+          {/* Fixed height + width so nothing ever reflows */}
+          <div className="overflow-hidden flex items-center justify-center w-full" style={{ height: '4.5rem' }}>
+            <span
+              ref={cycleRef}
+              className="font-bespoke font-bold text-xl tracking-widest uppercase text-nm-warm text-center block leading-tight"
+              style={{ width: '100%' }}
+            >
+              {CYCLING_WORDS[0]}
+            </span>
+          </div>
+          {/* Progress dots */}
+          <div className="flex gap-1.5 mt-1">
+            {CYCLING_WORDS.map((_, i) => (
+              <span
+                key={i}
+                ref={(el) => { dotsRef.current[i] = el }}
+                className="w-1 h-1 rounded-full bg-nm-warm"
+                style={{ opacity: i === 0 ? 1 : 0.3 }}
+              />
+            ))}
+          </div>
         </div>
       </div>
 
