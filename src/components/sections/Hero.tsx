@@ -130,20 +130,6 @@ export default function Hero() {
           </div>
         </h1>
 
-        {/* Horizontal stats strip */}
-        <div data-e-sub className="flex items-stretch border border-nm-border/50 rounded-sm overflow-hidden mb-10" style={{ opacity: 0 }}>
-          {[
-            { value: '5+', label: 'År i bransjen' },
-            { value: '120+', label: 'Fornøyde kunder' },
-            { value: '3×', label: 'Gjennomsnittlig ROI' },
-          ].map((s, i) => (
-            <div key={s.label} className={`flex flex-col items-center px-8 py-4 gap-1 ${i < 2 ? 'border-r border-nm-border/50' : ''}`}>
-              <span className="font-satoshi font-black text-2xl text-nm-accent">{s.value}</span>
-              <span className="font-cabinet text-nm-muted text-xs tracking-wide whitespace-nowrap">{s.label}</span>
-            </div>
-          ))}
-        </div>
-
         {/* Sub + cycling word */}
         <div data-e-sub className="flex flex-col sm:flex-row items-center justify-center gap-5 mb-12" style={{ opacity: 0 }}>
           <p className="font-cabinet text-nm-muted text-lg leading-relaxed max-w-sm">
@@ -151,23 +137,13 @@ export default function Hero() {
           </p>
           <div className="flex items-center gap-3 flex-shrink-0">
             <span className="hidden sm:block w-px h-10 bg-nm-border" />
-            <div className="overflow-hidden h-8 flex items-center w-[22ch]">
+            <div className="overflow-hidden h-10 flex items-center w-[22ch]">
               <span
                 ref={cycleRef}
-                className="font-bespoke font-bold text-base tracking-widest uppercase text-nm-warm block whitespace-nowrap"
+                className="font-bespoke font-bold text-2xl tracking-widest uppercase text-nm-warm block whitespace-nowrap"
               >
                 {CYCLING_WORDS[0]}
               </span>
-            </div>
-            <div className="flex gap-1.5 items-center">
-              {CYCLING_WORDS.map((_, i) => (
-                <span
-                  key={i}
-                  ref={(el) => { dotsRef.current[i] = el }}
-                  className="w-1 h-1 rounded-full bg-nm-warm"
-                  style={{ opacity: i === 0 ? 1 : 0.3 }}
-                />
-              ))}
             </div>
           </div>
         </div>
