@@ -79,14 +79,7 @@ export default function TjenestePage() {
           className="prose prose-invert prose-lg max-w-none font-cabinet text-nm-muted leading-relaxed border-t border-nm-border/50 pt-12"
           style={{ opacity: 0 }}
         >
-          <p>
-            Innholdet for denne tjenesten hentes fra WordPress CMS. Koble til{' '}
-            <code className="text-nm-accent bg-nm-surface px-1.5 py-0.5 rounded text-sm">
-              VITE_WP_BASE_URL
-            </code>{' '}
-            i <code className="text-nm-accent bg-nm-surface px-1.5 py-0.5 rounded text-sm">.env</code>{' '}
-            for å laste dynamisk innhold.
-          </p>
+          <p>Koble til Wordpress CMS</p>
         </div>
 
         {/* Prev / Next navigation */}
