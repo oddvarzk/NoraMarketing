@@ -166,7 +166,7 @@ export default function HvemViEr() {
               className="font-satoshi font-black text-5xl md:text-7xl text-nm-light leading-tight mb-8 max-w-4xl"
               style={{ opacity: 0 }}
             >
-              Vi er <span className="text-gradient">Nora Marketing</span>.
+              Vi er Nora Marketing.
             </h1>
 
             <p
@@ -199,7 +199,7 @@ export default function HvemViEr() {
                   className="font-satoshi font-black text-3xl md:text-4xl text-nm-light leading-tight"
                 >
                   Ekte hjelp,<br />
-                  <span className="text-gradient">uten støy.</span>
+                  uten støy.
                 </h2>
               </div>
 
@@ -234,7 +234,7 @@ export default function HvemViEr() {
                   className="font-satoshi font-black text-3xl md:text-4xl text-nm-light leading-tight"
                 >
                   Prinsippene som{' '}
-                  <span className="text-gradient">styrer alt vi gjør.</span>
+                  styrer alt vi gjør.
                 </h2>
               </div>
             </div>
@@ -280,7 +280,7 @@ export default function HvemViEr() {
                 className="font-satoshi font-black text-3xl md:text-4xl text-nm-light leading-tight max-w-xl"
               >
                 Hvordan vi leverer{' '}
-                <span className="text-gradient">markedsføring som fungerer.</span>
+                markedsføring som fungerer.
               </h2>
             </div>
 
@@ -327,7 +327,7 @@ export default function HvemViEr() {
                 </span>
                 <h2 className="font-satoshi font-black text-3xl md:text-4xl text-nm-light mb-6 leading-tight">
                   Profesjonell markedsføring{' '}
-                  <span className="text-gradient">for alle.</span>
+                  for alle.
                 </h2>
                 <p className="font-cabinet text-nm-muted text-lg leading-relaxed mb-8">
                   Å demokratisere tilgangen til profesjonell markedsføring – slik at bedrifter i alle

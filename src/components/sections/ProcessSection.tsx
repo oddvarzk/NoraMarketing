@@ -140,7 +140,7 @@ export default function ProcessSection() {
             </span>
             <h2 className="font-satoshi font-black text-4xl lg:text-[3.25rem] leading-tight text-nm-light">
               Enkel,{' '}
-              <span className="text-gradient">men effektiv.</span>
+              men effektiv.
             </h2>
           </div>
           <p className="hidden lg:block max-w-xs text-nm-muted font-cabinet text-sm leading-relaxed text-right">
@@ -282,7 +282,7 @@ export default function ProcessSection() {
             Vår tilnærming
           </span>
           <h2 className="font-satoshi font-black text-3xl text-nm-light leading-tight">
-            Enkel, <span className="text-gradient">men effektiv.</span>
+            Enkel, men effektiv.
           </h2>
         </div>
 

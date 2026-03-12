@@ -188,7 +188,7 @@ export default function Kontakt() {
               style={{ opacity: 0 }}
             >
               La oss snakke om{' '}
-              <span className="text-gradient">din vekst</span>.
+              din vekst.
             </h1>
 
             <p
@@ -412,7 +412,7 @@ export default function Kontakt() {
             </span>
             <h2 id="socials-heading" className="font-satoshi font-black text-3xl text-nm-light">
               Følg oss for{' '}
-              <span className="text-gradient">daglig innsikt.</span>
+              daglig innsikt.
             </h2>
           </div>
 
@@ -456,7 +456,7 @@ export default function Kontakt() {
             </span>
             <h2 id="faq-heading" className="font-satoshi font-black text-3xl text-nm-light">
               Ofte stilte{' '}
-              <span className="text-gradient">spørsmål.</span>
+              spørsmål.
             </h2>
           </div>
 

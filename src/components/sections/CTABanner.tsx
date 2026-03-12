@@ -89,7 +89,7 @@ export default function CTABanner() {
           <span data-cta-line className="block" style={{ clipPath: 'inset(0 100% 0.5em 0)' }}>
             La oss gjøre deg
           </span>
-          <span data-cta-line className="block text-gradient" style={{ clipPath: 'inset(0 100% 0.5em 0)', paddingBottom: '0.35em', marginBottom: '-0.35em' }}>
+          <span data-cta-line className="block" style={{ clipPath: 'inset(0 100% 0.5em 0)' }}>
             umulig å ignorere.
           </span>
         </h2>

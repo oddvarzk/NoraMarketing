@@ -98,7 +98,7 @@ export default function AboutTeaser() {
               style={{ opacity: 0 }}
             >
               Et byrå bygget på{' '}
-              <span className="text-gradient">resultater</span>,{' '}
+              resultater,{' '}
               ikke løfter.
             </h2>
 

@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
+import { Link } from 'react-router-dom'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import MagneticButton from '../ui/MagneticButton'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -12,59 +12,39 @@ const CYCLING_WORDS = [
   'SEO & SEM',
 ]
 
-export default function Hero() {
-  const sectionRef = useRef<HTMLElement>(null)
-  const cycleRef = useRef<HTMLSpanElement>(null)
-  const cycleIndex = useRef(0)
+const STATS = [
+  { num: '5+',   label: 'År i bransjen' },
+  { num: '120+', label: 'Fornøyde kunder' },
+  { num: '3×',   label: 'Gj.snittlig ROI' },
+]
 
-  // Entry animation
+export default function Hero() {
+  const sectionRef  = useRef<HTMLElement>(null)
+  const cycleRef    = useRef<HTMLSpanElement>(null)
+  const cycleIndex  = useRef(0)
+
+  // ── Entry animation ──────────────────────────────────────────────────────────
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Fade-up reveal — no overflow clipping, so descenders are always fully visible
-      gsap.set('[data-h-line]', { opacity: 0, y: 55 })
+      gsap.set('[data-h-line]',  { opacity: 0, y: 64 })
+      gsap.set('[data-e-tag]',   { opacity: 0, x: -14 })
+      gsap.set('[data-e-line]',  { scaleX: 0, transformOrigin: 'left' })
+      gsap.set('[data-e-sub]',   { opacity: 0, y: 22 })
+      gsap.set('[data-stat]',    { opacity: 0, y: 18 })
 
       const tl = gsap.timeline({ defaults: { ease: 'power4.out' } })
 
-      // Eyebrow line + text
-      tl.fromTo('[data-e-line]',
-        { scaleX: 0, transformOrigin: 'left' },
-        { scaleX: 1, duration: 0.7 },
-        0,
-      )
-      tl.fromTo('[data-e-tag]',
-        { opacity: 0, x: -10 },
-        { opacity: 1, x: 0, duration: 0.5 },
-        0.25,
-      )
-
-      // Each headline line fades up — staggered
-      tl.to('[data-h-line]',
-        { opacity: 1, y: 0, duration: 1.05, stagger: 0.1 },
-        0.15,
-      )
-
-      // Sub text + CTAs
-      tl.fromTo('[data-e-sub]',
-        { opacity: 0, y: 18 },
-        { opacity: 1, y: 0, duration: 0.8, stagger: 0.15 },
-        0.75,
-      )
-      tl.fromTo('[data-e-cta]',
-        { opacity: 0, y: 14 },
-        { opacity: 1, y: 0, duration: 0.7 },
-        0.9,
-      )
-      tl.fromTo('[data-e-scroll]',
-        { opacity: 0 },
-        { opacity: 1, duration: 0.8 },
-        1.4,
-      )
+      tl.to('[data-e-line]', { scaleX: 1, duration: 0.65 }, 0)
+      tl.to('[data-e-tag]',  { opacity: 1, x: 0, duration: 0.55 }, 0.2)
+      tl.to('[data-h-line]', { opacity: 1, y: 0, duration: 1.1, stagger: 0.09 }, 0.12)
+      tl.to('[data-e-sub]',  { opacity: 1, y: 0, duration: 0.85, stagger: 0.13 }, 0.65)
+      tl.to('[data-stat]',   { opacity: 1, y: 0, duration: 0.7,  stagger: 0.08 }, 1.05)
     }, sectionRef)
 
     return () => ctx.revert()
   }, [])
 
-  // Cycling specialty word
+  // ── Cycling specialty word ────────────────────────────────────────────────────
   useEffect(() => {
     const el = cycleRef.current
     if (!el) return
@@ -90,65 +70,137 @@ export default function Hero() {
   return (
     <section
       ref={sectionRef}
-      className="relative min-h-dvh flex flex-col items-center justify-center overflow-hidden px-6 pt-24 pb-20"
+      className="relative min-h-dvh flex flex-col overflow-hidden bg-nm-dark"
       aria-label="Introduksjon"
     >
       <HeroBg />
-      <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-nm-dark to-transparent pointer-events-none" />
 
-      <div className="relative z-10 max-w-5xl mx-auto w-full flex flex-col items-center text-center">
+      {/* ── Main content ────────────────────────────────────────────────────── */}
+      <div className="relative z-10 flex-1 flex flex-col justify-center px-6 sm:px-10 lg:px-16 pt-28 pb-10">
 
         {/* Eyebrow */}
-        <div className="flex items-center gap-3 mb-10 justify-center">
-          <span data-e-line className="block w-8 h-px bg-nm-warm origin-left" />
-          <span data-e-tag className="font-bespoke text-xs tracking-widest2 uppercase text-nm-warm" style={{ opacity: 0 }}>
-            Markedsføringsbyrå
+        <div className="flex items-center justify-center lg:justify-start gap-3 mb-10 sm:mb-14">
+          <span
+            data-e-line
+            className="block w-8 h-px bg-nm-warm/50"
+            style={{ transform: 'scaleX(0)', transformOrigin: 'left' }}
+          />
+          <span
+            data-e-tag
+            className="font-bespoke text-[11px] tracking-widest2 uppercase text-nm-warm/70"
+            style={{ opacity: 0 }}
+          >
+            Markedsføringsbyrå · Oslo, Norge
           </span>
-          <span data-e-line className="block w-8 h-px bg-nm-warm" style={{ transformOrigin: 'right' }} />
+          <span
+            data-e-line
+            className="block lg:hidden w-8 h-px bg-nm-warm/50"
+            style={{ transform: 'scaleX(0)', transformOrigin: 'right' }}
+          />
         </div>
 
-        {/* Headline */}
-        <h1 className="font-satoshi font-black text-[clamp(3.2rem,7.5vw,8.5rem)] leading-[0.93] tracking-tight text-nm-light mb-10">
-          <span data-h-line className="block">Vi gjør deg</span>
-          <span data-h-line className="block">umulig å</span>
-          <span data-h-line className="block text-gradient" style={{ paddingBottom: '0.35em', marginBottom: '-0.35em' }}>ignorere.</span>
-        </h1>
+        {/* Two-column grid — headline left, meta right */}
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] items-end gap-10 lg:gap-6">
 
-        {/* Sub + cycling word */}
-        <div data-e-sub className="flex flex-col sm:flex-row items-center justify-center gap-5 mb-12" style={{ opacity: 0 }}>
-          <p className="font-cabinet text-nm-muted text-lg leading-relaxed max-w-sm">
-            Vi kombinerer kreativitet med strategi for å levere markedsføring som faktisk måles. Vi er spesialiserte i
-          </p>
-          <div className="flex items-center gap-3 flex-shrink-0">
-            <span className="hidden sm:block w-px h-10 bg-nm-border" />
-            <div className="h-12 w-[22ch] flex items-center justify-center sm:justify-start" style={{ clipPath: 'inset(0 -9999px)' }}>
-              <span
-                ref={cycleRef}
-                className="font-bespoke font-bold text-2xl tracking-widest uppercase text-nm-warm block whitespace-nowrap"
-              >
-                {CYCLING_WORDS[0]}
+          {/* Headline */}
+          <h1 className="font-satoshi font-black text-[clamp(3.4rem,9vw,10rem)] leading-[0.88] tracking-tight text-center lg:text-left">
+            <span data-h-line className="block text-nm-light" style={{ opacity: 0 }}>Vi gjør deg</span>
+            <span data-h-line className="block text-nm-light" style={{ opacity: 0 }}>umulig å</span>
+            <span data-h-line className="block text-nm-light" style={{ opacity: 0 }}>ignorere.</span>
+          </h1>
+
+          {/* Right column */}
+          <div className="flex flex-col items-center lg:items-start gap-7 lg:pb-1">
+
+            {/* Description */}
+            <p
+              data-e-sub
+              className="font-cabinet text-nm-muted text-[15px] leading-relaxed max-w-[290px] text-center lg:text-left"
+              style={{ opacity: 0 }}
+            >
+              Vi kombinerer kreativitet med strategi for å levere markedsføring som faktisk måles.
+            </p>
+
+            {/* Cycling specialty */}
+            <div data-e-sub className="flex flex-col items-center lg:items-start gap-1.5" style={{ opacity: 0 }}>
+              <span className="font-cabinet text-[10px] text-nm-muted/50 tracking-widest2 uppercase">
+                Spesialisert i
               </span>
+              <div
+                className="h-8 flex items-center"
+                style={{ clipPath: 'inset(0 -9999px)' }}
+              >
+                <span
+                  ref={cycleRef}
+                  className="font-bespoke text-[17px] tracking-widest2 uppercase text-nm-warm block whitespace-nowrap"
+                >
+                  {CYCLING_WORDS[0]}
+                </span>
+              </div>
             </div>
-          </div>
-        </div>
 
-        {/* CTAs */}
-        <div data-e-cta className="flex flex-wrap gap-4 justify-center" style={{ opacity: 0 }}>
-          <MagneticButton href="/tjenester" variant="outline" size="lg">Våre tjenester</MagneticButton>
-          <MagneticButton href="/kontakt" variant="primary" size="lg">Kom i kontakt</MagneticButton>
+            {/* CTA — editorial arrow link */}
+            <div data-e-sub className="flex flex-col items-center lg:items-start gap-5" style={{ opacity: 0 }}>
+              <Link
+                to="/kontakt"
+                className="inline-flex items-center gap-3 group"
+                aria-label="Ta kontakt"
+              >
+                <span className="font-satoshi font-semibold text-nm-fg text-[14px] tracking-wide group-hover:text-nm-warm transition-colors duration-200">
+                  Ta kontakt
+                </span>
+                <span
+                  className="h-px bg-nm-border/80 group-hover:bg-nm-warm transition-all duration-300 ease-out"
+                  style={{ width: '2rem' }}
+                  aria-hidden="true"
+                />
+                <svg
+                  className="w-[11px] h-[11px] text-nm-muted group-hover:text-nm-warm -ml-[0.85rem] transition-colors duration-200"
+                  viewBox="0 0 12 12"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M1 6h10M7 2l4 4-4 4" />
+                </svg>
+              </Link>
+
+              <Link
+                to="/tjenester"
+                className="font-cabinet text-[12px] text-nm-muted/50 hover:text-nm-muted tracking-wide transition-colors duration-200 underline underline-offset-4 decoration-nm-border/50"
+              >
+                Se alle tjenester
+              </Link>
+            </div>
+
+          </div>
         </div>
       </div>
 
-      {/* Scroll hint */}
-      <div
-        data-e-scroll
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
-        style={{ opacity: 0 }}
-        aria-hidden="true"
-      >
-        <span className="font-cabinet text-[10px] tracking-widest2 uppercase text-nm-muted/40">Scroll</span>
-        <div className="w-px h-10 overflow-hidden relative">
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-nm-muted/40 to-transparent animate-[slideDown_2s_ease-in-out_infinite]" />
+      {/* ── Stats strip ─────────────────────────────────────────────────────── */}
+      <div className="relative z-10 border-t border-nm-border/40">
+        <div className="px-6 sm:px-10 lg:px-16 py-6 flex items-center justify-center lg:justify-start gap-8 sm:gap-14 lg:gap-20">
+          {STATS.map(({ num, label }) => (
+            <div key={label} data-stat className="flex flex-col gap-1" style={{ opacity: 0 }}>
+              <span className="font-satoshi font-black text-[clamp(1.35rem,2.8vw,2rem)] leading-none text-nm-light">
+                {num}
+              </span>
+              <span className="font-cabinet text-[10px] sm:text-[11px] text-nm-muted/60 tracking-wide uppercase whitespace-nowrap">
+                {label}
+              </span>
+            </div>
+          ))}
+
+          {/* Scroll indicator — desktop only */}
+          <div className="ml-auto hidden lg:flex items-center gap-3" aria-hidden="true">
+            <span className="font-cabinet text-[9px] tracking-widest2 uppercase text-nm-muted/30">Scroll</span>
+            <div className="w-10 h-px overflow-hidden relative">
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-nm-muted/30 to-transparent animate-[slideRight_2s_ease-in-out_infinite]" />
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -157,26 +209,35 @@ export default function Hero() {
 
 function HeroBg() {
   return (
-    <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
-      <svg className="absolute inset-0 w-full h-full opacity-[0.12]" xmlns="http://www.w3.org/2000/svg">
+    <div className="absolute inset-0 pointer-events-none select-none" aria-hidden="true">
+
+      {/* Dot grid — warm-tinted, left-weighted fade */}
+      <svg className="absolute inset-0 w-full h-full opacity-[0.06]" xmlns="http://www.w3.org/2000/svg">
         <defs>
-          <pattern id="dot-grid" x="0" y="0" width="32" height="32" patternUnits="userSpaceOnUse">
-            <circle cx="1" cy="1" r="1" fill="#4B6EF5" />
+          <pattern id="dot-grid-h" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+            <circle cx="1" cy="1" r="1" fill="#E8A44A" />
           </pattern>
-          <radialGradient id="dot-mask-g" cx="50%" cy="50%" r="55%">
+          <radialGradient id="dot-mask-h" cx="20%" cy="45%" r="55%">
             <stop offset="0%" stopColor="white" stopOpacity="1" />
             <stop offset="100%" stopColor="white" stopOpacity="0" />
           </radialGradient>
-          <mask id="dot-fade">
-            <rect width="100%" height="100%" fill="url(#dot-mask-g)" />
+          <mask id="dot-fade-h">
+            <rect width="100%" height="100%" fill="url(#dot-mask-h)" />
           </mask>
         </defs>
-        <rect width="100%" height="100%" fill="url(#dot-grid)" mask="url(#dot-fade)" />
+        <rect width="100%" height="100%" fill="url(#dot-grid-h)" mask="url(#dot-fade-h)" />
       </svg>
-      {/* Accent glow — hidden on mobile (blur-[130px] is expensive to composite) */}
-      <div className="hidden sm:block absolute -top-32 left-1/2 -translate-x-1/2 w-[60vw] h-[50vh] bg-nm-accent/[0.07] rounded-full blur-[130px]" />
-      {/* Warm glow — hidden on mobile */}
-      <div className="hidden sm:block absolute -bottom-20 left-1/2 -translate-x-1/2 w-[40vw] h-[30vh] bg-nm-warm/[0.04] rounded-full blur-[100px]" />
+
+      {/* Ghost "NM" letterform — top-right, Bespoke Stencil texture */}
+      <div
+        className="absolute right-[-2vw] top-1/2 -translate-y-[55%] font-bespoke leading-none text-nm-fg hidden lg:block"
+        style={{ fontSize: '28vw', opacity: 0.022, userSelect: 'none', pointerEvents: 'none' }}
+      >
+        NM
+      </div>
+
+      {/* Very faint warm glow — bottom-left */}
+      <div className="absolute bottom-0 left-[-5%] w-[45vw] h-[45vh] bg-nm-warm/[0.035] rounded-full blur-[120px]" />
     </div>
   )
 }

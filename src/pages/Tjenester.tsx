@@ -223,7 +223,7 @@ export default function Tjenester() {
             style={{ opacity: 0 }}
           >
             Tjenester som leverer{' '}
-            <span className="text-gradient">resultater</span>.
+            resultater.
           </h1>
 
           <p
@@ -320,7 +320,7 @@ export default function Tjenester() {
                 className="font-satoshi font-black text-3xl md:text-4xl text-nm-light leading-tight"
               >
                 Ofte stilte{' '}
-                <span className="text-gradient">spørsmål.</span>
+                spørsmål.
               </h2>
               <p className="font-cabinet text-nm-muted text-sm leading-relaxed mt-4 max-w-xs">
                 Svar på det folk lurer mest på. Ikke finner du svaret her?{' '}
