@@ -91,6 +91,34 @@ const RICH_SERVICES = [
       'Innsiktsbaserte anbefalinger',
     ],
   },
+  {
+    number: '07',
+    slug: 'nettsideutvikling',
+    category: 'Nettside',
+    title: 'Nettsideutvikling',
+    excerpt:
+      'En profesjonell nettside er ditt sterkeste salgsverktøy. Vi bygger skreddersydde, lynraske nettsider som ser unike ut og konverterer besøkende til kunder.',
+    bullets: [
+      'Skreddersydd design og utvikling',
+      'Mobilvennlig og lynrask',
+      'SEO-optimalisert struktur',
+      'WordPress eller headless CMS',
+    ],
+  },
+  {
+    number: '08',
+    slug: 'videoproduksjon',
+    category: 'Video',
+    title: 'Videoproduksjon',
+    excerpt:
+      'Video er det mest engasjerende formatet på nett. Vi produserer innhold som fanger oppmerksomheten til målgruppen din – fra promofilm til sosiale medier-klipp.',
+    bullets: [
+      'Promovideoer og bedriftspresentasjoner',
+      'Sosiale medier-videoer og reels',
+      'Animasjoner og motion graphics',
+      'Redigering og etterarbeid',
+    ],
+  },
 ]
 
 const FAQS = [
@@ -212,7 +240,7 @@ export default function Tjenester() {
         {/* ── INTRO STRIP ───────────────────────────────────────────────── */}
         <div className="py-12 border-t border-nm-border/50 border-b grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
           {[
-            { num: '6+', label: 'Spesialiserte tjenester' },
+            { num: '8+', label: 'Spesialiserte tjenester' },
             { num: '100%', label: 'Skreddersydd til din bedrift' },
             { num: '1', label: 'Uforpliktende første samtale' },
           ].map((item) => (

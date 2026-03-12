@@ -48,6 +48,20 @@ export const SERVICES = [
     excerpt:
       'En helhetlig digital strategi som binder alle kanaler sammen og sikrer at innsatsen peker mot samme mål.',
   },
+  {
+    number: '07',
+    title: 'Nettsideutvikling',
+    slug: 'nettsideutvikling',
+    excerpt:
+      'Skreddersydde nettsider som ser unike ut og konverterer besøkende til kunder – raske, mobilvennlige og klare for vekst.',
+  },
+  {
+    number: '08',
+    title: 'Videoproduksjon',
+    slug: 'videoproduksjon',
+    excerpt:
+      'Engasjerende videoinnhold som stopper scrollingen og forteller historien din – fra promofilm til sosiale medier-klipp.',
+  },
 ]
 
 export default function ServicesSection() {

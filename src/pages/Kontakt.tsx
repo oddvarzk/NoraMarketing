@@ -12,6 +12,8 @@ const SERVICES_OPTIONS = [
   'E-post Markedsføring',
   'Analyse & Rapportering',
   'Digital Strategi',
+  'Nettsideutvikling',
+  'Videoproduksjon',
   'Annet',
 ]
 

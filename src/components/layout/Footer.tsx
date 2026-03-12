@@ -39,6 +39,8 @@ const LINKS = {
     { label: 'E-post Markedsføring', href: '/tjenester/epost-markedsforing' },
     { label: 'Analyse & Rapportering', href: '/tjenester/analyse-rapportering' },
     { label: 'Digital Strategi', href: '/tjenester/digital-strategi' },
+    { label: 'Nettsideutvikling', href: '/tjenester/nettsideutvikling' },
+    { label: 'Videoproduksjon', href: '/tjenester/videoproduksjon' },
   ],
   Selskapet: [
     { label: 'Hvem vi er', href: '/hvem-vi-er' },
