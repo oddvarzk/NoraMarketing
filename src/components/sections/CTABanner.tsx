@@ -87,10 +87,10 @@ export default function CTABanner() {
         {/* Heading – clip reveal line by line */}
         <h2 className="font-satoshi font-black text-5xl md:text-7xl text-nm-light leading-[0.95] tracking-tight mb-10">
           <span data-cta-line className="block" style={{ clipPath: 'inset(0 100% 0.5em 0)' }}>
-            La oss gjøre deg
+            Ta en prat
           </span>
           <span data-cta-line className="block" style={{ clipPath: 'inset(0 100% 0.5em 0)' }}>
-            umulig å ignorere.
+            med oss.
           </span>
         </h2>
 

@@ -104,9 +104,9 @@ export default function Hero() {
 
           {/* Headline */}
           <h1 className="font-satoshi font-black text-[clamp(3.4rem,9vw,10rem)] leading-[0.88] tracking-tight text-center lg:text-left">
-            <span data-h-line className="block text-nm-light" style={{ opacity: 0 }}>Vi gjør deg</span>
-            <span data-h-line className="block text-nm-light" style={{ opacity: 0 }}>umulig å</span>
-            <span data-h-line className="block text-nm-light" style={{ opacity: 0 }}>ignorere.</span>
+            <span data-h-line className="block text-nm-light" style={{ opacity: 0 }}>Markedsføring</span>
+            <span data-h-line className="block text-nm-light" style={{ opacity: 0 }}>som faktisk</span>
+            <span data-h-line className="block text-nm-light" style={{ opacity: 0 }}>fungerer.</span>
           </h1>
 
           {/* Right column */}
@@ -194,13 +194,6 @@ export default function Hero() {
             </div>
           ))}
 
-          {/* Scroll indicator — desktop only */}
-          <div className="ml-auto hidden lg:flex items-center gap-3" aria-hidden="true">
-            <span className="font-cabinet text-[9px] tracking-widest2 uppercase text-nm-muted/30">Scroll</span>
-            <div className="w-10 h-px overflow-hidden relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-nm-muted/30 to-transparent animate-[slideRight_2s_ease-in-out_infinite]" />
-            </div>
-          </div>
         </div>
       </div>
     </section>
@@ -227,14 +220,6 @@ function HeroBg() {
         </defs>
         <rect width="100%" height="100%" fill="url(#dot-grid-h)" mask="url(#dot-fade-h)" />
       </svg>
-
-      {/* Ghost "NM" letterform — top-right, Bespoke Stencil texture */}
-      <div
-        className="absolute right-[-2vw] top-1/2 -translate-y-[55%] font-bespoke leading-none text-nm-fg hidden lg:block"
-        style={{ fontSize: '28vw', opacity: 0.022, userSelect: 'none', pointerEvents: 'none' }}
-      >
-        NM
-      </div>
 
       {/* Very faint warm glow — bottom-left */}
       <div className="absolute bottom-0 left-[-5%] w-[45vw] h-[45vh] bg-nm-warm/[0.035] rounded-full blur-[120px]" />
