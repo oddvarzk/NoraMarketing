@@ -26,17 +26,13 @@ export default function Hero() {
   useEffect(() => {
     const ctx = gsap.context(() => {
       gsap.set('[data-h-line]', { opacity: 0, y: 72 })
-      gsap.set('[data-e-tag]',  { opacity: 0, x: -16 })
-      gsap.set('[data-e-line]', { scaleX: 0, transformOrigin: 'left' })
       gsap.set('[data-e-sub]',  { opacity: 0, y: 24 })
       gsap.set('[data-stat]',   { opacity: 0, y: 16 })
 
       const tl = gsap.timeline({ defaults: { ease: 'power4.out' } })
-      tl.to('[data-e-line]',  { scaleX: 1, duration: 0.7 }, 0)
-        .to('[data-e-tag]',   { opacity: 1, x: 0, duration: 0.6 }, 0.2)
-        .to('[data-h-line]',  { opacity: 1, y: 0, duration: 1.3, stagger: 0.1 }, 0.1)
-        .to('[data-e-sub]',   { opacity: 1, y: 0, duration: 0.9, stagger: 0.15 }, 0.6)
-        .to('[data-stat]',    { opacity: 1, y: 0, duration: 0.7, stagger: 0.07 }, 1.1)
+      tl.to('[data-h-line]',  { opacity: 1, y: 0, duration: 1.3, stagger: 0.1 }, 0)
+        .to('[data-e-sub]',   { opacity: 1, y: 0, duration: 0.9, stagger: 0.15 }, 0.5)
+        .to('[data-stat]',    { opacity: 1, y: 0, duration: 0.7, stagger: 0.07 }, 1.0)
     }, sectionRef)
 
     return () => ctx.revert()
@@ -73,21 +69,8 @@ export default function Hero() {
       {/* ── Main content ─────────────────────────────────────────────── */}
       <div className="relative z-10 flex-1 flex flex-col justify-center px-6 sm:px-12 lg:px-20 pt-32 pb-12">
 
-        {/* Eyebrow */}
-        <div className="flex items-center gap-3 mb-14">
-          <span
-            data-e-line
-            className="block w-10 h-px bg-nm-accent/50"
-            style={{ transform: 'scaleX(0)', transformOrigin: 'left' }}
-          />
-          <span
-            data-e-tag
-            className="font-bespoke text-[10px] tracking-widest2 uppercase text-nm-accent"
-            style={{ opacity: 0 }}
-          >
-            Markedsføringsbyrå · Oslo, Norge
-          </span>
-        </div>
+        {/* Spacer replaces eyebrow */}
+        <div className="mb-14" />
 
         {/* Headline */}
         <h1 className="font-satoshi font-black leading-[0.86] tracking-tight mb-14 max-w-5xl">
@@ -150,7 +133,7 @@ export default function Hero() {
 
               <Link
                 to="/tjenester"
-                className="font-cabinet text-[12px] text-nm-muted/50 hover:text-nm-muted tracking-wide transition-colors duration-200 underline underline-offset-4 decoration-nm-border/40"
+                className="font-cabinet text-[13px] text-nm-fg/70 hover:text-nm-fg tracking-wide transition-colors duration-200 underline underline-offset-4 decoration-nm-fg/30"
               >
                 Se alle tjenester
               </Link>
@@ -159,13 +142,13 @@ export default function Hero() {
 
           {/* Cycling specialty — right, subtle */}
           <div data-e-sub className="flex flex-col items-start lg:items-end gap-1.5 lg:pb-1" style={{ opacity: 0 }}>
-            <span className="font-cabinet text-[9px] text-nm-muted/40 tracking-widest2 uppercase">
+            <span className="font-cabinet text-[10px] text-nm-fg/50 tracking-widest2 uppercase">
               Spesialisert i
             </span>
             <div className="h-6 flex items-center overflow-hidden" style={{ clipPath: 'inset(0 -9999px)' }}>
               <span
                 ref={cycleRef}
-                className="font-bespoke text-[13px] tracking-widest uppercase text-nm-fg/40 block whitespace-nowrap"
+                className="font-bespoke text-[14px] tracking-widest uppercase text-nm-fg/80 block whitespace-nowrap"
               >
                 {CYCLING_WORDS[0]}
               </span>
