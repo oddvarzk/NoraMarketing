@@ -104,7 +104,7 @@ export default function Hero() {
             style={{
               fontSize: 'clamp(3.5rem,9.5vw,10.5rem)',
               opacity: 0,
-              WebkitTextStroke: '1.5px #E8E8EE',
+              WebkitTextStroke: '2.5px rgba(232,232,238,0.65)',
               color: 'transparent',
             }}
           >
@@ -197,36 +197,65 @@ function HeroBg() {
   return (
     <div className="absolute inset-0 pointer-events-none select-none" aria-hidden="true">
 
-      {/* Fine grid */}
-      <svg className="absolute inset-0 w-full h-full opacity-[0.022]" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-        <defs>
-          <pattern id="grid-h" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
-            <path d="M 100 0 L 0 0 0 100" fill="none" stroke="#E8E8EE" strokeWidth="0.5" />
-          </pattern>
-          <radialGradient id="grid-fade" cx="25%" cy="40%" r="65%">
-            <stop offset="0%" stopColor="white" stopOpacity="1" />
-            <stop offset="100%" stopColor="white" stopOpacity="0" />
-          </radialGradient>
-          <mask id="grid-mask">
-            <rect width="100%" height="100%" fill="url(#grid-fade)" />
-          </mask>
-        </defs>
-        <rect width="100%" height="100%" fill="url(#grid-h)" mask="url(#grid-mask)" />
-      </svg>
+      {/* Video */}
+      <video
+        className="absolute inset-0 w-full h-full object-cover"
+        src="/noraMarketing.mp4"
+        autoPlay
+        muted
+        loop
+        playsInline
+      />
 
-      {/* Stencil watermark — very faint */}
+      {/* Base dark tint */}
+      <div className="absolute inset-0 bg-nm-dark/70" />
+
+      {/* Left-side darkening — protects text area */}
       <div
-        className="absolute bottom-8 left-0 font-bespoke font-bold leading-none whitespace-nowrap"
+        className="absolute inset-0"
         style={{
-          fontSize: 'clamp(100px, 18vw, 240px)',
-          color: 'transparent',
-          WebkitTextStroke: '1px rgba(232,164,74,0.04)',
-          letterSpacing: '-0.02em',
-          transform: 'translateX(-1%)',
+          background: 'linear-gradient(to right, rgba(13,13,15,0.6) 0%, transparent 55%)',
         }}
-      >
-        NORA
-      </div>
+      />
+
+      {/* Right-side darkening — tames the bright monitors */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background: 'linear-gradient(to left, rgba(13,13,15,0.55) 0%, transparent 60%)',
+        }}
+      />
+
+      {/* Radial vignette — edges all around */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            'radial-gradient(ellipse 75% 75% at 38% 50%, transparent 35%, rgba(13,13,15,0.9) 100%)',
+        }}
+      />
+
+      {/* Bottom fade — bleeds seamlessly into the next section */}
+      <div
+        className="absolute bottom-0 left-0 right-0 h-48"
+        style={{
+          background: 'linear-gradient(to bottom, transparent, #0D0D0F)',
+        }}
+      />
+
+      {/* Top fade — softens the navbar edge */}
+      <div
+        className="absolute top-0 left-0 right-0 h-32"
+        style={{
+          background: 'linear-gradient(to top, transparent, rgba(13,13,15,0.6))',
+        }}
+      />
+
+      {/* Warm accent glow — bottom left, ties into the palette */}
+      <div className="absolute bottom-0 left-[-5%] w-[40vw] h-[35vh] bg-nm-warm/[0.07] rounded-full blur-[120px]" />
+
+      {/* Accent glow — top right */}
+      <div className="absolute top-[-10%] right-[-5%] w-[35vw] h-[45vh] bg-nm-accent/[0.06] rounded-full blur-[130px]" />
 
       {/* Warm glow — bottom left */}
       <div className="absolute bottom-0 left-[-10%] w-[45vw] h-[40vh] bg-nm-warm/[0.025] rounded-full blur-[130px]" />
