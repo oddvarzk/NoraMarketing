@@ -5,11 +5,12 @@ import MagneticButton from '../ui/MagneticButton'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const MARQUEE_WORDS = [
-  'Vekst', '—', 'Strategi', '—', 'Resultater', '—',
-  'Merkevare', '—', 'Innhold', '—', 'Analyse', '—',
-  'Vekst', '—', 'Strategi', '—', 'Resultater', '—',
-  'Merkevare', '—', 'Innhold', '—', 'Analyse', '—',
+const TICKER_ITEMS = [
+  'Vekst', '·', 'Strategi', '·', 'Resultater', '·',
+  'Merkevare', '·', 'Innhold', '·', 'Analyse', '·',
+  'ROI', '·', 'Konvertering', '·', 'Suksess', '·',
+  'Vekst', '·', 'Strategi', '·', 'Resultater', '·',
+  'Merkevare', '·', 'Innhold', '·', 'Analyse', '·',
 ]
 
 export default function CTABanner() {
@@ -17,14 +18,22 @@ export default function CTABanner() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Clip-path reveal on heading lines
+      gsap.fromTo(
+        '[data-cta-eyebrow]',
+        { opacity: 0, x: -20 },
+        {
+          opacity: 1, x: 0, duration: 0.7, ease: 'power3.out',
+          scrollTrigger: { trigger: '[data-cta-eyebrow]', start: 'top 85%' },
+        },
+      )
+
       gsap.fromTo(
         '[data-cta-line]',
         { clipPath: 'inset(0 100% 0.5em 0)' },
         {
           clipPath: 'inset(0 0% -0.5em 0)',
-          duration: 1,
-          stagger: 0.12,
+          duration: 1.1,
+          stagger: 0.13,
           ease: 'power3.inOut',
           scrollTrigger: { trigger: '[data-cta-line]', start: 'top 80%' },
         },
@@ -32,19 +41,19 @@ export default function CTABanner() {
 
       gsap.fromTo(
         '[data-cta-sub]',
-        { opacity: 0, y: 20 },
+        { opacity: 0, y: 18 },
         {
           opacity: 1, y: 0, duration: 0.8, ease: 'power3.out',
-          scrollTrigger: { trigger: '[data-cta-sub]', start: 'top 82%' },
+          scrollTrigger: { trigger: '[data-cta-sub]', start: 'top 84%' },
         },
       )
 
       gsap.fromTo(
         '[data-cta-btn]',
-        { opacity: 0, y: 16 },
+        { opacity: 0, y: 14 },
         {
-          opacity: 1, y: 0, duration: 0.7, stagger: 0.1, ease: 'power3.out',
-          scrollTrigger: { trigger: '[data-cta-btn]', start: 'top 85%' },
+          opacity: 1, y: 0, duration: 0.65, stagger: 0.1, ease: 'power3.out',
+          scrollTrigger: { trigger: '[data-cta-btn]', start: 'top 88%' },
         },
       )
     }, sectionRef)
@@ -55,66 +64,123 @@ export default function CTABanner() {
   return (
     <section
       ref={sectionRef}
-      className="relative py-32 overflow-hidden bg-nm-surface/40 border-t border-nm-border/40"
+      className="relative overflow-hidden bg-nm-mid border-t border-nm-border/40"
       aria-label="Ta kontakt"
     >
-      {/* Scrolling background marquee */}
+      {/* Scrolling ticker — top */}
       <div
-        className="absolute inset-0 flex items-center overflow-hidden pointer-events-none select-none"
+        className="border-b border-nm-border/30 py-3 overflow-hidden"
         aria-hidden="true"
       >
-        <div className="marquee-track-slow opacity-[0.03]">
-          {MARQUEE_WORDS.map((w, i) => (
-            <span key={i} className="font-bespoke font-bold text-[8vw] text-nm-fg mx-6 whitespace-nowrap">
+        <div className="marquee-track-slow opacity-[0.18]">
+          {TICKER_ITEMS.map((w, i) => (
+            <span key={i} className="font-bespoke text-xs tracking-widest uppercase text-nm-fg mx-5 whitespace-nowrap">
               {w}
             </span>
           ))}
         </div>
       </div>
 
-      {/* Accent glow — hidden on mobile (blur-3xl is expensive to composite) */}
-      <div className="hidden sm:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vw] h-64 bg-nm-accent/5 rounded-full blur-3xl pointer-events-none" />
+      {/* Main content */}
+      <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 py-28 lg:py-36">
 
-      <div className="relative z-10 max-w-5xl mx-auto px-6">
-        {/* Eyebrow */}
-        <div className="flex items-center gap-3 mb-10">
-          <span className="w-8 h-px bg-nm-warm" />
-          <span className="font-bespoke font-bold text-xs tracking-widest2 uppercase text-nm-warm">
-            La oss snakke
-          </span>
-        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-16 lg:gap-12 items-end">
 
-        {/* Heading – clip reveal line by line */}
-        <h2 className="font-satoshi font-black text-5xl md:text-7xl text-nm-light leading-[0.95] tracking-tight mb-10">
-          <span data-cta-line className="block" style={{ clipPath: 'inset(0 100% 0.5em 0)' }}>
-            Ta en prat
-          </span>
-          <span data-cta-line className="block" style={{ clipPath: 'inset(0 100% 0.5em 0)' }}>
-            med oss.
-          </span>
-        </h2>
+          {/* Left: Heading */}
+          <div>
+            {/* Eyebrow */}
+            <div
+              data-cta-eyebrow
+              className="flex items-center gap-3 mb-10"
+              style={{ opacity: 0 }}
+            >
+              <span className="w-8 h-px bg-nm-warm" />
+              <span className="font-bespoke text-[10px] tracking-widest2 uppercase text-nm-warm">
+                La oss snakke
+              </span>
+            </div>
 
-        <p
-          data-cta-sub
-          className="font-cabinet text-nm-muted text-xl leading-relaxed max-w-lg mb-12"
-          style={{ opacity: 0 }}
-        >
-          La oss ta en uforpliktende prat om hva Nora Marketing kan gjøre for din bedrift.
-        </p>
-
-        <div className="flex flex-wrap gap-5">
-          <div data-cta-btn style={{ opacity: 0 }}>
-            <MagneticButton href="/kontakt" variant="primary" size="lg">
-              Ta kontakt i dag
-            </MagneticButton>
+            {/* Headline — clip reveal */}
+            <h2 className="font-satoshi font-black leading-[0.88] tracking-tight" style={{ fontSize: 'clamp(3rem,8vw,7.5rem)' }}>
+              <span
+                data-cta-line
+                className="block text-nm-light"
+                style={{ clipPath: 'inset(0 100% 0.5em 0)' }}
+              >
+                Ta en prat
+              </span>
+              <span
+                data-cta-line
+                className="block"
+                style={{ clipPath: 'inset(0 100% 0.5em 0)', WebkitTextStroke: '1.5px #F4F4F8', color: 'transparent' }}
+              >
+                med oss.
+              </span>
+            </h2>
           </div>
-          <div data-cta-btn style={{ opacity: 0 }}>
-            <MagneticButton href="/tjenester" variant="outline" size="lg">
-              Se alle tjenester
-            </MagneticButton>
+
+          {/* Right: Sub + CTAs */}
+          <div className="flex flex-col gap-8">
+            <p
+              data-cta-sub
+              className="font-cabinet text-nm-muted text-lg leading-relaxed"
+              style={{ opacity: 0 }}
+            >
+              La oss ta en uforpliktende prat om hva Nora Marketing kan gjøre for din bedrift — ingen forpliktelser, bare muligheter.
+            </p>
+
+            {/* Contact details */}
+            <div
+              data-cta-sub
+              className="flex flex-col gap-2 border-l-2 border-nm-accent/40 pl-4"
+              style={{ opacity: 0 }}
+            >
+              <a
+                href="tel:+4741160640"
+                className="font-satoshi font-medium text-nm-fg text-sm hover:text-nm-accent transition-colors duration-200"
+              >
+                +47 41 16 06 40
+              </a>
+              <a
+                href="mailto:hei@noramarketing.no"
+                className="font-cabinet text-nm-muted text-sm hover:text-nm-fg transition-colors duration-200"
+              >
+                hei@noramarketing.no
+              </a>
+            </div>
+
+            <div className="flex flex-wrap gap-4">
+              <div data-cta-btn style={{ opacity: 0 }}>
+                <MagneticButton href="/kontakt" variant="primary" size="lg">
+                  Ta kontakt i dag
+                </MagneticButton>
+              </div>
+              <div data-cta-btn style={{ opacity: 0 }}>
+                <MagneticButton href="/tjenester" variant="outline" size="lg">
+                  Se tjenester
+                </MagneticButton>
+              </div>
+            </div>
           </div>
         </div>
       </div>
+
+      {/* Bottom ticker — reversed */}
+      <div
+        className="border-t border-nm-border/30 py-3 overflow-hidden"
+        aria-hidden="true"
+      >
+        <div className="marquee-track-slow-reverse opacity-[0.12]">
+          {[...TICKER_ITEMS].reverse().map((w, i) => (
+            <span key={i} className="font-bespoke text-xs tracking-widest uppercase text-nm-warm mx-5 whitespace-nowrap">
+              {w}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* Subtle corner accent */}
+      <div className="absolute bottom-0 right-0 w-[40vw] h-[40vh] bg-nm-accent/[0.03] rounded-full blur-[120px] pointer-events-none" aria-hidden="true" />
     </section>
   )
 }

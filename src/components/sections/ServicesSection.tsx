@@ -12,6 +12,7 @@ export const SERVICES = [
     slug: 'innholdsmarkedsforing',
     excerpt:
       'Strategisk innhold som bygger merkevare, tiltrekker kunder og konverterer besøkende til leads.',
+    category: 'Innhold',
   },
   {
     number: '02',
@@ -19,6 +20,7 @@ export const SERVICES = [
     slug: 'sosiale-medier',
     excerpt:
       'Målrettet tilstedeværelse på riktige plattformer – fra strategi og innholdsproduksjon til analyse.',
+    category: 'Kanaler',
   },
   {
     number: '03',
@@ -26,6 +28,7 @@ export const SERVICES = [
     slug: 'seo-sem',
     excerpt:
       'Organisk synlighet og betalt annonsering som gir målbar trafikk og lavere kostnad per konvertering.',
+    category: 'Søk',
   },
   {
     number: '04',
@@ -33,6 +36,7 @@ export const SERVICES = [
     slug: 'epost-markedsforing',
     excerpt:
       'Automatiserte sekvenser og nyhetsbrev som pleier relasjoner og driver gjenkjøp.',
+    category: 'Automatisering',
   },
   {
     number: '05',
@@ -40,6 +44,7 @@ export const SERVICES = [
     slug: 'analyse-rapportering',
     excerpt:
       'Datadrevet innsikt med klare dashbords – slik at du alltid vet hva som fungerer.',
+    category: 'Data',
   },
   {
     number: '06',
@@ -47,6 +52,7 @@ export const SERVICES = [
     slug: 'digital-strategi',
     excerpt:
       'En helhetlig digital strategi som binder alle kanaler sammen og sikrer at innsatsen peker mot samme mål.',
+    category: 'Strategi',
   },
   {
     number: '07',
@@ -54,6 +60,7 @@ export const SERVICES = [
     slug: 'nettsideutvikling',
     excerpt:
       'Skreddersydde nettsider som ser unike ut og konverterer besøkende til kunder – raske, mobilvennlige og klare for vekst.',
+    category: 'Utvikling',
   },
   {
     number: '08',
@@ -61,6 +68,7 @@ export const SERVICES = [
     slug: 'videoproduksjon',
     excerpt:
       'Engasjerende videoinnhold som stopper scrollingen og forteller historien din – fra promofilm til sosiale medier-klipp.',
+    category: 'Kreativ',
   },
 ]
 
@@ -70,32 +78,21 @@ export default function ServicesSection() {
   useEffect(() => {
     const ctx = gsap.context(() => {
       gsap.fromTo(
-        '[data-services-label]',
-        { clipPath: 'inset(0 100% 0 0)' },
+        '[data-services-header]',
+        { opacity: 0, y: 24 },
         {
-          clipPath: 'inset(0 0% 0 0)',
-          duration: 0.9,
-          ease: 'power3.inOut',
-          scrollTrigger: { trigger: '[data-services-label]', start: 'top 88%' },
+          opacity: 1, y: 0, duration: 0.8, stagger: 0.1, ease: 'power3.out',
+          scrollTrigger: { trigger: '[data-services-header]', start: 'top 88%' },
         },
       )
 
-      const rows = sectionRef.current?.querySelectorAll<HTMLElement>('[data-service-row]')
-      rows?.forEach((row, i) => {
+      gsap.utils.toArray<HTMLElement>('[data-service-row]').forEach((row, i) => {
         gsap.fromTo(
           row,
-          { opacity: 0, x: -40 },
+          { opacity: 0, x: -32 },
           {
-            opacity: 1,
-            x: 0,
-            duration: 0.7,
-            delay: i * 0.05,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: row,
-              start: 'top 87%',
-              toggleActions: 'play none none none',
-            },
+            opacity: 1, x: 0, duration: 0.65, delay: i * 0.04, ease: 'power3.out',
+            scrollTrigger: { trigger: row, start: 'top 88%', toggleActions: 'play none none none' },
           },
         )
       })
@@ -108,25 +105,64 @@ export default function ServicesSection() {
     <section
       ref={sectionRef}
       id="tjenester"
-      className="max-w-7xl mx-auto px-6 py-24"
+      className="py-32 px-6 sm:px-12 lg:px-20 border-t border-nm-border/25"
       aria-labelledby="services-heading"
     >
-      <div className="flex items-center gap-4 mb-12">
-        <span className="w-8 h-px bg-nm-accent" />
-        <h2
-          id="services-heading"
-          data-services-label
-          className="font-bespoke font-bold text-xs tracking-widest2 uppercase text-nm-fg"
-        >
-          Tjenester
-        </h2>
+      <div className="max-w-7xl mx-auto">
+
+        {/* Header */}
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] items-end gap-8 mb-14">
+          <div>
+            <div className="flex items-center gap-3 mb-4">
+              <span className="w-8 h-px bg-nm-accent" data-services-header style={{ opacity: 0 }} />
+              <span
+                className="font-bespoke text-[10px] tracking-widest2 uppercase text-nm-accent"
+                data-services-header
+                id="services-heading"
+                style={{ opacity: 0 }}
+              >
+                Tjenester
+              </span>
+            </div>
+            <h2
+              data-services-header
+              className="font-satoshi font-black text-[clamp(2rem,5vw,4rem)] text-nm-light leading-[0.9] tracking-tight"
+              style={{ opacity: 0 }}
+            >
+              Alt du trenger.<br />
+              <span className="text-nm-muted font-black">Ingenting mer.</span>
+            </h2>
+          </div>
+
+          <p
+            data-services-header
+            className="font-cabinet text-nm-muted text-sm leading-relaxed max-w-xs lg:text-right"
+            style={{ opacity: 0 }}
+          >
+            Skreddersydde løsninger. Ingen standardpakker – kun det som faktisk driver vekst for din bedrift.
+          </p>
+        </div>
+
+        {/* Service list */}
+        <div className="border-t border-nm-border/50">
+          {SERVICES.map((service) => (
+            <ServiceRow key={service.slug} service={service} />
+          ))}
+        </div>
+
+        {/* Footer link */}
+        <div className="mt-10 flex justify-end" data-services-header style={{ opacity: 0 }}>
+          <Link
+            to="/tjenester"
+            className="inline-flex items-center gap-2 group font-cabinet text-sm text-nm-muted hover:text-nm-fg transition-colors duration-200"
+          >
+            <span>Alle tjenester</span>
+            <svg className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform duration-200" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M1 6h10M7 2l4 4-4 4" />
+            </svg>
+          </Link>
+        </div>
       </div>
-
-      <div className="border-t border-nm-border" />
-
-      {SERVICES.map((service) => (
-        <ServiceRow key={service.slug} service={service} />
-      ))}
     </section>
   )
 }
@@ -137,23 +173,17 @@ function ServiceRow({ service }: { service: (typeof SERVICES)[number] }) {
   const handleMouseEnter = () => {
     const row = rowRef.current
     if (!row) return
-    gsap.to(row.querySelector('[data-bg-num]'), {
-      opacity: 0.07, x: 0, duration: 0.4, ease: 'power2.out',
-    })
-    gsap.to(row.querySelector('[data-arrow]'), {
-      x: 6, duration: 0.3, ease: 'power2.out',
-    })
+    gsap.to(row.querySelector('[data-row-arrow]'), { x: 5, duration: 0.25, ease: 'power2.out' })
+    gsap.to(row.querySelector('[data-row-excerpt]'), { opacity: 1, y: 0, duration: 0.3, ease: 'power2.out' })
+    gsap.to(row.querySelector('[data-row-num]'), { color: '#4B6EF5', duration: 0.2 })
   }
 
   const handleMouseLeave = () => {
     const row = rowRef.current
     if (!row) return
-    gsap.to(row.querySelector('[data-bg-num]'), {
-      opacity: 0, x: -10, duration: 0.4, ease: 'power2.out',
-    })
-    gsap.to(row.querySelector('[data-arrow]'), {
-      x: 0, duration: 0.3, ease: 'power2.out',
-    })
+    gsap.to(row.querySelector('[data-row-arrow]'), { x: 0, duration: 0.25, ease: 'power2.out' })
+    gsap.to(row.querySelector('[data-row-excerpt]'), { opacity: 0, y: 6, duration: 0.25, ease: 'power2.in' })
+    gsap.to(row.querySelector('[data-row-num]'), { color: '#6B6B80', duration: 0.2 })
   }
 
   return (
@@ -163,41 +193,42 @@ function ServiceRow({ service }: { service: (typeof SERVICES)[number] }) {
       data-service-row
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className="group relative flex items-center justify-between py-7 border-b border-nm-border/60 hover:border-nm-accent/30 transition-colors duration-300 overflow-hidden"
+      className="group relative flex items-center gap-4 py-6 border-b border-nm-border/40 hover:border-nm-border transition-colors duration-300"
+      style={{ opacity: 0 }}
     >
-      {/* Decorative bg number */}
+      {/* Number */}
       <span
-        data-bg-num
-        className="absolute right-20 top-1/2 font-bespoke font-bold text-8xl leading-none text-nm-fg pointer-events-none select-none opacity-0"
-        style={{ transform: 'translateY(-50%) translateX(-10px)' }}
-        aria-hidden="true"
+        data-row-num
+        className="font-bespoke text-[10px] tracking-widest text-nm-muted/50 w-8 flex-shrink-0 transition-colors duration-200"
       >
         {service.number}
       </span>
 
-      <div className="flex items-center gap-6 md:gap-10">
-        <span data-arrow className="text-nm-muted group-hover:text-nm-accent transition-colors duration-200">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-            <path d="M4 10h12M11 5l5 5-5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </span>
-        <span className="font-satoshi font-semibold text-xl md:text-2xl text-nm-fg group-hover:text-white transition-colors duration-200">
+      {/* Title + excerpt (appears on hover) */}
+      <div className="flex-1 min-w-0">
+        <span className="font-satoshi font-semibold text-lg md:text-xl text-nm-fg group-hover:text-white transition-colors duration-200 block leading-snug">
           {service.title}
+        </span>
+        <span
+          data-row-excerpt
+          className="font-cabinet text-nm-muted text-[12px] leading-relaxed block mt-1"
+          style={{ opacity: 0, transform: 'translateY(6px)' }}
+        >
+          {service.excerpt}
         </span>
       </div>
 
-      <div className="flex items-center gap-4 text-nm-muted">
-        <span className="font-satoshi text-sm tabular-nums tracking-widest">{service.number}</span>
-        <div className="hidden md:flex items-end gap-0.5 h-5">
-          {[3, 5, 4, 6, 3].map((h, i) => (
-            <span
-              key={i}
-              className="w-0.5 bg-nm-border group-hover:bg-nm-accent/50 transition-all duration-300 rounded-full"
-              style={{ height: h * 3, transitionDelay: `${i * 30}ms` }}
-            />
-          ))}
-        </div>
-      </div>
+      {/* Category pill */}
+      <span className="hidden md:inline-flex font-cabinet text-[10px] text-nm-muted/50 border border-nm-border/50 px-3 py-1 rounded-full tracking-wide flex-shrink-0 group-hover:border-nm-accent/30 group-hover:text-nm-accent/70 transition-all duration-200">
+        {service.category}
+      </span>
+
+      {/* Arrow */}
+      <span data-row-arrow className="text-nm-muted/40 group-hover:text-nm-accent transition-colors duration-200 flex-shrink-0">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </span>
     </Link>
   )
 }

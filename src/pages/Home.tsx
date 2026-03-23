@@ -1,6 +1,7 @@
 import SEO from '../components/ui/SEO'
 import Hero from '../components/sections/Hero'
 import LogoBanner from '../components/sections/LogoBanner'
+import WorkTeaser from '../components/sections/WorkTeaser'
 import ServicesSection from '../components/sections/ServicesSection'
 import ProcessSection from '../components/sections/ProcessSection'
 import AboutTeaser from '../components/sections/AboutTeaser'
@@ -16,6 +17,7 @@ export default function Home() {
 
       <Hero />
       <LogoBanner heading="Tillit fra utallige byråer **i hele Norden**" />
+      <WorkTeaser />
       <ServicesSection />
       <ProcessSection />
       <AboutTeaser />

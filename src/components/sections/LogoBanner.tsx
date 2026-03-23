@@ -29,7 +29,7 @@ export default function LogoBanner({ heading = 'Tillit fra utallige byråer **i 
   const doubled = [...PARTNERS, ...PARTNERS]
 
   return (
-    <div className="py-16 border-y border-nm-border/40 overflow-hidden">
+    <div className="py-14 border-y border-nm-border/25 overflow-hidden">
       <p className="text-center font-cabinet text-nm-muted text-sm mb-10 px-6">
         {heading.split('**').map((part, i) =>
           i % 2 === 1 ? (

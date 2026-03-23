@@ -77,9 +77,21 @@
     will-change: transform;
   }
 
+  .marquee-track-slow-reverse {
+    display: flex;
+    width: max-content;
+    animation: marquee-reverse 60s linear infinite;
+    will-change: transform;
+  }
+
   @keyframes marquee {
     from { transform: translateX(0); }
     to   { transform: translateX(-50%); }
+  }
+
+  @keyframes marquee-reverse {
+    from { transform: translateX(-50%); }
+    to   { transform: translateX(0); }
   }
 
   @keyframes slideDown {
@@ -125,7 +137,8 @@
   @media (prefers-reduced-motion: reduce) {
     .grain::before,
     .marquee-track,
-    .marquee-track-slow {
+    .marquee-track-slow,
+    .marquee-track-slow-reverse {
       animation: none;
     }
     *, *::before, *::after {

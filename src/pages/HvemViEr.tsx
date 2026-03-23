@@ -74,21 +74,16 @@ export default function HvemViEr() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // ── Hero entrance ───────────────────────────────────────────────────
-      gsap.fromTo(
-        '[data-hero-el]',
-        { opacity: 0, y: 40 },
-        { opacity: 1, y: 0, duration: 0.9, stagger: 0.15, ease: 'power3.out' },
-      )
+      gsap.set('[data-hero-el]', { opacity: 0, y: 48 })
+      gsap.timeline({ defaults: { ease: 'power4.out' } })
+        .to('[data-hero-el]', { opacity: 1, y: 0, duration: 1, stagger: 0.13 }, 0)
 
-      // ── History: section label + paragraphs ─────────────────────────────
       gsap.fromTo(
         '[data-hist-label]',
         { clipPath: 'inset(0 100% 0 0)' },
         {
           clipPath: 'inset(0 0% 0 0)',
-          duration: 0.9,
-          ease: 'power3.inOut',
+          duration: 0.9, ease: 'power3.inOut',
           scrollTrigger: { trigger: '[data-hist-label]', start: 'top 88%' },
         },
       )
@@ -96,46 +91,42 @@ export default function HvemViEr() {
       gsap.utils.toArray<HTMLElement>('[data-hist-para]').forEach((el, i) => {
         gsap.fromTo(
           el,
-          { opacity: 0, y: 28 },
+          { opacity: 0, y: 24 },
           {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-            ease: 'power3.out',
+            opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', delay: i * 0.07,
             scrollTrigger: { trigger: el, start: 'top 88%' },
-            delay: i * 0.08,
           },
         )
       })
 
-      // ── Values cards ────────────────────────────────────────────────────
       gsap.fromTo(
         '[data-value-card]',
-        { opacity: 0, y: 36 },
+        { opacity: 0, y: 30 },
         {
-          opacity: 1,
-          y: 0,
-          duration: 0.75,
-          stagger: 0.1,
-          ease: 'power3.out',
-          scrollTrigger: { trigger: '[data-value-card]', start: 'top 86%' },
+          opacity: 1, y: 0, duration: 0.7, stagger: 0.09, ease: 'power3.out',
+          scrollTrigger: { trigger: '[data-value-card]', start: 'top 87%' },
         },
       )
 
-      // ── Approach rows ───────────────────────────────────────────────────
       gsap.utils.toArray<HTMLElement>('[data-approach-row]').forEach((el) => {
         gsap.fromTo(
           el,
-          { opacity: 0, x: -24 },
+          { opacity: 0, x: -20 },
           {
-            opacity: 1,
-            x: 0,
-            duration: 0.7,
-            ease: 'power3.out',
-            scrollTrigger: { trigger: el, start: 'top 88%' },
+            opacity: 1, x: 0, duration: 0.65, ease: 'power3.out',
+            scrollTrigger: { trigger: el, start: 'top 89%' },
           },
         )
       })
+
+      gsap.fromTo(
+        '[data-mission-el]',
+        { opacity: 0, y: 28 },
+        {
+          opacity: 1, y: 0, duration: 0.8, stagger: 0.1, ease: 'power3.out',
+          scrollTrigger: { trigger: '[data-mission-el]', start: 'top 85%' },
+        },
+      )
     }, pageRef)
 
     return () => ctx.revert()
@@ -150,205 +141,266 @@ export default function HvemViEr() {
       />
 
       <div ref={pageRef}>
-        <div className="max-w-7xl mx-auto px-6">
 
-          {/* ── HERO ──────────────────────────────────────────────────────── */}
-          <div className="pt-40 pb-24">
-            <div data-hero-el className="flex items-center gap-4 mb-6" style={{ opacity: 0 }}>
+        {/* ── HERO ──────────────────────────────────────────────────────── */}
+        <div className="relative pt-36 pb-24 px-6 sm:px-10 lg:px-16 border-b border-nm-border/30 overflow-hidden">
+          {/* Background watermark */}
+          <div
+            className="absolute top-1/2 right-0 font-bespoke font-bold leading-none pointer-events-none select-none"
+            style={{
+              fontSize: 'clamp(120px, 20vw, 300px)',
+              color: 'transparent',
+              WebkitTextStroke: '1px rgba(232,164,74,0.05)',
+              transform: 'translate(10%, -50%)',
+              letterSpacing: '-0.02em',
+            }}
+            aria-hidden="true"
+          >
+            NM
+          </div>
+
+          <div className="max-w-7xl mx-auto">
+            <div data-hero-el className="flex items-center gap-3 mb-8" style={{ opacity: 0 }}>
               <span className="w-8 h-px bg-nm-accent" />
-              <span className="font-bespoke font-bold text-xs tracking-widest2 uppercase text-nm-fg">
+              <span className="font-bespoke text-[10px] tracking-widest2 uppercase text-nm-accent">
                 Hvem vi er
               </span>
             </div>
 
-            <h1
-              data-hero-el
-              className="font-satoshi font-black text-5xl md:text-7xl text-nm-light leading-tight mb-8 max-w-4xl"
-              style={{ opacity: 0 }}
-            >
-              Vi er Nora Marketing.
-            </h1>
+            <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-10 items-end">
+              <h1
+                data-hero-el
+                className="font-satoshi font-black leading-[0.88] tracking-tight text-nm-light"
+                style={{ fontSize: 'clamp(3rem,8vw,7rem)', opacity: 0 }}
+              >
+                Vi er<br />
+                Nora{' '}
+                <span className="text-nm-warm">Marketing.</span>
+              </h1>
 
-            <p
-              data-hero-el
-              className="font-cabinet text-nm-muted text-xl leading-relaxed max-w-2xl"
-              style={{ opacity: 0 }}
-            >
-              Et markedsføringsbyrå grunnlagt på troen om at ærlighet, enkelhet og datadrevne
-              beslutninger er det eneste som virkelig fungerer over tid.
-            </p>
-          </div>
-
-          {/* ── VÅR HISTORIE ──────────────────────────────────────────────── */}
-          <section
-            aria-labelledby="history-heading"
-            className="py-24 border-t border-nm-border/50"
-          >
-            <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-12 lg:gap-20">
-              {/* Left: label + heading */}
-              <div className="lg:pt-1">
-                <span
-                  data-hist-label
-                  className="font-bespoke font-bold text-xs tracking-widest2 uppercase text-nm-accent block mb-5"
-                  style={{ clipPath: 'inset(0 100% 0 0)' }}
-                >
-                  Vår Historie
-                </span>
-                <h2
-                  id="history-heading"
-                  className="font-satoshi font-black text-3xl md:text-4xl text-nm-light leading-tight"
-                >
-                  Ekte hjelp,<br />
-                  uten støy.
-                </h2>
-              </div>
-
-              {/* Right: paragraphs */}
-              <div className="flex flex-col gap-7 border-l border-nm-border/50 pl-8 lg:pl-12">
-                {HISTORY_PARAS.map((para, i) => (
-                  <p
-                    key={i}
-                    data-hist-para
-                    className="font-cabinet text-nm-muted text-lg leading-relaxed"
-                    style={{ opacity: 0 }}
-                  >
-                    {para}
-                  </p>
-                ))}
-              </div>
+              <p
+                data-hero-el
+                className="font-cabinet text-nm-muted text-lg leading-relaxed lg:pb-1"
+                style={{ opacity: 0 }}
+              >
+                Et markedsføringsbyrå grunnlagt på troen om at ærlighet, enkelhet og datadrevne beslutninger er det eneste som virkelig fungerer over tid.
+              </p>
             </div>
-          </section>
+          </div>
+        </div>
 
-          {/* ── KJERNEVERDIEER ────────────────────────────────────────────── */}
-          <section
-            aria-labelledby="values-heading"
-            className="py-24 border-t border-nm-border/50"
-          >
-            <div className="flex items-end justify-between mb-14 flex-wrap gap-4">
-              <div>
-                <span className="font-bespoke font-bold text-xs tracking-widest2 uppercase text-nm-accent block mb-3">
-                  Kjerneverdieer
+        {/* ── VÅR HISTORIE ──────────────────────────────────────────────── */}
+        <section
+          aria-labelledby="history-heading"
+          className="py-28 px-6 sm:px-10 lg:px-16"
+        >
+          <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-12 lg:gap-20">
+
+            <div className="lg:pt-1">
+              <span
+                data-hist-label
+                className="font-bespoke text-[10px] tracking-widest2 uppercase text-nm-accent block mb-5"
+                style={{ clipPath: 'inset(0 100% 0 0)' }}
+              >
+                Vår Historie
+              </span>
+              <h2
+                id="history-heading"
+                className="font-satoshi font-black text-[clamp(1.8rem,3.5vw,2.8rem)] text-nm-light leading-[0.92] tracking-tight"
+              >
+                Ekte hjelp,<br />
+                <span style={{ WebkitTextStroke: '1px #F4F4F8', color: 'transparent' }}>
+                  uten støy.
                 </span>
+              </h2>
+            </div>
+
+            <div className="flex flex-col gap-7 border-l border-nm-border/40 pl-8 lg:pl-12">
+              {HISTORY_PARAS.map((para, i) => (
+                <p
+                  key={i}
+                  data-hist-para
+                  className="font-cabinet text-nm-muted text-lg leading-relaxed"
+                  style={{ opacity: 0 }}
+                >
+                  {para}
+                </p>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── KJERNEVERDIER ──────────────────────────────────────────────── */}
+        <section
+          aria-labelledby="values-heading"
+          className="py-28 px-6 sm:px-10 lg:px-16 border-t border-nm-border/30"
+        >
+          <div className="max-w-7xl mx-auto">
+            <div className="flex items-end justify-between mb-14 flex-wrap gap-6">
+              <div>
+                <div className="flex items-center gap-3 mb-4">
+                  <span className="w-8 h-px bg-nm-accent" />
+                  <span className="font-bespoke text-[10px] tracking-widest2 uppercase text-nm-accent">
+                    Kjerneverdier
+                  </span>
+                </div>
                 <h2
                   id="values-heading"
-                  className="font-satoshi font-black text-3xl md:text-4xl text-nm-light leading-tight"
+                  className="font-satoshi font-black text-[clamp(1.8rem,4vw,3rem)] text-nm-light leading-[0.92] tracking-tight"
                 >
-                  Prinsippene som{' '}
-                  styrer alt vi gjør.
+                  Prinsippene som<br />
+                  <span style={{ WebkitTextStroke: '1px #F4F4F8', color: 'transparent' }}>
+                    styrer alt vi gjør.
+                  </span>
                 </h2>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {VALUES.map((v) => (
                 <div
                   key={v.number}
                   data-value-card
-                  className="group relative overflow-hidden p-8 bg-nm-surface border border-nm-border/60 rounded-2xl hover:border-nm-accent/40 transition-colors duration-300"
+                  className="group relative overflow-hidden flex gap-6 p-7 bg-nm-surface/30 border border-nm-border/50 rounded-2xl hover:border-nm-accent/30 transition-colors duration-300"
                   style={{ opacity: 0 }}
                 >
                   {/* Ghost number */}
                   <span
-                    className="absolute -top-3 -right-2 font-bespoke font-bold text-[7rem] leading-none pointer-events-none select-none"
-                    style={{ color: 'rgba(75,110,245,0.055)' }}
+                    className="absolute -top-2 -right-1 font-bespoke font-bold text-[5.5rem] leading-none pointer-events-none select-none"
+                    style={{ color: 'rgba(75,110,245,0.05)' }}
                     aria-hidden="true"
                   >
                     {v.number}
                   </span>
 
-                  <span className="font-bespoke text-xs tracking-widest2 text-nm-accent uppercase block mb-4">
+                  <span className="font-bespoke font-bold text-2xl text-nm-accent/20 group-hover:text-nm-accent/40 transition-colors duration-300 flex-shrink-0 mt-0.5">
                     {v.number}
                   </span>
-                  <h3 className="font-satoshi font-bold text-xl text-nm-light mb-3">{v.title}</h3>
-                  <p className="font-cabinet text-nm-muted text-sm leading-relaxed">{v.body}</p>
+
+                  <div>
+                    <h3 className="font-satoshi font-bold text-lg text-nm-light mb-2">{v.title}</h3>
+                    <p className="font-cabinet text-nm-muted text-sm leading-relaxed">{v.body}</p>
+                  </div>
                 </div>
               ))}
             </div>
-          </section>
+          </div>
+        </section>
 
-          {/* ── VÅR TILNÆRMING ────────────────────────────────────────────── */}
-          <section
-            aria-labelledby="approach-heading"
-            className="py-24 border-t border-nm-border/50"
-          >
+        {/* ── VÅR TILNÆRMING ────────────────────────────────────────────── */}
+        <section
+          aria-labelledby="approach-heading"
+          className="py-28 px-6 sm:px-10 lg:px-16 border-t border-nm-border/30"
+        >
+          <div className="max-w-7xl mx-auto">
             <div className="mb-14">
-              <span className="font-bespoke font-bold text-xs tracking-widest2 uppercase text-nm-accent block mb-3">
-                Vår Tilnærming
-              </span>
+              <div className="flex items-center gap-3 mb-4">
+                <span className="w-8 h-px bg-nm-warm" />
+                <span className="font-bespoke text-[10px] tracking-widest2 uppercase text-nm-warm">
+                  Vår Tilnærming
+                </span>
+              </div>
               <h2
                 id="approach-heading"
-                className="font-satoshi font-black text-3xl md:text-4xl text-nm-light leading-tight max-w-xl"
+                className="font-satoshi font-black text-[clamp(1.8rem,4vw,3rem)] text-nm-light leading-[0.92] tracking-tight max-w-xl"
               >
-                Hvordan vi leverer{' '}
-                markedsføring som fungerer.
+                Hvordan vi leverer<br />
+                <span className="text-nm-warm">markedsføring som fungerer.</span>
               </h2>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-0 border border-nm-border/50 rounded-2xl overflow-hidden">
+            <div className="grid grid-cols-1 md:grid-cols-2 border border-nm-border/50 rounded-2xl overflow-hidden divide-y md:divide-y-0">
               {APPROACH.map((item, i) => (
                 <div
                   key={item.number}
                   data-approach-row
                   className={[
-                    'group flex gap-6 p-8 border-nm-border/50 hover:bg-nm-surface/60 transition-colors duration-200',
-                    // right border on left-column items (even index on 2-col)
-                    i % 2 === 0 ? 'md:border-r' : '',
-                    // bottom border on all but last row
-                    i < APPROACH.length - 2 ? 'border-b' : '',
-                    // last item on odd total: span full width on mobile
-                    i === APPROACH.length - 1 && APPROACH.length % 2 !== 0 ? 'md:col-span-2' : '',
+                    'group flex gap-6 p-8 hover:bg-nm-surface/40 transition-colors duration-200',
+                    i % 2 === 0 ? 'md:border-r border-nm-border/50' : '',
+                    i < APPROACH.length - 2 ? 'md:border-b border-nm-border/50' : '',
+                    'border-b border-nm-border/50 last:border-b-0',
                   ].join(' ')}
+                  style={{ opacity: 0 }}
                 >
-                  <span
-                    className="font-bespoke font-bold text-2xl text-nm-accent/30 group-hover:text-nm-accent/60 transition-colors duration-200 flex-shrink-0 mt-0.5"
-                    aria-hidden="true"
-                  >
+                  <span className="font-bespoke font-bold text-xl text-nm-accent/25 group-hover:text-nm-accent/50 transition-colors duration-200 flex-shrink-0 mt-0.5">
                     {item.number}
                   </span>
                   <div>
-                    <h3 className="font-satoshi font-bold text-nm-fg text-base mb-2">
-                      {item.title}
-                    </h3>
-                    <p className="font-cabinet text-nm-muted text-sm leading-relaxed">
-                      {item.body}
-                    </p>
+                    <h3 className="font-satoshi font-semibold text-nm-fg text-sm mb-2">{item.title}</h3>
+                    <p className="font-cabinet text-nm-muted text-sm leading-relaxed">{item.body}</p>
                   </div>
                 </div>
               ))}
             </div>
-          </section>
+          </div>
+        </section>
 
-          {/* ── MISSION / CTA ─────────────────────────────────────────────── */}
-          <section className="py-24 border-t border-nm-border/50">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-              <div>
-                <span className="font-bespoke font-bold text-xs tracking-widest2 uppercase text-nm-accent block mb-5">
-                  Vår Misjon
-                </span>
-                <h2 className="font-satoshi font-black text-3xl md:text-4xl text-nm-light mb-6 leading-tight">
-                  Profesjonell markedsføring{' '}
+        {/* ── MISJON ────────────────────────────────────────────────────── */}
+        <section className="py-28 px-6 sm:px-10 lg:px-16 border-t border-nm-border/30">
+          <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+
+            <div>
+              <div className="flex items-center gap-3 mb-6">
+                <span className="w-8 h-px bg-nm-accent" />
+                <span className="font-bespoke text-[10px] tracking-widest2 uppercase text-nm-accent">Vår Misjon</span>
+              </div>
+              <h2
+                data-mission-el
+                className="font-satoshi font-black text-[clamp(1.8rem,4vw,3rem)] text-nm-light mb-6 leading-[0.92] tracking-tight"
+                style={{ opacity: 0 }}
+              >
+                Profesjonell markedsføring<br />
+                <span style={{ WebkitTextStroke: '1px #F4F4F8', color: 'transparent' }}>
                   for alle.
-                </h2>
-                <p className="font-cabinet text-nm-muted text-lg leading-relaxed mb-8">
-                  Å demokratisere tilgangen til profesjonell markedsføring – slik at bedrifter i alle
-                  størrelser kan konkurrere og vokse i det digitale landskapet. Vi er her for de som
-                  vil noe, ikke bare de som har råd til å kaste penger på det.
-                </p>
+                </span>
+              </h2>
+              <p
+                data-mission-el
+                className="font-cabinet text-nm-muted text-lg leading-relaxed mb-8"
+                style={{ opacity: 0 }}
+              >
+                Å demokratisere tilgangen til profesjonell markedsføring – slik at bedrifter i alle
+                størrelser kan konkurrere og vokse i det digitale landskapet. Vi er her for de som
+                vil noe, ikke bare de som har råd til å kaste penger på det.
+              </p>
+              <div data-mission-el style={{ opacity: 0 }}>
                 <Button href="/kontakt" variant="primary">
                   Ta kontakt
                 </Button>
               </div>
+            </div>
 
-              {/* Placeholder – swap for real image later */}
-              <div className="aspect-video bg-nm-surface border border-nm-border/50 rounded-2xl flex items-center justify-center">
-                <span className="font-bespoke font-bold text-8xl text-nm-accent/15 select-none">
-                  NM
-                </span>
+            {/* Visual block */}
+            <div
+              data-mission-el
+              className="aspect-[4/3] bg-nm-surface/30 border border-nm-border/50 rounded-2xl flex items-center justify-center relative overflow-hidden"
+              style={{ opacity: 0 }}
+            >
+              {/* Grid decoration */}
+              <svg className="absolute inset-0 w-full h-full opacity-[0.04]" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+                <defs>
+                  <pattern id="grid-about" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
+                    <path d="M 60 0 L 0 0 0 60" fill="none" stroke="#E8E8EE" strokeWidth="0.5" />
+                  </pattern>
+                </defs>
+                <rect width="100%" height="100%" fill="url(#grid-about)" />
+              </svg>
+              {/* Stat trio */}
+              <div className="relative z-10 grid grid-cols-3 gap-6 px-10 w-full">
+                {[
+                  { val: '5+', label: 'År' },
+                  { val: '120+', label: 'Kunder' },
+                  { val: '3×', label: 'ROI' },
+                ].map(({ val, label }) => (
+                  <div key={label} className="text-center">
+                    <p className="font-satoshi font-black text-nm-accent text-3xl leading-none">{val}</p>
+                    <p className="font-cabinet text-nm-muted text-xs mt-1.5 uppercase tracking-widest">{label}</p>
+                  </div>
+                ))}
               </div>
             </div>
-          </section>
-
-        </div>
+          </div>
+        </section>
 
         <CTABanner />
       </div>
