@@ -77,7 +77,7 @@ export default function Hero() {
           <span
             data-h-line
             className="block text-nm-light"
-            style={{ fontSize: 'clamp(3.5rem,9.5vw,10.5rem)', opacity: 0 }}
+            style={{ fontSize: 'clamp(2.4rem,9.5vw,10.5rem)', opacity: 0 }}
           >
             Markedsføring
           </span>
@@ -85,7 +85,7 @@ export default function Hero() {
             data-h-line
             className="block"
             style={{
-              fontSize: 'clamp(3.5rem,9.5vw,10.5rem)',
+              fontSize: 'clamp(2.4rem,9.5vw,10.5rem)',
               opacity: 0,
               WebkitTextStroke: '2.5px rgba(232,232,238,0.65)',
               color: 'transparent',
@@ -96,7 +96,7 @@ export default function Hero() {
           <span
             data-h-line
             className="block text-nm-warm"
-            style={{ fontSize: 'clamp(3.5rem,9.5vw,10.5rem)', opacity: 0 }}
+            style={{ fontSize: 'clamp(2.4rem,9.5vw,10.5rem)', opacity: 0 }}
           >
             fungerer.
           </span>
