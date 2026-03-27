@@ -117,13 +117,202 @@ Videoen refereres direkte i `src/components/sections/Hero.tsx`.
 
 ---
 
-## CMS – WordPress
+## CMS – WordPress oppsett
 
-Nettsiden støtter headless WordPress via REST API:
+Nettsiden henter innhold fra WordPress via REST API. Begge innholdstyper (tjenester og prosjekter) fungerer med fallback-data hvis WP ikke er koblet til ennå – så siden vil alltid vise noe.
 
-- Sett `VITE_WP_BASE_URL` i `.env`
-- WordPress trenger custom post type `tjenester` registrert
-- Kontaktskjema kan kobles til Contact Form 7 eller WPForms REST API i `src/pages/Kontakt.tsx`
+### 1. Miljøvariabel
+
+Lag en `.env`-fil i rotkatalogen (eller sett den i hostingpanelet):
+
+```env
+VITE_WP_BASE_URL=https://cms.noramarketing.no
+```
+
+---
+
+### 2. Nødvendige plugins i WordPress
+
+Installer disse to pluginene:
+
+| Plugin | Hvorfor |
+|---|---|
+| **Custom Post Type UI** (gratisversjon fra wordpress.org) | Lager de egendefinerte innholdstypene |
+| **Advanced Custom Fields (ACF)** (gratisversjon holder) | Legger til ekstrafelter på postene |
+
+---
+
+### 3. Tjenester (`/tjenester`)
+
+#### Steg 1 – Lag CPT med Custom Post Type UI
+
+Gå til **CPT UI → Add/Edit Post Types** og fyll inn:
+
+| Felt | Verdi |
+|---|---|
+| Post Type Slug | `tjenester` |
+| Plural Label | `Tjenester` |
+| Singular Label | `Tjeneste` |
+| Has Archive | Av |
+| Show in REST API | **På** ← viktig |
+| REST API base slug | `tjenester` |
+
+Klikk **Add Post Type**.
+
+#### Steg 2 – Legg til ACF-felter
+
+Gå til **ACF → Field Groups → Add New**, gi gruppen navnet `Tjeneste-felter`, og sett **Location** til `Post Type == tjenester`.
+
+Legg til disse feltene:
+
+| Feltnavn (Label) | Field Name | Felttype |
+|---|---|---|
+| Kategori | `kategori` | Text |
+| Ingress / Excerpt | – | Bruk den innebygde WordPress Excerpt-boksen i stedet |
+
+> Tjenestens tittel og innhold skrives i den vanlige WordPress-editoren. Excerpt-feltet (kort beskrivelse) finner du under editoren – klikk **Screen Options** øverst til høyre og huk av for **Excerpt** hvis det ikke vises.
+
+#### Steg 3 – Legg til en tjeneste
+
+1. Gå til **Tjenester → Add New**
+2. Skriv inn tjenestens navn som **tittel**
+3. Skriv full beskrivelse i **innholdsblokken**
+4. Fyll inn `kategori`-feltet (f.eks. `Strategi`)
+5. Legg til en **Featured Image** (vises på tjenestesiden)
+6. Klikk **Publish**
+
+---
+
+### 4. Prosjekter (`/prosjekter`)
+
+#### Steg 1 – Lag CPT med Custom Post Type UI
+
+Gå til **CPT UI → Add/Edit Post Types** og fyll inn:
+
+| Felt | Verdi |
+|---|---|
+| Post Type Slug | `prosjekter` |
+| Plural Label | `Prosjekter` |
+| Singular Label | `Prosjekt` |
+| Has Archive | Av |
+| Show in REST API | **På** ← viktig |
+| REST API base slug | `prosjekter` |
+
+Klikk **Add Post Type**.
+
+#### Steg 2 – Legg til ACF-felter
+
+Gå til **ACF → Field Groups → Add New**, gi gruppen navnet `Prosjekt-felter`, og sett **Location** til `Post Type == prosjekter`.
+
+Legg til disse feltene:
+
+| Feltnavn (Label) | Field Name | Felttype | Eksempel-verdi |
+|---|---|---|---|
+| Kategori | `kategori` | Text | `sosiale-medier` |
+| Klient | `klient` | Text | `Nordvik Eiendom` |
+| År | `aar` | Text | `2024` |
+| Tags | `tags` | Text | `Meta Ads, Kreativ, A/B-testing` |
+
+**Gyldige verdier for `kategori`** (må skrives nøyaktig slik):
+
+```
+sosiale-medier
+seo-sem
+innholdsmarkedsforing
+nettsideutvikling
+digital-strategi
+videoproduksjon
+```
+
+#### Steg 3 – Legg til et prosjekt
+
+1. Gå til **Prosjekter → Add New**
+2. Skriv klientens navn som **tittel** (vises på kortet)
+3. Skriv en kort beskrivelse i **Excerpt**-feltet (vises på hover) – aktiver det via **Screen Options** hvis det ikke synes
+4. Fyll inn ACF-feltene: `kategori`, `klient`, `aar`, `tags`
+5. Last opp et **Featured Image** – dette er bildet som vises på prosjektkortet
+6. Klikk **Publish**
+
+Prosjektet dukker nå opp automatisk på `/prosjekter` under riktig kategori.
+
+> For å **slette** et prosjekt: flytt det til papirkurven i WordPress. Det forsvinner fra nettsiden umiddelbart.
+
+---
+
+### 5. CORS
+
+Hvis nettsiden og WordPress ligger på forskjellige domener (f.eks. nettside på Vercel og WP på et eget subdomain), må du tillate forespørsler fra nettsidens domene. Legg dette til i WordPress-temaets `functions.php`:
+
+```php
+add_action('rest_api_init', function () {
+    header('Access-Control-Allow-Origin: https://noramarketing.no');
+    header('Access-Control-Allow-Methods: GET');
+});
+```
+
+Bytt ut `https://noramarketing.no` med det faktiske domenet til nettsiden.
+
+---
+
+### 6. Kontaktskjema (Contact Form 7)
+
+Kontaktskjemaet er koblet til Contact Form 7 via REST API. Slik setter du det opp:
+
+#### Steg 1 – Installer plugin
+
+Installer **Contact Form 7** fra wordpress.org (gratis).
+
+#### Steg 2 – Lag skjemaet
+
+Gå til **Contact → Add New** i WordPress og gi skjemaet et navn, f.eks. `Kontaktskjema – Nora Marketing`.
+
+Erstatt innholdet i **Form**-fanen med dette:
+
+```
+[text* your-name placeholder "Ditt fulle navn"]
+[email* your-email placeholder "din@epost.no"]
+[tel* your-phone placeholder "+47 123 45 678"]
+[text your-company placeholder "Bedriftsnavn (valgfritt)"]
+[select your-service "Innholdsmarkedsføring" "Sosiale Medier" "SEO & SEM" "Digital Strategi" "Nettsideutvikling" "Videoproduksjon" "Annet"]
+[textarea* your-message placeholder "Fortell oss om ditt prosjekt…"]
+[submit "Send melding"]
+```
+
+> Feltnavnene (`your-name`, `your-email` osv.) **må** skrives nøyaktig slik – nettsiden sender data med disse navnene.
+
+#### Steg 3 – Sett opp e-postvarsling
+
+Under **Mail**-fanen i CF7, sett:
+
+| Felt | Verdi |
+|---|---|
+| To | `hei@noramarketing.no` |
+| From | `[your-email]` |
+| Subject | `Ny henvendelse fra [your-name]` |
+| Message body | `Navn: [your-name]` `E-post: [your-email]` `Telefon: [your-phone]` `Bedrift: [your-company]` `Tjeneste: [your-service]` `Melding: [your-message]` |
+
+Klikk **Save**.
+
+#### Steg 4 – Finn skjema-ID
+
+Etter lagring vises skjema-IDen øverst på siden, f.eks.:
+
+```
+ID: 123
+```
+
+#### Steg 5 – Legg til i .env
+
+```env
+VITE_WP_BASE_URL=https://ditt-staging-domene.no
+VITE_CF7_FORM_ID=123
+```
+
+Bytt ut `123` med din faktiske skjema-ID. Husk å sette begge variablene i hostingpanelet ved deploy.
+
+#### Test det
+
+Fyll ut skjemaet på `/kontakt` og trykk Send. Hvis alt er riktig får du en bekreftelse på siden og en e-post i innboksen.
 
 ---
 

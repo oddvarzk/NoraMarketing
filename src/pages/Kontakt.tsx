@@ -9,13 +9,14 @@ const SERVICES_OPTIONS = [
   'Innholdsmarkedsføring',
   'Sosiale Medier',
   'SEO & SEM',
-  'E-post Markedsføring',
-  'Analyse & Rapportering',
   'Digital Strategi',
   'Nettsideutvikling',
   'Videoproduksjon',
   'Annet',
 ]
+
+const CF7_FORM_ID = import.meta.env.VITE_CF7_FORM_ID ?? ''
+const WP_BASE    = import.meta.env.VITE_WP_BASE_URL ?? 'https://cms.noramarketing.no'
 
 const FAQS = [
   {
@@ -94,6 +95,8 @@ export default function Kontakt() {
     message: '',
   })
   const [submitted, setSubmitted] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const [openFaq, setOpenFaq] = useState<number | null>(null)
 
   useEffect(() => {
@@ -121,11 +124,37 @@ export default function Kontakt() {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }))
   }
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    // TODO: integrate with WordPress Contact Form 7 REST endpoint
-    console.log('Form data:', form)
-    setSubmitted(true)
+    setLoading(true)
+    setError(null)
+
+    try {
+      const body = new FormData()
+      body.append('your-name',    form.name)
+      body.append('your-email',   form.email)
+      body.append('your-phone',   form.phone)
+      body.append('your-company', form.company)
+      body.append('your-service', form.service)
+      body.append('your-message', form.message)
+
+      const res = await fetch(
+        `${WP_BASE}/wp-json/contact-form-7/v1/contact-forms/${CF7_FORM_ID}/feedback`,
+        { method: 'POST', body },
+      )
+
+      const data = await res.json() as { status: string; message: string }
+
+      if (data.status === 'mail_sent') {
+        setSubmitted(true)
+      } else {
+        setError(data.message ?? 'Noe gikk galt. Prøv igjen eller send oss en e-post direkte.')
+      }
+    } catch {
+      setError('Kunne ikke nå serveren. Sjekk internettforbindelsen din og prøv igjen.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -272,14 +301,23 @@ export default function Kontakt() {
                     * Påkrevde felt. Vi svarer vanligvis innen 24 timer på hverdager.
                   </p>
 
+                  {error && (
+                    <p className="font-cabinet text-sm text-red-400 bg-red-400/10 border border-red-400/20 rounded-xl px-4 py-3">
+                      {error}
+                    </p>
+                  )}
+
                   <button
                     type="submit"
-                    className="inline-flex items-center justify-center gap-2 px-6 py-4 bg-nm-accent text-white font-satoshi font-semibold text-sm rounded-xl hover:bg-nm-accent-light transition-colors duration-200"
+                    disabled={loading}
+                    className="inline-flex items-center justify-center gap-2 px-6 py-4 bg-nm-accent text-white font-satoshi font-semibold text-sm rounded-xl hover:bg-nm-accent-light transition-colors duration-200 disabled:opacity-60 disabled:cursor-not-allowed"
                   >
-                    Send melding
-                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-                      <path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
+                    {loading ? 'Sender…' : 'Send melding'}
+                    {!loading && (
+                      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                        <path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    )}
                   </button>
                 </form>
               )}

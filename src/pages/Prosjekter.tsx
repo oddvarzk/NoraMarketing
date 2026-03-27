@@ -1,199 +1,151 @@
+/**
+ * Prosjekter – portfolio page
+ *
+ * Data source: WordPress CPT "prosjekter" (via wp.projects())
+ * Falls back to FALLBACK_PROJECTS if WP is not yet configured.
+ *
+ * Each WP post should have:
+ *   - Title          → project / client name
+ *   - Featured Image → card image
+ *   - Excerpt        → short description shown on hover
+ *   - ACF fields:
+ *       kategori  (text/select) e.g. "sosiale-medier"
+ *       klient    (text)        client name
+ *       aar       (text)        year e.g. "2024"
+ *       tags      (text)        comma-separated: "Meta Ads, Kreativ"
+ */
+
 import { useRef, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import SEO from '../components/ui/SEO'
+import { wp } from '../lib/wordpress'
 
 gsap.registerPlugin(ScrollTrigger)
 
-// ─── Data ────────────────────────────────────────────────────────────────────
+// ─── Types ────────────────────────────────────────────────────────────────────
 
-const CATEGORIES = [
-  {
-    id: 'sosiale-medier',
-    label: 'Sosiale Medier',
-    number: '01',
-    description: 'Kampanjer og tilstedeværelse som engasjerer og bygger merkevare på tvers av plattformer.',
-    projects: [
-      {
-        client: 'Forma Studio',
-        year: '2024',
-        headline: '−52 % kostnad per kunde',
-        sub: 'ved kampanjeoptimalisering',
-        tags: ['Meta Ads', 'Kreativ', 'A/B-testing'],
-        metric: '−52%',
-      },
-      {
-        client: 'Kvartett AS',
-        year: '2023',
-        headline: '+180 % engasjement',
-        sub: 'på 60 dager med redefinert innholdsstrategi',
-        tags: ['Instagram', 'TikTok', 'Strategi'],
-        metric: '+180%',
-      },
-      {
-        client: 'Vind Digital',
-        year: '2024',
-        headline: '×3.2 rekkevidde',
-        sub: 'etter rebranding av sosiale kanaler',
-        tags: ['LinkedIn', 'Meta', 'Innhold'],
-        metric: '×3.2',
-      },
-    ],
-  },
-  {
-    id: 'seo-sem',
-    label: 'SEO & SEM',
-    number: '02',
-    description: 'Organisk synlighet og betalt annonsering som leverer målbar trafikk og lavere CPA.',
-    projects: [
-      {
-        client: 'Helios AS',
-        year: '2024',
-        headline: '×4 organisk trafikk',
-        sub: 'over 6 måneder med teknisk SEO og innhold',
-        tags: ['SEO', 'Innhold', 'Google'],
-        metric: '×4',
-      },
-      {
-        client: 'Nordvik Eiendom',
-        year: '2024',
-        headline: '+340 % kvalifiserte leads',
-        sub: 'gjennom Google Ads-optimalisering',
-        tags: ['Google Ads', 'Søkestrategi', 'CRO'],
-        metric: '+340%',
-      },
-    ],
-  },
-  {
-    id: 'innholdsmarkedsforing',
-    label: 'Innholdsmarkedsføring',
-    number: '03',
-    description: 'Strategisk innhold som bygger autoritet, tiltrekker de rette kundene og konverterer.',
-    projects: [
-      {
-        client: 'Bergström Group',
-        year: '2023',
-        headline: '+95 % tid på side',
-        sub: 'etter innholdsrestrukturering og bloggstrategi',
-        tags: ['Blogg', 'E-post', 'SEO'],
-        metric: '+95%',
-      },
-      {
-        client: 'Apex Group',
-        year: '2024',
-        headline: '×2.7 konverteringsrate',
-        sub: 'med målrettet lead magnet-innhold',
-        tags: ['Lead gen', 'Innhold', 'Automasjon'],
-        metric: '×2.7',
-      },
-    ],
-  },
-  {
-    id: 'nettsideutvikling',
-    label: 'Nettsideutvikling',
-    number: '04',
-    description: 'Skreddersydde nettsider som konverterer — raske, mobilvennlige og klare for vekst.',
-    projects: [
-      {
-        client: 'Solberg & Co',
-        year: '2024',
-        headline: '+210 % konverteringer',
-        sub: 'etter fullstendig nettside-redesign',
-        tags: ['React', 'UX/UI', 'CRO'],
-        metric: '+210%',
-      },
-      {
-        client: 'Forma Studio',
-        year: '2023',
-        headline: '0.8 s lastetid',
-        sub: 'fullstendig optimalisert nettside fra bunnen',
-        tags: ['Performance', 'Core Web Vitals', 'Vite'],
-        metric: '0.8s',
-      },
-    ],
-  },
-  {
-    id: 'digital-strategi',
-    label: 'Digital Strategi',
-    number: '05',
-    description: 'Helhetlige strategier som binder kanaler og aktiviteter mot samme vekstmål.',
-    projects: [
-      {
-        client: 'Nordvik Eiendom',
-        year: '2023',
-        headline: '3× gjennomsnittlig ROI',
-        sub: 'etter full digital strategi og kanalplan',
-        tags: ['Strategi', 'Analyse', 'Vekst'],
-        metric: '3×',
-      },
-      {
-        client: 'Helios AS',
-        year: '2023',
-        headline: '−40 % markedsbudsjett',
-        sub: 'med samme resultat etter kanaloptimalisering',
-        tags: ['Budsjett', 'Effektivitet', 'Kanalmix'],
-        metric: '−40%',
-      },
-    ],
-  },
-  {
-    id: 'videoproduksjon',
-    label: 'Videoproduksjon',
-    number: '06',
-    description: 'Videoinnhold som stopper scrollingen og forteller merkevarehistorien din.',
-    projects: [
-      {
-        client: 'Kvartett AS',
-        year: '2024',
-        headline: '12 M visninger',
-        sub: 'på viral merkevare-video på TikTok og Reels',
-        tags: ['TikTok', 'Reels', 'Promofilm'],
-        metric: '12M',
-      },
-      {
-        client: 'Vind Digital',
-        year: '2024',
-        headline: '+320 % watch time',
-        sub: 'etter redesign av video-innholdsstrategi',
-        tags: ['YouTube', 'Storytelling', 'Kreativ'],
-        metric: '+320%',
-      },
-    ],
-  },
+interface Project {
+  id: number
+  slug: string
+  title: string
+  excerpt: string
+  image: string | null
+  kategori: string   // e.g. "sosiale-medier"
+  klient: string
+  aar: string
+  tags: string[]
+}
+
+// ─── Category definitions ─────────────────────────────────────────────────────
+
+const CATEGORY_META: Record<string, { label: string; number: string }> = {
+  'sosiale-medier':         { label: 'Sosiale Medier',       number: '01' },
+  'seo-sem':                { label: 'SEO & SEM',            number: '02' },
+  'innholdsmarkedsforing':  { label: 'Innholdsmarkedsføring', number: '03' },
+  'nettsideutvikling':      { label: 'Nettsideutvikling',    number: '04' },
+  'digital-strategi':       { label: 'Digital Strategi',     number: '05' },
+  'videoproduksjon':        { label: 'Videoproduksjon',      number: '06' },
+}
+
+const CATEGORY_ORDER = Object.keys(CATEGORY_META)
+
+// ─── Fallback data (remove once WP CPT is live) ───────────────────────────────
+
+const FALLBACK_PROJECTS: Project[] = [
+  { id: 1,  slug: 'forma-studio-meta',    title: 'Forma Studio',     excerpt: 'Kampanjeoptimalisering som reduserte kostnad per kunde med 52 % på tre måneder.',   image: null, kategori: 'sosiale-medier',        klient: 'Forma Studio',     aar: '2024', tags: ['Meta Ads', 'A/B-testing'] },
+  { id: 2,  slug: 'kvartett-innhold',     title: 'Kvartett AS',      excerpt: 'Redefinert innholdsstrategi som tredoblet engasjement på Instagram og TikTok.',       image: null, kategori: 'sosiale-medier',        klient: 'Kvartett AS',      aar: '2023', tags: ['Instagram', 'TikTok'] },
+  { id: 3,  slug: 'vind-digital-reach',   title: 'Vind Digital',     excerpt: 'Fullstendig rebranding av sosiale kanaler med ×3.2 rekkevidde.',                       image: null, kategori: 'sosiale-medier',        klient: 'Vind Digital',     aar: '2024', tags: ['LinkedIn', 'Meta'] },
+  { id: 4,  slug: 'helios-seo',           title: 'Helios AS',        excerpt: 'Teknisk SEO og innholdsstrategi som firedoblet organisk trafikk på 6 måneder.',        image: null, kategori: 'seo-sem',               klient: 'Helios AS',        aar: '2024', tags: ['SEO', 'Google'] },
+  { id: 5,  slug: 'nordvik-leads',        title: 'Nordvik Eiendom',  excerpt: 'Google Ads-optimalisering som ga 340 % økning i kvalifiserte leads.',                  image: null, kategori: 'seo-sem',               klient: 'Nordvik Eiendom',  aar: '2024', tags: ['Google Ads', 'CRO'] },
+  { id: 6,  slug: 'bergstrom-innhold',    title: 'Bergström Group',  excerpt: 'Innholdsrestrukturering og bloggstrategi økte tid på side med 95 %.',                  image: null, kategori: 'innholdsmarkedsforing', klient: 'Bergström Group',  aar: '2023', tags: ['Blogg', 'SEO'] },
+  { id: 7,  slug: 'apex-leadgen',         title: 'Apex Group',       excerpt: 'Målrettet lead magnet-innhold som mer enn doblet konverteringsraten.',                  image: null, kategori: 'innholdsmarkedsforing', klient: 'Apex Group',       aar: '2024', tags: ['Lead gen', 'Innhold'] },
+  { id: 8,  slug: 'solberg-nettside',     title: 'Solberg & Co',     excerpt: 'Fullstendig nettside-redesign som økte konverteringer med 210 %.',                     image: null, kategori: 'nettsideutvikling',     klient: 'Solberg & Co',     aar: '2024', tags: ['React', 'UX/UI'] },
+  { id: 9,  slug: 'forma-performance',    title: 'Forma Studio',     excerpt: 'Fullstendig optimalisert nettside fra bunnen med 0.8 s lastetid.',                     image: null, kategori: 'nettsideutvikling',     klient: 'Forma Studio',     aar: '2023', tags: ['Performance', 'Vite'] },
+  { id: 10, slug: 'nordvik-strategi',     title: 'Nordvik Eiendom',  excerpt: 'Full digital strategi og kanalplan som tredoblet gjennomsnittlig ROI.',                image: null, kategori: 'digital-strategi',      klient: 'Nordvik Eiendom',  aar: '2023', tags: ['Strategi', 'Vekst'] },
+  { id: 11, slug: 'helios-budsjett',      title: 'Helios AS',        excerpt: 'Kanaloptimalisering som kuttet markedsbudsjettet med 40 % – med samme resultat.',     image: null, kategori: 'digital-strategi',      klient: 'Helios AS',        aar: '2023', tags: ['Budsjett', 'Effektivitet'] },
+  { id: 12, slug: 'kvartett-video',       title: 'Kvartett AS',      excerpt: 'Viral merkevare-video som fikk 12 millioner visninger på TikTok og Reels.',           image: null, kategori: 'videoproduksjon',        klient: 'Kvartett AS',      aar: '2024', tags: ['TikTok', 'Reels'] },
+  { id: 13, slug: 'vind-watchtime',       title: 'Vind Digital',     excerpt: 'Redesignet video-innholdsstrategi økte watch time med 320 %.',                         image: null, kategori: 'videoproduksjon',        klient: 'Vind Digital',     aar: '2024', tags: ['YouTube', 'Storytelling'] },
 ]
+
+// ─── WP data mapper ───────────────────────────────────────────────────────────
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function mapWpProject(post: any): Project {
+  const acf = post.acf ?? {}
+  const embedded = post._embedded ?? {}
+  const media = embedded['wp:featuredmedia']?.[0]
+  const image = media?.source_url ?? null
+
+  return {
+    id: post.id,
+    slug: post.slug,
+    title: post.title?.rendered ?? '',
+    excerpt: post.excerpt?.rendered?.replace(/<[^>]+>/g, '').trim() ?? '',
+    image,
+    kategori: acf.kategori ?? 'sosiale-medier',
+    klient: acf.klient ?? post.title?.rendered ?? '',
+    aar: acf.aar ?? '',
+    tags: typeof acf.tags === 'string'
+      ? acf.tags.split(',').map((t: string) => t.trim()).filter(Boolean)
+      : [],
+  }
+}
 
 // ─── Page ────────────────────────────────────────────────────────────────────
 
 export default function Prosjekter() {
   const heroRef = useRef<HTMLDivElement>(null)
+  const [projects, setProjects] = useState<Project[]>([])
+  const [loading, setLoading] = useState(true)
   const [activeFilter, setActiveFilter] = useState<string | null>(null)
 
+  // Fetch from WP, fall back to dummy data
+  useEffect(() => {
+    wp.projects()
+      .then((posts) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const mapped = (posts as any[]).map(mapWpProject)
+        setProjects(mapped.length > 0 ? mapped : FALLBACK_PROJECTS)
+      })
+      .catch(() => setProjects(FALLBACK_PROJECTS))
+      .finally(() => setLoading(false))
+  }, [])
+
+  // Hero entrance
   useEffect(() => {
     const ctx = gsap.context(() => {
       gsap.set('[data-p-hero]', { opacity: 0, y: 40 })
-      const tl = gsap.timeline({ defaults: { ease: 'power4.out' } })
-      tl.to('[data-p-hero]', { opacity: 1, y: 0, duration: 1.1, stagger: 0.1 }, 0)
+      gsap.timeline({ defaults: { ease: 'power4.out' } })
+        .to('[data-p-hero]', { opacity: 1, y: 0, duration: 1.1, stagger: 0.1 }, 0)
     }, heroRef)
     return () => ctx.revert()
   }, [])
 
-  const visible = activeFilter
-    ? CATEGORIES.filter((c) => c.id === activeFilter)
-    : CATEGORIES
+  // Group by category in the defined order
+  const grouped = CATEGORY_ORDER.reduce<Record<string, Project[]>>((acc, key) => {
+    const list = projects.filter((p) => p.kategori === key)
+    if (list.length > 0) acc[key] = list
+    return acc
+  }, {})
+
+  const visibleKeys = activeFilter
+    ? ([activeFilter].filter((k) => grouped[k]))
+    : Object.keys(grouped)
 
   return (
     <>
       <SEO
         title="Prosjekter"
-        description="Se hva vi har levert – resultater på tvers av sosiale medier, SEO, innhold, strategi, nettsideutvikling og videoproduksjon."
+        description="Et utvalg av hva vi har bygget, skapt og levert – på tvers av sosiale medier, SEO, innhold, strategi, nettside og video."
         canonical="/prosjekter"
       />
 
       {/* ── Hero ───────────────────────────────────────────────────────── */}
       <section
         ref={heroRef}
-        className="relative min-h-[52vh] flex flex-col justify-end overflow-hidden bg-nm-dark px-6 sm:px-12 lg:px-20 pb-16 pt-40"
+        className="relative flex flex-col justify-end overflow-hidden bg-nm-dark px-6 sm:px-12 lg:px-20 pb-16 pt-40"
       >
         <div className="relative z-10 max-w-7xl mx-auto w-full">
           <div className="flex items-center gap-3 mb-6" data-p-hero style={{ opacity: 0 }}>
@@ -211,10 +163,7 @@ export default function Prosjekter() {
             <span className="block text-nm-light">Arbeid vi</span>
             <span
               className="block"
-              style={{
-                WebkitTextStroke: '2px rgba(232,232,238,0.55)',
-                color: 'transparent',
-              }}
+              style={{ WebkitTextStroke: '2px rgba(232,232,238,0.55)', color: 'transparent' }}
             >
               er stolte av.
             </span>
@@ -229,56 +178,57 @@ export default function Prosjekter() {
           </p>
         </div>
 
-        {/* Bottom fade */}
         <div
           className="absolute bottom-0 left-0 right-0 h-32 pointer-events-none"
           style={{ background: 'linear-gradient(to bottom, transparent, #0D0D0F)' }}
         />
       </section>
 
-      {/* ── Category filter bar ────────────────────────────────────────── */}
+      {/* ── Filter bar ─────────────────────────────────────────────────── */}
       <div className="sticky top-[60px] z-30 bg-nm-dark/90 backdrop-blur-sm border-b border-nm-border/30">
         <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-20">
-          <div className="flex items-center gap-1 overflow-x-auto scrollbar-none py-3">
-            <FilterBtn
-              label="Alle"
-              active={activeFilter === null}
-              onClick={() => setActiveFilter(null)}
-            />
-            {CATEGORIES.map((c) => (
+          <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none py-3">
+            <FilterBtn label="Alle" active={activeFilter === null} onClick={() => setActiveFilter(null)} />
+            {CATEGORY_ORDER.filter((k) => grouped[k]).map((key) => (
               <FilterBtn
-                key={c.id}
-                label={c.label}
-                active={activeFilter === c.id}
-                onClick={() => setActiveFilter(activeFilter === c.id ? null : c.id)}
+                key={key}
+                label={CATEGORY_META[key].label}
+                active={activeFilter === key}
+                onClick={() => setActiveFilter(activeFilter === key ? null : key)}
               />
             ))}
           </div>
         </div>
       </div>
 
-      {/* ── Category sections ──────────────────────────────────────────── */}
+      {/* ── Content ────────────────────────────────────────────────────── */}
       <main className="bg-nm-dark pb-32">
-        {visible.map((cat) => (
-          <CategorySection key={cat.id} category={cat} />
-        ))}
+        {loading ? (
+          <div className="flex items-center justify-center py-40">
+            <span className="font-cabinet text-nm-muted/50 text-sm tracking-wide">Laster prosjekter…</span>
+          </div>
+        ) : (
+          visibleKeys.map((key) => (
+            <CategorySection
+              key={key}
+              categoryKey={key}
+              meta={CATEGORY_META[key]}
+              projects={grouped[key]}
+            />
+          ))
+        )}
       </main>
 
-      {/* ── CTA strip ──────────────────────────────────────────────────── */}
+      {/* ── CTA ────────────────────────────────────────────────────────── */}
       <div className="bg-nm-dark border-t border-nm-border/25 px-6 sm:px-12 lg:px-20 py-20">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-8">
-          <div>
-            <p className="font-satoshi font-black text-[clamp(1.5rem,3vw,2.5rem)] text-nm-light leading-tight">
-              Klar for å bli neste<br />
-              <span style={{ WebkitTextStroke: '1.5px rgba(232,232,238,0.5)', color: 'transparent' }}>
-                suksesshistorie?
-              </span>
-            </p>
-          </div>
-          <Link
-            to="/kontakt"
-            className="inline-flex items-center gap-3 group flex-shrink-0"
-          >
+          <p className="font-satoshi font-black text-[clamp(1.5rem,3vw,2.5rem)] text-nm-light leading-tight">
+            Klar for å bli neste<br />
+            <span style={{ WebkitTextStroke: '1.5px rgba(232,232,238,0.5)', color: 'transparent' }}>
+              suksesshistorie?
+            </span>
+          </p>
+          <Link to="/kontakt" className="inline-flex items-center gap-3 group flex-shrink-0">
             <span className="font-satoshi font-semibold text-nm-fg text-sm tracking-wide group-hover:text-nm-accent transition-colors duration-200">
               Start et prosjekt
             </span>
@@ -313,26 +263,30 @@ function FilterBtn({ label, active, onClick }: { label: string; active: boolean;
 
 // ─── Category section ─────────────────────────────────────────────────────────
 
-function CategorySection({ category: cat }: { category: (typeof CATEGORIES)[number] }) {
+function CategorySection({
+  categoryKey,
+  meta,
+  projects,
+}: {
+  categoryKey: string
+  meta: { label: string; number: string }
+  projects: Project[]
+}) {
   const sectionRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
     const ctx = gsap.context(() => {
       gsap.fromTo(
-        '[data-cat-header]',
-        { opacity: 0, y: 24 },
-        {
-          opacity: 1, y: 0, duration: 0.7, stagger: 0.08, ease: 'power3.out',
-          scrollTrigger: { trigger: '[data-cat-header]', start: 'top 88%' },
-        },
+        '[data-cat-hdr]',
+        { opacity: 0, y: 20 },
+        { opacity: 1, y: 0, duration: 0.65, stagger: 0.07, ease: 'power3.out',
+          scrollTrigger: { trigger: '[data-cat-hdr]', start: 'top 88%' } },
       )
       gsap.fromTo(
         '[data-proj-card]',
-        { opacity: 0, y: 40 },
-        {
-          opacity: 1, y: 0, duration: 0.75, stagger: 0.1, ease: 'power3.out',
-          scrollTrigger: { trigger: '[data-proj-card]', start: 'top 90%' },
-        },
+        { opacity: 0, y: 36 },
+        { opacity: 1, y: 0, duration: 0.7, stagger: 0.09, ease: 'power3.out',
+          scrollTrigger: { trigger: '[data-proj-card]', start: 'top 91%' } },
       )
     }, sectionRef)
     return () => ctx.revert()
@@ -341,34 +295,27 @@ function CategorySection({ category: cat }: { category: (typeof CATEGORIES)[numb
   return (
     <section
       ref={sectionRef}
-      id={cat.id}
-      className="border-t border-nm-border/25 px-6 sm:px-12 lg:px-20 pt-20 pb-4"
+      id={categoryKey}
+      className="border-t border-nm-border/25 px-6 sm:px-12 lg:px-20 pt-18 pb-6"
+      style={{ paddingTop: '4.5rem' }}
     >
       <div className="max-w-7xl mx-auto">
 
-        {/* Section header */}
-        <div className="grid grid-cols-1 lg:grid-cols-[auto_1fr] gap-6 lg:gap-16 items-start mb-12">
-          <div className="flex items-center gap-4 lg:pt-1" data-cat-header style={{ opacity: 0 }}>
-            <span className="font-bespoke text-[10px] tracking-widest2 uppercase text-nm-accent/60 tabular-nums">
-              {cat.number}
-            </span>
-            <span className="w-8 h-px bg-nm-border/60" />
-          </div>
-
-          <div data-cat-header style={{ opacity: 0 }}>
-            <h2 className="font-satoshi font-black text-[clamp(1.5rem,3.5vw,2.8rem)] text-nm-light leading-tight tracking-tight mb-2">
-              {cat.label}
-            </h2>
-            <p className="font-cabinet text-nm-muted text-sm leading-relaxed max-w-md">
-              {cat.description}
-            </p>
-          </div>
+        {/* Header */}
+        <div className="flex items-center gap-5 mb-10">
+          <span data-cat-hdr className="font-bespoke text-[10px] tracking-widest2 uppercase text-nm-accent/60 tabular-nums" style={{ opacity: 0 }}>
+            {meta.number}
+          </span>
+          <span className="w-6 h-px bg-nm-border/50" />
+          <h2 data-cat-hdr className="font-satoshi font-black text-[clamp(1.3rem,2.8vw,2.2rem)] text-nm-light tracking-tight" style={{ opacity: 0 }}>
+            {meta.label}
+          </h2>
         </div>
 
-        {/* Project cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-5 pb-16">
-          {cat.projects.map((project, i) => (
-            <ProjectCard key={project.client} project={project} accent={i === 0} />
+        {/* Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-5 pb-14">
+          {projects.map((project) => (
+            <ProjectCard key={project.id} project={project} />
           ))}
         </div>
       </div>
@@ -376,29 +323,25 @@ function CategorySection({ category: cat }: { category: (typeof CATEGORIES)[numb
   )
 }
 
-// ─── Project card ─────────────────────────────────────────────────────────────
+// ─── Project card (image-first) ───────────────────────────────────────────────
 
-function ProjectCard({
-  project: p,
-  accent,
-}: {
-  project: (typeof CATEGORIES)[number]['projects'][number]
-  accent: boolean
-}) {
+function ProjectCard({ project: p }: { project: Project }) {
   const cardRef = useRef<HTMLDivElement>(null)
 
   const handleEnter = () => {
     const card = cardRef.current
     if (!card) return
-    gsap.to(card.querySelector('[data-metric]'), { y: -4, duration: 0.3, ease: 'power2.out' })
-    gsap.to(card.querySelector('[data-glow]'), { opacity: 1, duration: 0.35 })
+    gsap.to(card.querySelector('[data-card-overlay]'), { opacity: 1, duration: 0.35, ease: 'power2.out' })
+    gsap.to(card.querySelector('[data-card-info]'), { y: 0, opacity: 1, duration: 0.4, ease: 'power3.out' })
+    gsap.to(card.querySelector('[data-card-img]'), { scale: 1.04, duration: 0.6, ease: 'power2.out' })
   }
 
   const handleLeave = () => {
     const card = cardRef.current
     if (!card) return
-    gsap.to(card.querySelector('[data-metric]'), { y: 0, duration: 0.3, ease: 'power2.out' })
-    gsap.to(card.querySelector('[data-glow]'), { opacity: 0, duration: 0.35 })
+    gsap.to(card.querySelector('[data-card-overlay]'), { opacity: 0, duration: 0.3 })
+    gsap.to(card.querySelector('[data-card-info]'), { y: 12, opacity: 0, duration: 0.3, ease: 'power2.in' })
+    gsap.to(card.querySelector('[data-card-img]'), { scale: 1, duration: 0.5, ease: 'power2.out' })
   }
 
   return (
@@ -407,61 +350,71 @@ function ProjectCard({
       data-proj-card
       onMouseEnter={handleEnter}
       onMouseLeave={handleLeave}
-      className={`group relative flex flex-col p-7 rounded-2xl border overflow-hidden transition-colors duration-300 cursor-default ${
-        accent
-          ? 'bg-nm-surface border-nm-border hover:border-nm-accent/40'
-          : 'bg-nm-surface/40 border-nm-border/50 hover:border-nm-border'
-      }`}
+      className="group relative rounded-xl overflow-hidden cursor-default bg-nm-surface border border-nm-border/50"
       style={{ opacity: 0 }}
     >
-      {/* Hover glow ring */}
-      <div
-        data-glow
-        className="absolute inset-0 rounded-2xl ring-1 ring-nm-accent/20 pointer-events-none"
-        style={{ opacity: 0 }}
-      />
-
-      {/* Top row */}
-      <div className="flex items-start justify-between mb-8">
-        <span className="font-cabinet text-xs text-nm-muted/60 tracking-wide">
-          {p.client}
-        </span>
-        <span className="font-bespoke text-[10px] text-nm-muted/40 tracking-widest">
-          {p.year}
-        </span>
-      </div>
-
-      {/* Metric */}
-      <div data-metric className="mb-5">
-        <span
-          className={`font-satoshi font-black leading-none block ${accent ? 'text-nm-accent' : 'text-nm-fg'}`}
-          style={{ fontSize: 'clamp(2.2rem,4.5vw,3rem)' }}
-        >
-          {p.metric}
-        </span>
-        <p className="font-cabinet text-nm-muted text-xs mt-1.5 leading-relaxed">
-          {p.sub}
-        </p>
-      </div>
-
-      {/* Divider */}
-      <div className="h-px w-full bg-nm-border/50 mb-5" />
-
-      {/* Headline */}
-      <p className="font-satoshi font-semibold text-nm-fg text-sm leading-snug mb-6">
-        {p.headline}
-      </p>
-
-      {/* Tags */}
-      <div className="flex flex-wrap gap-2 mt-auto">
-        {p.tags.map((tag) => (
-          <span
-            key={tag}
-            className="font-cabinet text-[10px] text-nm-fg/50 border border-nm-border/60 bg-nm-dark/40 px-3 py-1 rounded-full tracking-wide"
+      {/* Image area */}
+      <div className="relative aspect-[4/3] overflow-hidden">
+        {p.image ? (
+          <img
+            data-card-img
+            src={p.image}
+            alt={p.title}
+            className="w-full h-full object-cover"
+            loading="lazy"
+          />
+        ) : (
+          /* Placeholder when no image is set yet */
+          <div
+            data-card-img
+            className="w-full h-full flex items-center justify-center bg-nm-surface"
           >
-            {tag}
-          </span>
-        ))}
+            <span
+              className="font-satoshi font-black text-nm-fg/[0.06] leading-none select-none"
+              style={{ fontSize: 'clamp(3rem,8vw,6rem)' }}
+            >
+              {p.klient.charAt(0)}
+            </span>
+          </div>
+        )}
+
+        {/* Hover overlay */}
+        <div
+          data-card-overlay
+          className="absolute inset-0 bg-nm-dark/75 backdrop-blur-[2px] flex flex-col justify-end p-5"
+          style={{ opacity: 0 }}
+        >
+          <div data-card-info style={{ opacity: 0, transform: 'translateY(12px)' }}>
+            <p className="font-cabinet text-nm-muted/80 text-xs leading-relaxed mb-3">
+              {p.excerpt}
+            </p>
+            <div className="flex flex-wrap gap-1.5">
+              {p.tags.map((tag) => (
+                <span
+                  key={tag}
+                  className="font-cabinet text-[10px] text-nm-fg/60 border border-nm-border/60 bg-nm-dark/60 px-2.5 py-0.5 rounded-full tracking-wide"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Card footer – always visible */}
+      <div className="flex items-center justify-between px-4 py-3 border-t border-nm-border/40">
+        <div>
+          <p className="font-satoshi font-semibold text-nm-fg text-sm leading-snug">
+            {p.klient}
+          </p>
+          <p className="font-cabinet text-nm-muted/60 text-[11px] mt-0.5">
+            {CATEGORY_META[p.kategori]?.label ?? p.kategori}
+          </p>
+        </div>
+        <span className="font-bespoke text-[10px] text-nm-muted/40 tracking-widest flex-shrink-0">
+          {p.aar}
+        </span>
       </div>
     </div>
   )

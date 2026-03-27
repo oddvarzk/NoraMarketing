@@ -29,4 +29,21 @@ export const wp = {
 
   service: (slug: string) =>
     wpFetch<unknown[]>(`/tjenester?slug=${slug}&_embed`).then((r) => r[0]),
+
+  /**
+   * Custom post type – register "prosjekter" CPT in WordPress.
+   *
+   * Required ACF fields per post:
+   *   - kategori   (text / select) – e.g. "sosiale-medier"
+   *   - klient     (text)          – client name
+   *   - aar        (text)          – year, e.g. "2024"
+   *   - tags       (repeater/text) – comma-separated tag string
+   *
+   * Set a Featured Image on each post – that becomes the card image.
+   */
+  projects: () =>
+    wpFetch<unknown[]>('/prosjekter?per_page=100&_embed').catch(() => []),
+
+  project: (slug: string) =>
+    wpFetch<unknown[]>(`/prosjekter?slug=${slug}&_embed`).then((r) => r[0]),
 }
