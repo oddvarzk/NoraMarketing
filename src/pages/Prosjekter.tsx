@@ -160,12 +160,12 @@ export default function Prosjekter() {
             className="font-satoshi font-black leading-[0.88] tracking-tight mb-8"
             style={{ fontSize: 'clamp(2.8rem,8vw,8rem)', opacity: 0 }}
           >
-            <span className="block text-nm-light">Arbeid vi</span>
+            <span className="block text-nm-light">Noe av det</span>
             <span
               className="block"
               style={{ WebkitTextStroke: '2px rgba(232,232,238,0.55)', color: 'transparent' }}
             >
-              er stolte av.
+              vi har gjort.
             </span>
           </h1>
 
@@ -174,7 +174,7 @@ export default function Prosjekter() {
             className="font-cabinet text-nm-muted text-lg leading-relaxed max-w-lg"
             style={{ opacity: 0 }}
           >
-            Reelle resultater for reelle kunder. Her er et utvalg av hva vi har bygget, skapt og levert.
+            Et utvalg prosjekter vi har jobbet med – forskjellige kunder, forskjellige utfordringer.
           </p>
         </div>
 
@@ -326,7 +326,7 @@ function CategorySection({
 // ─── Project card (image-first) ───────────────────────────────────────────────
 
 function ProjectCard({ project: p }: { project: Project }) {
-  const cardRef = useRef<HTMLDivElement>(null)
+  const cardRef = useRef<HTMLAnchorElement>(null)
 
   const handleEnter = () => {
     const card = cardRef.current
@@ -345,12 +345,13 @@ function ProjectCard({ project: p }: { project: Project }) {
   }
 
   return (
-    <div
+    <Link
+      to={`/prosjekter/${p.slug}`}
       ref={cardRef}
       data-proj-card
       onMouseEnter={handleEnter}
       onMouseLeave={handleLeave}
-      className="group relative rounded-xl overflow-hidden cursor-default bg-nm-surface border border-nm-border/50"
+      className="group relative rounded-xl overflow-hidden bg-nm-surface border border-nm-border/50 hover:border-nm-accent/40 transition-colors duration-300 block"
       style={{ opacity: 0 }}
     >
       {/* Image area */}
@@ -416,6 +417,6 @@ function ProjectCard({ project: p }: { project: Project }) {
           {p.aar}
         </span>
       </div>
-    </div>
+    </Link>
   )
 }

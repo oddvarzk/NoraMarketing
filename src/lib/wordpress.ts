@@ -31,15 +31,38 @@ export const wp = {
     wpFetch<unknown[]>(`/tjenester?slug=${slug}&_embed`).then((r) => r[0]),
 
   /**
+   * Custom post type – register "team" CPT in WordPress.
+   *
+   * Required ACF fields per post:
+   *   - rolle        (text)  – job title / role
+   *   - bio          (textarea) – short bio paragraph
+   *   - spesialisering (text) – comma-separated: "SEO, Innhold"
+   *   - linkedin     (url)   – full LinkedIn profile URL
+   *   - siden        (text)  – year joined, e.g. "2022"
+   *   - initialer    (text)  – 2-letter initials shown when no photo, e.g. "NL"
+   *
+   * Set a Featured Image on each post – that becomes the profile photo.
+   * Order team members using the "Order" field in WordPress (Menu Order).
+   */
+  team: () =>
+    wpFetch<unknown[]>('/team?per_page=100&_embed&orderby=menu_order&order=asc').catch(() => []),
+
+  /**
    * Custom post type – register "prosjekter" CPT in WordPress.
    *
    * Required ACF fields per post:
-   *   - kategori   (text / select) – e.g. "sosiale-medier"
-   *   - klient     (text)          – client name
-   *   - aar        (text)          – year, e.g. "2024"
-   *   - tags       (repeater/text) – comma-separated tag string
+   *   - kategori       (text/select) – e.g. "sosiale-medier"
+   *   - klient         (text)        – client name shown on card
+   *   - aar            (text)        – year, e.g. "2024"
+   *   - tags           (text)        – comma-separated: "Meta Ads, Kreativ"
    *
-   * Set a Featured Image on each post – that becomes the card image.
+   * Extra ACF fields for the full project page:
+   *   - utfordring     (textarea)    – the client's challenge / brief
+   *   - losning        (textarea)    – what Nora Marketing did
+   *   - resultat_tekst (textarea)    – qualitative result description
+   *
+   * Set a Featured Image on each post – that becomes the card image and hero.
+   * Use Excerpt for the short hover description on the card.
    */
   projects: () =>
     wpFetch<unknown[]>('/prosjekter?per_page=100&_embed').catch(() => []),

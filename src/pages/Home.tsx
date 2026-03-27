@@ -15,8 +15,8 @@ export default function Home() {
       />
 
       <Hero />
-      <ProcessSection />
       <LogoBanner heading="Tillit fra utallige byråer **i hele Norden**" />
+      <ProcessSection />
       <ServicesSection />
       <AboutTeaser />
       <CTABanner />

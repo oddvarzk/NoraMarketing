@@ -183,7 +183,53 @@ Legg til disse feltene:
 
 ---
 
-### 4. Prosjekter (`/prosjekter`)
+### 4. Team (`/hvem-vi-er`)
+
+#### Steg 1 – Lag CPT med Custom Post Type UI
+
+Gå til **CPT UI → Add/Edit Post Types** og fyll inn:
+
+| Felt | Verdi |
+|---|---|
+| Post Type Slug | `team` |
+| Plural Label | `Team` |
+| Singular Label | `Teammedlem` |
+| Has Archive | Av |
+| Show in REST API | **På** ← viktig |
+| REST API base slug | `team` |
+| Supports | Title, Thumbnail (Featured Image) |
+
+Klikk **Add Post Type**.
+
+#### Steg 2 – Legg til ACF-felter
+
+Gå til **ACF → Field Groups → Add New**, gi gruppen navnet `Team-felter`, og sett **Location** til `Post Type == team`.
+
+Legg til disse feltene:
+
+| Feltnavn (Label) | Field Name | Felttype | Eksempel |
+|---|---|---|---|
+| Rolle | `rolle` | Text | `Grunnlegger & Daglig leder` |
+| Bio | `bio` | Textarea | Kort beskrivende avsnitt |
+| Spesialisering | `spesialisering` | Text | `SEO, Innhold, Strategi` |
+| LinkedIn | `linkedin` | URL | `https://linkedin.com/in/navn` |
+| Siden | `siden` | Text | `2019` |
+| Initialer | `initialer` | Text | `NL` (vises hvis ingen bilde) |
+
+#### Steg 3 – Legg til et teammedlem
+
+1. Gå til **Team → Add New**
+2. Skriv personens fulle navn som **tittel**
+3. Fyll inn alle ACF-feltene
+4. Last opp et **Featured Image** – dette blir profilbildet
+5. Sett **rekkefølge** under **Page Attributes → Order** (0 = først, 1 = andre, osv.)
+6. Klikk **Publish**
+
+Teammedlemmet dukker opp automatisk på `/hvem-vi-er` i riktig rekkefølge. Slett et teammedlem ved å flytte det til papirkurven i WordPress.
+
+---
+
+### 5. Prosjekter (`/prosjekter`)
 
 #### Steg 1 – Lag CPT med Custom Post Type UI
 
@@ -212,6 +258,11 @@ Legg til disse feltene:
 | Klient | `klient` | Text | `Nordvik Eiendom` |
 | År | `aar` | Text | `2024` |
 | Tags | `tags` | Text | `Meta Ads, Kreativ, A/B-testing` |
+| Utfordringen | `utfordring` | Textarea | Hva var kundens problem/brief |
+| Løsningen | `losning` | Textarea | Hva Nora Marketing gjorde |
+| Resultat-beskrivelse | `resultat_tekst` | Textarea | Kvalitativ beskrivelse av resultatet |
+
+> `utfordring`, `losning` og `resultat_tekst` vises på den individuelle prosjektsiden (`/prosjekter/:slug`). Kortet på oversiktssiden bruker WordPress **Excerpt**-feltet (aktiver via Screen Options).
 
 **Gyldige verdier for `kategori`** (må skrives nøyaktig slik):
 
