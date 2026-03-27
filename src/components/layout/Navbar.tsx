@@ -5,11 +5,13 @@ import NMLogo from '../ui/NMLogo'
 
 const DESKTOP_LINKS = [
   { label: 'Tjenester', href: '/tjenester' },
+  { label: 'Prosjekter', href: '/prosjekter' },
   { label: 'Hvem vi er', href: '/hvem-vi-er' },
 ]
 
 const MOBILE_LINKS = [
   { label: 'Tjenester', href: '/tjenester' },
+  { label: 'Prosjekter', href: '/prosjekter' },
   { label: 'Hvem vi er', href: '/hvem-vi-er' },
   { label: 'Kontakt', href: '/kontakt' },
 ]

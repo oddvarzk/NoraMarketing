@@ -238,7 +238,7 @@ export default function Tjenester() {
                 <span style={{ WebkitTextStroke: '1.5px #F4F4F8', color: 'transparent' }}>
                   leverer
                 </span>{' '}
-                <span className="text-nm-warm">resultater.</span>
+                <span className="text-nm-accent">resultater.</span>
               </h1>
 
               <p
@@ -350,8 +350,8 @@ export default function Tjenester() {
             {/* Left */}
             <div className="lg:pt-1">
               <div className="flex items-center gap-3 mb-5">
-                <span className="w-8 h-px bg-nm-warm" />
-                <span className="font-bespoke text-[10px] tracking-widest2 uppercase text-nm-warm">FAQ</span>
+                <span className="w-8 h-px bg-nm-accent" />
+                <span className="font-bespoke text-[10px] tracking-widest2 uppercase text-nm-accent">FAQ</span>
               </div>
               <h2
                 id="faq-heading"

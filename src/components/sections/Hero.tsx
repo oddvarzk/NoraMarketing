@@ -95,7 +95,7 @@ export default function Hero() {
           </span>
           <span
             data-h-line
-            className="block text-nm-warm"
+            className="block text-nm-accent"
             style={{ fontSize: 'clamp(2.4rem,9.5vw,10.5rem)', opacity: 0 }}
           >
             fungerer.
@@ -119,11 +119,11 @@ export default function Hero() {
                 to="/kontakt"
                 className="inline-flex items-center gap-3 group"
               >
-                <span className="font-satoshi font-semibold text-nm-fg text-sm tracking-wide group-hover:text-nm-warm transition-colors duration-200">
+                <span className="font-satoshi font-semibold text-nm-fg text-sm tracking-wide group-hover:text-nm-accent transition-colors duration-200">
                   Start et prosjekt
                 </span>
-                <span className="h-8 w-8 flex items-center justify-center rounded-full border border-nm-border/60 group-hover:border-nm-warm/40 transition-colors duration-300">
-                  <svg className="w-3 h-3 text-nm-muted group-hover:text-nm-warm transition-colors duration-200" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <span className="h-8 w-8 flex items-center justify-center rounded-full border border-nm-border/60 group-hover:border-nm-accent/40 transition-colors duration-300">
+                  <svg className="w-3 h-3 text-nm-muted group-hover:text-nm-accent transition-colors duration-200" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                     <path d="M1 6h10M7 2l4 4-4 4" />
                   </svg>
                 </span>
@@ -235,13 +235,13 @@ function HeroBg() {
       />
 
       {/* Warm accent glow — bottom left, ties into the palette */}
-      <div className="absolute bottom-0 left-[-5%] w-[40vw] h-[35vh] bg-nm-warm/[0.07] rounded-full blur-[120px]" />
+      <div className="absolute bottom-0 left-[-5%] w-[40vw] h-[35vh] bg-nm-accent/[0.07] rounded-full blur-[120px]" />
 
       {/* Accent glow — top right */}
       <div className="absolute top-[-10%] right-[-5%] w-[35vw] h-[45vh] bg-nm-accent/[0.06] rounded-full blur-[130px]" />
 
       {/* Warm glow — bottom left */}
-      <div className="absolute bottom-0 left-[-10%] w-[45vw] h-[40vh] bg-nm-warm/[0.025] rounded-full blur-[130px]" />
+      <div className="absolute bottom-0 left-[-10%] w-[45vw] h-[40vh] bg-nm-accent/[0.025] rounded-full blur-[130px]" />
       {/* Accent glow — top right */}
       <div className="absolute top-[-15%] right-[-8%] w-[40vw] h-[50vh] bg-nm-accent/[0.03] rounded-full blur-[140px]" />
     </div>

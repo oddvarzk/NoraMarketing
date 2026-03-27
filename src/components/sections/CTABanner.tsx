@@ -94,8 +94,8 @@ export default function CTABanner() {
               className="flex items-center gap-3 mb-10"
               style={{ opacity: 0 }}
             >
-              <span className="w-8 h-px bg-nm-warm" />
-              <span className="font-bespoke text-[10px] tracking-widest2 uppercase text-nm-warm">
+              <span className="w-8 h-px bg-nm-accent" />
+              <span className="font-bespoke text-[10px] tracking-widest2 uppercase text-nm-accent">
                 La oss snakke
               </span>
             </div>
@@ -172,7 +172,7 @@ export default function CTABanner() {
       >
         <div className="marquee-track-slow-reverse opacity-[0.12]">
           {[...TICKER_ITEMS].reverse().map((w, i) => (
-            <span key={i} className="font-bespoke text-xs tracking-widest uppercase text-nm-warm mx-5 whitespace-nowrap">
+            <span key={i} className="font-bespoke text-xs tracking-widest uppercase text-nm-accent mx-5 whitespace-nowrap">
               {w}
             </span>
           ))}

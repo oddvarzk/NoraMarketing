@@ -170,7 +170,7 @@ export default function Kontakt() {
                 style={{ fontSize: 'clamp(3rem,8vw,7rem)', opacity: 0 }}
               >
                 La oss snakke om<br />
-                <span className="text-nm-warm">din vekst.</span>
+                <span className="text-nm-accent">din vekst.</span>
               </h1>
 
               <div data-hero-el className="flex flex-col gap-5 lg:pb-1" style={{ opacity: 0 }}>
@@ -344,8 +344,8 @@ export default function Kontakt() {
 
             <div>
               <div className="flex items-center gap-3 mb-5">
-                <span className="w-8 h-px bg-nm-warm" />
-                <span className="font-bespoke text-[10px] tracking-widest2 uppercase text-nm-warm">FAQ</span>
+                <span className="w-8 h-px bg-nm-accent" />
+                <span className="font-bespoke text-[10px] tracking-widest2 uppercase text-nm-accent">FAQ</span>
               </div>
               <h2 id="faq-heading" className="font-satoshi font-black text-[clamp(1.6rem,3.5vw,2.5rem)] text-nm-light leading-[0.92] tracking-tight">
                 Ofte stilte<br />

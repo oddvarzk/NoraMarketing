@@ -82,8 +82,8 @@ export default function WorkTeaser() {
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-16">
           <div>
             <div className="flex items-center gap-3 mb-4">
-              <span className="w-8 h-px bg-nm-warm" data-wt-header style={{ opacity: 0 }} />
-              <span className="font-bespoke text-[10px] tracking-widest2 uppercase text-nm-warm" data-wt-header style={{ opacity: 0 }}>
+              <span className="w-8 h-px bg-nm-accent" data-wt-header style={{ opacity: 0 }} />
+              <span className="font-bespoke text-[10px] tracking-widest2 uppercase text-nm-accent" data-wt-header style={{ opacity: 0 }}>
                 Utvalgte resultater
               </span>
             </div>
@@ -97,7 +97,7 @@ export default function WorkTeaser() {
               <span style={{ WebkitTextStroke: '1px #E8E8EE', color: 'transparent' }}>
                 Resultater.
               </span>{' '}
-              <span className="text-nm-warm">Vekst.</span>
+              <span className="text-nm-accent">Vekst.</span>
             </h2>
           </div>
 
@@ -162,7 +162,7 @@ function CaseCard({ caseItem: c, isFirst }: { caseItem: (typeof CASES)[number]; 
       onMouseLeave={handleLeave}
       className={`group relative flex flex-col p-7 rounded-2xl border transition-colors duration-300 cursor-default overflow-hidden ${
         isFirst
-          ? 'bg-nm-surface border-nm-border hover:border-nm-warm/40'
+          ? 'bg-nm-surface border-nm-border hover:border-nm-accent/40'
           : 'bg-nm-surface/40 border-nm-border/50 hover:border-nm-border'
       }`}
       style={{ opacity: 0 }}
@@ -170,7 +170,7 @@ function CaseCard({ caseItem: c, isFirst }: { caseItem: (typeof CASES)[number]; 
       {/* Hover accent border overlay */}
       <div
         data-card-border
-        className="absolute inset-0 rounded-2xl ring-1 ring-nm-warm/20 pointer-events-none"
+        className="absolute inset-0 rounded-2xl ring-1 ring-nm-accent/20 pointer-events-none"
         style={{ opacity: 0 }}
       />
 
@@ -187,7 +187,7 @@ function CaseCard({ caseItem: c, isFirst }: { caseItem: (typeof CASES)[number]; 
       {/* Big metric */}
       <div data-metric className="mb-6">
         <div className="flex items-baseline gap-1">
-          <span className={`font-satoshi font-black leading-none ${isFirst ? 'text-nm-warm' : 'text-nm-fg'}`}
+          <span className={`font-satoshi font-black leading-none ${isFirst ? 'text-nm-accent' : 'text-nm-fg'}`}
             style={{ fontSize: 'clamp(2.5rem,5vw,3.5rem)' }}
           >
             {c.metric}

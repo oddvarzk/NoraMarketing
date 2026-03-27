@@ -91,7 +91,7 @@ export default function TjenestePage() {
               style={{ fontSize: 'clamp(2.5rem,7vw,6rem)', opacity: 0 }}
             >
               <span className="text-nm-light">{service.title.split(' ').slice(0, -1).join(' ')}</span>{' '}
-              <span className="text-nm-warm">{service.title.split(' ').slice(-1)[0]}</span>
+              <span className="text-nm-accent">{service.title.split(' ').slice(-1)[0]}</span>
             </h1>
 
             {/* Excerpt */}

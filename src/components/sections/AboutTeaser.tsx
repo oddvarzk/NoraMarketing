@@ -194,7 +194,7 @@ export default function AboutTeaser() {
               {/* Star rating */}
               <div className="flex gap-1 md:justify-end mt-2">
                 {Array.from({ length: 5 }).map((_, i) => (
-                  <svg key={i} className="w-3 h-3 text-nm-warm" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true">
+                  <svg key={i} className="w-3 h-3 text-nm-accent" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true">
                     <path d="M6 1l1.4 2.8 3.1.4-2.25 2.2.53 3.1L6 8.05 3.22 9.5l.53-3.1L1.5 4.2l3.1-.4L6 1z" />
                   </svg>
                 ))}

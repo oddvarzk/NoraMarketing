@@ -175,7 +175,7 @@ export default function HvemViEr() {
               >
                 Vi er<br />
                 Nora{' '}
-                <span className="text-nm-warm">Marketing.</span>
+                <span className="text-nm-accent">Marketing.</span>
               </h1>
 
               <p
@@ -295,8 +295,8 @@ export default function HvemViEr() {
           <div className="max-w-7xl mx-auto">
             <div className="mb-14">
               <div className="flex items-center gap-3 mb-4">
-                <span className="w-8 h-px bg-nm-warm" />
-                <span className="font-bespoke text-[10px] tracking-widest2 uppercase text-nm-warm">
+                <span className="w-8 h-px bg-nm-accent" />
+                <span className="font-bespoke text-[10px] tracking-widest2 uppercase text-nm-accent">
                   Vår Tilnærming
                 </span>
               </div>
@@ -305,7 +305,7 @@ export default function HvemViEr() {
                 className="font-satoshi font-black text-[clamp(1.8rem,4vw,3rem)] text-nm-light leading-[0.92] tracking-tight max-w-xl"
               >
                 Hvordan vi leverer<br />
-                <span className="text-nm-warm">markedsføring som fungerer.</span>
+                <span className="text-nm-accent">markedsføring som fungerer.</span>
               </h2>
             </div>
 

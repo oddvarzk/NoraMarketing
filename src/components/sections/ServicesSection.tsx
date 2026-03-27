@@ -32,22 +32,6 @@ export const SERVICES = [
   },
   {
     number: '04',
-    title: 'E-post Markedsføring',
-    slug: 'epost-markedsforing',
-    excerpt:
-      'Automatiserte sekvenser og nyhetsbrev som pleier relasjoner og driver gjenkjøp.',
-    category: 'Automatisering',
-  },
-  {
-    number: '05',
-    title: 'Analyse & Rapportering',
-    slug: 'analyse-rapportering',
-    excerpt:
-      'Datadrevet innsikt med klare dashbords – slik at du alltid vet hva som fungerer.',
-    category: 'Data',
-  },
-  {
-    number: '06',
     title: 'Digital Strategi',
     slug: 'digital-strategi',
     excerpt:
@@ -55,7 +39,7 @@ export const SERVICES = [
     category: 'Strategi',
   },
   {
-    number: '07',
+    number: '05',
     title: 'Nettsideutvikling',
     slug: 'nettsideutvikling',
     excerpt:
@@ -63,7 +47,7 @@ export const SERVICES = [
     category: 'Utvikling',
   },
   {
-    number: '08',
+    number: '06',
     title: 'Videoproduksjon',
     slug: 'videoproduksjon',
     excerpt:
