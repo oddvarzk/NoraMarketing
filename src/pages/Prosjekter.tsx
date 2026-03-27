@@ -195,15 +195,6 @@ export default function Prosjekter() {
         ref={heroRef}
         className="relative min-h-[52vh] flex flex-col justify-end overflow-hidden bg-nm-dark px-6 sm:px-12 lg:px-20 pb-16 pt-40"
       >
-        {/* Ghost watermark */}
-        <span
-          aria-hidden="true"
-          className="pointer-events-none select-none absolute right-[-2%] top-[10%] font-satoshi font-black leading-none text-nm-fg/[0.03]"
-          style={{ fontSize: 'clamp(9rem,22vw,22rem)' }}
-        >
-          ARBEID
-        </span>
-
         <div className="relative z-10 max-w-7xl mx-auto w-full">
           <div className="flex items-center gap-3 mb-6" data-p-hero style={{ opacity: 0 }}>
             <span className="w-8 h-px bg-nm-accent" />
