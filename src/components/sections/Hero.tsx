@@ -61,7 +61,7 @@ export default function Hero() {
   return (
     <section
       ref={sectionRef}
-      className="relative min-h-dvh flex flex-col overflow-hidden bg-nm-dark"
+      className="relative min-h-svh flex flex-col overflow-hidden bg-nm-dark"
       aria-label="Introduksjon"
     >
       <HeroBg />
@@ -174,9 +174,9 @@ function RainbowBg() {
   const ANIM   = 80
   const dark   = 'rgb(13,13,15)'
 
-  const purple = 'rgba(130,140,160,0.13)'
-  const blue   = 'rgba(120,135,155,0.13)'
-  const teal   = 'rgba(125,140,155,0.13)'
+  const purple = 'rgba(180,190,210,0.5)'
+  const blue   = 'rgba(160,175,200,0.5)'
+  const teal   = 'rgba(170,185,200,0.5)'
 
   const combos: [string, string, string][] = [
     [purple, blue,   teal  ],
@@ -231,7 +231,7 @@ function HeroBg() {
       <RainbowBg />
 
       {/* Dark overlay — keeps text readable */}
-      <div className="absolute inset-0 bg-nm-dark/92" />
+      <div className="absolute inset-0 bg-nm-dark/90" />
 
       {/* Radial accent — breaks the perfect gradient look */}
       <div
