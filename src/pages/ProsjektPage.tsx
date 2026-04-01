@@ -190,7 +190,7 @@ export default function ProsjektPage() {
 
           {/* Ghost client watermark */}
           <div
-            className="absolute bottom-0 right-0 font-satoshi font-black leading-none pointer-events-none select-none"
+            className="absolute bottom-0 right-0 font-lora font-bold leading-none pointer-events-none select-none"
             style={{
               fontSize: 'clamp(80px,16vw,220px)',
               color: 'transparent',
@@ -223,7 +223,7 @@ export default function ProsjektPage() {
             {/* Title */}
             <h1
               data-pp-el
-              className="font-satoshi font-black leading-[0.88] tracking-tight mb-10 max-w-4xl"
+              className="font-lora font-bold leading-[0.88] tracking-tight mb-10 max-w-4xl"
               style={{ fontSize: 'clamp(2.4rem,7vw,7rem)', opacity: 0 }}
             >
               <span className="block text-nm-light">{p.klient}</span>

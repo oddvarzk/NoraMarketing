@@ -40,7 +40,7 @@ export default function NMLogo({ className = '', size = 'md' }: Props) {
           fontFamily="'Bespoke Stencil', sans-serif"
           fontWeight="700"
           fontSize="24"
-          fill="#4B6EF5"
+          fill="#1456CC"
         >
           M
         </text>

@@ -53,7 +53,7 @@ export default function LogoBanner({ heading = 'Tillit fra utallige byråer **i 
 
 const styleMap = {
   sans:    'font-satoshi font-bold text-base tracking-tight',
-  serif:   'font-satoshi font-black text-base italic tracking-tight',
+  serif:   'font-lora font-bold text-base italic tracking-tight',
   mono:    'font-cabinet font-bold text-sm tracking-widest uppercase',
   stencil: 'font-bespoke font-bold text-base tracking-wide uppercase',
 }

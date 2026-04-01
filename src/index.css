@@ -21,7 +21,7 @@
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-satoshi;
+    font-family: 'Lora', serif;
     text-rendering: optimizeLegibility;
   }
 
@@ -41,7 +41,7 @@
   }
 
   .text-gradient {
-    background: linear-gradient(135deg, #7B96FF 0%, #4B6EF5 100%);
+    background: linear-gradient(135deg, #2E6FE0 0%, #1456CC 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -82,6 +82,11 @@
     width: max-content;
     animation: marquee-reverse 60s linear infinite;
     will-change: transform;
+  }
+
+  @keyframes rainbow-slide {
+    from { right: -25vw; }
+    to   { right: 125vw; }
   }
 
   @keyframes marquee {

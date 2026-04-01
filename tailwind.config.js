@@ -5,6 +5,7 @@ export default {
     extend: {
       fontFamily: {
         satoshi: ['Satoshi', 'sans-serif'],
+        lora: ['Lora', 'serif'],
         cabinet: ['Cabinet Grotesk', 'sans-serif'],
         bespoke: ['Bespoke Stencil', 'sans-serif'],
       },
@@ -14,8 +15,8 @@ export default {
           mid: '#141418',
           surface: '#1A1A22',
           border: '#2A2A35',
-          accent: '#4B6EF5',
-          'accent-light': '#7B96FF',
+          accent: '#1456CC',
+          'accent-light': '#2E6FE0',
           muted: '#6B6B80',
           fg: '#E8E8EE',
           light: '#F4F4F8',

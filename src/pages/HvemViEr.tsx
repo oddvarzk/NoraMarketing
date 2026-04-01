@@ -285,7 +285,7 @@ export default function HvemViEr() {
             <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-10 items-end">
               <h1
                 data-hero-el
-                className="font-satoshi font-black leading-[0.88] tracking-tight text-nm-light"
+                className="font-lora font-bold leading-[0.88] tracking-tight text-nm-light"
                 style={{ fontSize: 'clamp(3rem,8vw,7rem)', opacity: 0 }}
               >
                 Vi er<br />
@@ -317,7 +317,7 @@ export default function HvemViEr() {
               </span>
               <h2
                 id="history-heading"
-                className="font-satoshi font-black text-[clamp(1.8rem,3.5vw,2.8rem)] text-nm-light leading-[0.92] tracking-tight"
+                className="font-lora font-bold text-[clamp(1.8rem,3.5vw,2.8rem)] text-nm-light leading-[0.92] tracking-tight"
               >
                 Ekte hjelp,<br />
                 <span style={{ WebkitTextStroke: '1px #F4F4F8', color: 'transparent' }}>
@@ -358,7 +358,7 @@ export default function HvemViEr() {
                 </div>
                 <h2
                   id="team-heading"
-                  className="font-satoshi font-black text-[clamp(1.8rem,3.5vw,2.8rem)] text-nm-light leading-[0.92] tracking-tight"
+                  className="font-lora font-bold text-[clamp(1.8rem,3.5vw,2.8rem)] text-nm-light leading-[0.92] tracking-tight"
                 >
                   Folkene<br />
                   <span style={{ WebkitTextStroke: '1px #F4F4F8', color: 'transparent' }}>
@@ -402,7 +402,7 @@ export default function HvemViEr() {
                 </div>
                 <h2
                   id="values-heading"
-                  className="font-satoshi font-black text-[clamp(1.8rem,4vw,3rem)] text-nm-light leading-[0.92] tracking-tight"
+                  className="font-lora font-bold text-[clamp(1.8rem,4vw,3rem)] text-nm-light leading-[0.92] tracking-tight"
                 >
                   Prinsippene som<br />
                   <span style={{ WebkitTextStroke: '1px #F4F4F8', color: 'transparent' }}>
@@ -455,7 +455,7 @@ export default function HvemViEr() {
               </div>
               <h2
                 id="approach-heading"
-                className="font-satoshi font-black text-[clamp(1.8rem,4vw,3rem)] text-nm-light leading-[0.92] tracking-tight max-w-xl"
+                className="font-lora font-bold text-[clamp(1.8rem,4vw,3rem)] text-nm-light leading-[0.92] tracking-tight max-w-xl"
               >
                 Hvordan vi leverer<br />
                 <span className="text-nm-accent">markedsføring som fungerer.</span>
@@ -498,7 +498,7 @@ export default function HvemViEr() {
               </div>
               <h2
                 data-mission-el
-                className="font-satoshi font-black text-[clamp(1.8rem,4vw,3rem)] text-nm-light mb-6 leading-[0.92] tracking-tight"
+                className="font-lora font-bold text-[clamp(1.8rem,4vw,3rem)] text-nm-light mb-6 leading-[0.92] tracking-tight"
                 style={{ opacity: 0 }}
               >
                 Profesjonell markedsføring<br />
@@ -542,7 +542,7 @@ export default function HvemViEr() {
                   { val: '3×', label: 'ROI' },
                 ].map(({ val, label }) => (
                   <div key={label} className="text-center">
-                    <p className="font-satoshi font-black text-nm-accent text-3xl leading-none">{val}</p>
+                    <p className="font-lora font-bold text-nm-accent text-3xl leading-none">{val}</p>
                     <p className="font-cabinet text-nm-muted text-xs mt-1.5 uppercase tracking-widest">{label}</p>
                   </div>
                 ))}
@@ -616,7 +616,7 @@ function TeamCard({
             className="w-full h-full flex items-center justify-center bg-gradient-to-br from-nm-surface to-nm-dark"
           >
             <span
-              className="font-satoshi font-black text-nm-fg/10 leading-none select-none"
+              className="font-lora font-bold text-nm-fg/10 leading-none select-none"
               style={{ fontSize: 'clamp(2.5rem,6vw,4rem)' }}
             >
               {m.initials}
@@ -736,7 +736,7 @@ function TeamPanel({ member, onClose }: { member: TeamMember | null; onClose: ()
                 ) : (
                   <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-nm-surface to-nm-dark">
                     <span
-                      className="font-satoshi font-black text-nm-fg/10 leading-none select-none"
+                      className="font-lora font-bold text-nm-fg/10 leading-none select-none"
                       style={{ fontSize: '5rem' }}
                     >
                       {member.initials}
@@ -747,7 +747,7 @@ function TeamPanel({ member, onClose }: { member: TeamMember | null; onClose: ()
 
               {/* Name + role */}
               <div className="mb-6">
-                <h2 className="font-satoshi font-black text-2xl text-nm-light leading-tight mb-1">
+                <h2 className="font-lora font-bold text-2xl text-nm-light leading-tight mb-1">
                   {member.name}
                 </h2>
                 <p className="font-cabinet text-nm-accent text-sm tracking-wide">{member.role}</p>

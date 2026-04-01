@@ -90,7 +90,7 @@ export default function WorkTeaser() {
             <h2
               id="work-teaser-heading"
               data-wt-header
-              className="font-satoshi font-black text-[clamp(2rem,5vw,4rem)] text-nm-light leading-[0.9] tracking-tight"
+              className="font-lora font-bold text-[clamp(2rem,5vw,4rem)] text-nm-light leading-[0.9] tracking-tight"
               style={{ opacity: 0 }}
             >
               Kunder.<br />
@@ -187,7 +187,7 @@ function CaseCard({ caseItem: c, isFirst }: { caseItem: (typeof CASES)[number]; 
       {/* Big metric */}
       <div data-metric className="mb-6">
         <div className="flex items-baseline gap-1">
-          <span className={`font-satoshi font-black leading-none ${isFirst ? 'text-nm-accent' : 'text-nm-fg'}`}
+          <span className={`font-lora font-bold leading-none ${isFirst ? 'text-nm-accent' : 'text-nm-fg'}`}
             style={{ fontSize: 'clamp(2.5rem,5vw,3.5rem)' }}
           >
             {c.metric}

@@ -110,7 +110,7 @@ export default function ServicesSection() {
             </div>
             <h2
               data-services-header
-              className="font-satoshi font-black text-[clamp(2rem,5vw,4rem)] text-nm-light leading-[0.9] tracking-tight"
+              className="font-lora font-bold text-[clamp(2rem,5vw,4rem)] text-nm-light leading-[0.9] tracking-tight"
               style={{ opacity: 0 }}
             >
               Alt du trenger.<br />
@@ -159,7 +159,7 @@ function ServiceRow({ service }: { service: (typeof SERVICES)[number] }) {
     if (!row) return
     gsap.to(row.querySelector('[data-row-arrow]'), { x: 5, duration: 0.25, ease: 'power2.out' })
     gsap.to(row.querySelector('[data-row-excerpt]'), { opacity: 1, y: 0, duration: 0.3, ease: 'power2.out' })
-    gsap.to(row.querySelector('[data-row-num]'), { color: '#4B6EF5', duration: 0.2 })
+    gsap.to(row.querySelector('[data-row-num]'), { color: '#1456CC', duration: 0.2 })
   }
 
   const handleMouseLeave = () => {

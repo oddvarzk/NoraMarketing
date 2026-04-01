@@ -101,7 +101,7 @@ export default function CTABanner() {
             </div>
 
             {/* Headline — clip reveal */}
-            <h2 className="font-satoshi font-black leading-[0.88] tracking-tight" style={{ fontSize: 'clamp(3rem,8vw,7.5rem)' }}>
+            <h2 className="font-lora font-bold leading-[0.88] tracking-tight" style={{ fontSize: 'clamp(3rem,8vw,7.5rem)' }}>
               <span
                 data-cta-line
                 className="block text-nm-light"
