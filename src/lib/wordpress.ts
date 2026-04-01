@@ -37,8 +37,6 @@ export const wp = {
    *   - rolle        (text)  – job title / role
    *   - bio          (textarea) – short bio paragraph
    *   - spesialisering (text) – comma-separated: "SEO, Innhold"
-   *   - linkedin     (url)   – full LinkedIn profile URL
-   *   - siden        (text)  – year joined, e.g. "2022"
    *   - initialer    (text)  – 2-letter initials shown when no photo, e.g. "NL"
    *
    * Set a Featured Image on each post – that becomes the profile photo.

@@ -51,24 +51,6 @@ const CATEGORY_META: Record<string, { label: string; number: string }> = {
 
 const CATEGORY_ORDER = Object.keys(CATEGORY_META)
 
-// ─── Fallback data (remove once WP CPT is live) ───────────────────────────────
-
-const FALLBACK_PROJECTS: Project[] = [
-  { id: 1,  slug: 'forma-studio-meta',    title: 'Forma Studio',     excerpt: 'Kampanjeoptimalisering som reduserte kostnad per kunde med 52 % på tre måneder.',   image: null, kategori: 'sosiale-medier',        klient: 'Forma Studio',     aar: '2024', tags: ['Meta Ads', 'A/B-testing'] },
-  { id: 2,  slug: 'kvartett-innhold',     title: 'Kvartett AS',      excerpt: 'Redefinert innholdsstrategi som tredoblet engasjement på Instagram og TikTok.',       image: null, kategori: 'sosiale-medier',        klient: 'Kvartett AS',      aar: '2023', tags: ['Instagram', 'TikTok'] },
-  { id: 3,  slug: 'vind-digital-reach',   title: 'Vind Digital',     excerpt: 'Fullstendig rebranding av sosiale kanaler med ×3.2 rekkevidde.',                       image: null, kategori: 'sosiale-medier',        klient: 'Vind Digital',     aar: '2024', tags: ['LinkedIn', 'Meta'] },
-  { id: 4,  slug: 'helios-seo',           title: 'Helios AS',        excerpt: 'Teknisk SEO og innholdsstrategi som firedoblet organisk trafikk på 6 måneder.',        image: null, kategori: 'seo-sem',               klient: 'Helios AS',        aar: '2024', tags: ['SEO', 'Google'] },
-  { id: 5,  slug: 'nordvik-leads',        title: 'Nordvik Eiendom',  excerpt: 'Google Ads-optimalisering som ga 340 % økning i kvalifiserte leads.',                  image: null, kategori: 'seo-sem',               klient: 'Nordvik Eiendom',  aar: '2024', tags: ['Google Ads', 'CRO'] },
-  { id: 6,  slug: 'bergstrom-innhold',    title: 'Bergström Group',  excerpt: 'Innholdsrestrukturering og bloggstrategi økte tid på side med 95 %.',                  image: null, kategori: 'innholdsmarkedsforing', klient: 'Bergström Group',  aar: '2023', tags: ['Blogg', 'SEO'] },
-  { id: 7,  slug: 'apex-leadgen',         title: 'Apex Group',       excerpt: 'Målrettet lead magnet-innhold som mer enn doblet konverteringsraten.',                  image: null, kategori: 'innholdsmarkedsforing', klient: 'Apex Group',       aar: '2024', tags: ['Lead gen', 'Innhold'] },
-  { id: 8,  slug: 'solberg-nettside',     title: 'Solberg & Co',     excerpt: 'Fullstendig nettside-redesign som økte konverteringer med 210 %.',                     image: null, kategori: 'nettsideutvikling',     klient: 'Solberg & Co',     aar: '2024', tags: ['React', 'UX/UI'] },
-  { id: 9,  slug: 'forma-performance',    title: 'Forma Studio',     excerpt: 'Fullstendig optimalisert nettside fra bunnen med 0.8 s lastetid.',                     image: null, kategori: 'nettsideutvikling',     klient: 'Forma Studio',     aar: '2023', tags: ['Performance', 'Vite'] },
-  { id: 10, slug: 'nordvik-strategi',     title: 'Nordvik Eiendom',  excerpt: 'Full digital strategi og kanalplan som tredoblet gjennomsnittlig ROI.',                image: null, kategori: 'digital-strategi',      klient: 'Nordvik Eiendom',  aar: '2023', tags: ['Strategi', 'Vekst'] },
-  { id: 11, slug: 'helios-budsjett',      title: 'Helios AS',        excerpt: 'Kanaloptimalisering som kuttet markedsbudsjettet med 40 % – med samme resultat.',     image: null, kategori: 'digital-strategi',      klient: 'Helios AS',        aar: '2023', tags: ['Budsjett', 'Effektivitet'] },
-  { id: 12, slug: 'kvartett-video',       title: 'Kvartett AS',      excerpt: 'Viral merkevare-video som fikk 12 millioner visninger på TikTok og Reels.',           image: null, kategori: 'videoproduksjon',        klient: 'Kvartett AS',      aar: '2024', tags: ['TikTok', 'Reels'] },
-  { id: 13, slug: 'vind-watchtime',       title: 'Vind Digital',     excerpt: 'Redesignet video-innholdsstrategi økte watch time med 320 %.',                         image: null, kategori: 'videoproduksjon',        klient: 'Vind Digital',     aar: '2024', tags: ['YouTube', 'Storytelling'] },
-]
-
 // ─── WP data mapper ───────────────────────────────────────────────────────────
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -101,15 +83,11 @@ export default function Prosjekter() {
   const [loading, setLoading] = useState(true)
   const [activeFilter, setActiveFilter] = useState<string | null>(null)
 
-  // Fetch from WP, fall back to dummy data
   useEffect(() => {
     wp.projects()
-      .then((posts) => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const mapped = (posts as any[]).map(mapWpProject)
-        setProjects(mapped.length > 0 ? mapped : FALLBACK_PROJECTS)
-      })
-      .catch(() => setProjects(FALLBACK_PROJECTS))
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .then((posts) => setProjects((posts as any[]).map(mapWpProject)))
+      .catch(() => setProjects([]))
       .finally(() => setLoading(false))
   }, [])
 

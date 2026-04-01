@@ -8,65 +8,7 @@ import { wp } from '../lib/wordpress'
 
 gsap.registerPlugin(ScrollTrigger)
 
-// ─── Data ────────────────────────────────────────────────────────────────────
-
-const TEAM: TeamMember[] = [
-  {
-    id: 'person-1',
-    name: 'Person 1',
-    role: 'Stilling / rolle',
-    image: null,
-    initials: 'P1',
-    bio: 'Kort beskrivelse om personen, bakgrunn, hva de bringer til teamet og hva de er spesielt gode på. Dette byttes ut med ekte innhold.',
-    specialties: ['Spesialitet 1', 'Spesialitet 2', 'Spesialitet 3'],
-    linkedin: 'https://linkedin.com',
-    since: '2019',
-  },
-  {
-    id: 'person-2',
-    name: 'Person 2',
-    role: 'Stilling / rolle',
-    image: null,
-    initials: 'P2',
-    bio: 'Kort beskrivelse om personen, bakgrunn, hva de bringer til teamet og hva de er spesielt gode på. Dette byttes ut med ekte innhold.',
-    specialties: ['Spesialitet 1', 'Spesialitet 2', 'Spesialitet 3'],
-    linkedin: 'https://linkedin.com',
-    since: '2020',
-  },
-  {
-    id: 'person-3',
-    name: 'Person 3',
-    role: 'Stilling / rolle',
-    image: null,
-    initials: 'P3',
-    bio: 'Kort beskrivelse om personen, bakgrunn, hva de bringer til teamet og hva de er spesielt gode på. Dette byttes ut med ekte innhold.',
-    specialties: ['Spesialitet 1', 'Spesialitet 2', 'Spesialitet 3'],
-    linkedin: 'https://linkedin.com',
-    since: '2021',
-  },
-  {
-    id: 'person-4',
-    name: 'Person 4',
-    role: 'Stilling / rolle',
-    image: null,
-    initials: 'P4',
-    bio: 'Kort beskrivelse om personen, bakgrunn, hva de bringer til teamet og hva de er spesielt gode på. Dette byttes ut med ekte innhold.',
-    specialties: ['Spesialitet 1', 'Spesialitet 2', 'Spesialitet 3'],
-    linkedin: 'https://linkedin.com',
-    since: '2022',
-  },
-  {
-    id: 'person-5',
-    name: 'Person 5',
-    role: 'Stilling / rolle',
-    image: null,
-    initials: 'P5',
-    bio: 'Kort beskrivelse om personen, bakgrunn, hva de bringer til teamet og hva de er spesielt gode på. Dette byttes ut med ekte innhold.',
-    specialties: ['Spesialitet 1', 'Spesialitet 2', 'Spesialitet 3'],
-    linkedin: 'https://linkedin.com',
-    since: '2023',
-  },
-]
+// ─── Types ───────────────────────────────────────────────────────────────────
 
 interface TeamMember {
   id: string
@@ -76,8 +18,8 @@ interface TeamMember {
   initials: string
   bio: string
   specialties: string[]
-  linkedin: string
-  since: string
+
+
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -96,8 +38,6 @@ function mapWpTeamMember(post: any): TeamMember {
     specialties: typeof acf.spesialisering === 'string'
                    ? acf.spesialisering.split(',').map((s: string) => s.trim()).filter(Boolean)
                    : [],
-    linkedin:    acf.linkedin ?? 'https://linkedin.com',
-    since:       acf.siden ?? '',
   }
 }
 
@@ -167,16 +107,16 @@ const HISTORY_PARAS = [
 
 export default function HvemViEr() {
   const pageRef = useRef<HTMLDivElement>(null)
-  const [team, setTeam] = useState<TeamMember[]>(TEAM)
+  const [team, setTeam] = useState<TeamMember[]>([])
+  const [teamLoading, setTeamLoading] = useState(true)
   const [activeMember, setActiveMember] = useState<TeamMember | null>(null)
 
   useEffect(() => {
     wp.team()
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .then((posts: any[]) => {
-        if (posts.length > 0) setTeam(posts.map(mapWpTeamMember))
-      })
-      .catch(() => {/* keep fallback */})
+      .then((posts: any[]) => setTeam(posts.map(mapWpTeamMember)))
+      .catch(() => {})
+      .finally(() => setTeamLoading(false))
   }, [])
 
   useEffect(() => {
@@ -372,17 +312,23 @@ export default function HvemViEr() {
               </p>
             </div>
 
-            {/* Team grid — asymmetric: first card slightly taller */}
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-              {team.map((member, i) => (
-                <TeamCard
-                  key={member.id}
-                  member={member}
-                  featured={i === 0}
-                  onClick={() => setActiveMember(member)}
-                />
-              ))}
-            </div>
+            {/* Team grid */}
+            {teamLoading ? (
+              <div className="flex items-center justify-center py-20">
+                <span className="font-cabinet text-nm-muted/50 text-sm tracking-wide">Laster teamet…</span>
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                {team.map((member, i) => (
+                  <TeamCard
+                    key={member.id}
+                    member={member}
+                    featured={i === 0}
+                    onClick={() => setActiveMember(member)}
+                  />
+                ))}
+              </div>
+            )}
           </div>
         </section>
 
@@ -751,7 +697,6 @@ function TeamPanel({ member, onClose }: { member: TeamMember | null; onClose: ()
                   {member.name}
                 </h2>
                 <p className="font-cabinet text-nm-accent text-sm tracking-wide">{member.role}</p>
-                <p className="font-cabinet text-nm-muted/50 text-xs mt-1">Siden {member.since}</p>
               </div>
 
               {/* Bio */}
@@ -776,20 +721,6 @@ function TeamPanel({ member, onClose }: { member: TeamMember | null; onClose: ()
                 </div>
               </div>
 
-              {/* LinkedIn */}
-              <a
-                href={member.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 group"
-              >
-                <span className="font-cabinet text-sm text-nm-muted group-hover:text-nm-fg transition-colors duration-200">
-                  LinkedIn
-                </span>
-                <svg className="w-3 h-3 text-nm-muted group-hover:text-nm-accent transition-all duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M1 11L11 1M11 1H4M11 1v7" />
-                </svg>
-              </a>
             </div>
 
             {/* Bottom padding */}

@@ -47,59 +47,6 @@ const CATEGORY_LABEL: Record<string, string> = {
   'videoproduksjon':       'Videoproduksjon',
 }
 
-// ─── Fallback detail data ─────────────────────────────────────────────────────
-
-const FALLBACK_DETAIL: Record<string, ProjectDetail> = {
-  'forma-studio-meta': {
-    slug: 'forma-studio-meta', title: 'Forma Studio – Meta-kampanje', klient: 'Forma Studio',
-    kategori: 'sosiale-medier', aar: '2024', tags: ['Meta Ads', 'A/B-testing', 'Kreativ'],
-    image: null,
-    utfordring: 'Forma Studio brukte store summer på Meta-annonsering uten å vite hva som faktisk fungerte. Kostnad per kunde var høy og skalerte ikke med budsjettet.',
-    losning: 'Vi satte opp et strukturert A/B-testingsystem på tvers av alle annonseformater, målgrupper og creatives. Gjennom kontinuerlig optimalisering over 90 dager identifiserte vi de beste kombinasjonene og skalerte disse.',
-    resultat_tekst: 'Kostnad per kunde falt med 52 % over tre måneder, mens konverteringsvolumet økte. Forma Studio har nå et repeterbart annonsesystem de kan skalere trygt.',
-  },
-  'nordvik-leads': {
-    slug: 'nordvik-leads', title: 'Nordvik Eiendom – Google Ads', klient: 'Nordvik Eiendom',
-    kategori: 'seo-sem', aar: '2024', tags: ['Google Ads', 'CRO', 'Søkestrategi'],
-    image: null,
-    utfordring: 'Nordvik hadde en Google Ads-konto med bred, uspesifikk annonsering. Mange klikk, få kvalifiserte henvendelser og et budsjett som ikke sto i stil med resultatene.',
-    losning: 'Vi restrukturerte hele kontoen – ny kampanjearkitektur, keyword-strategi rettet mot kjøpeklare søk, og en optimalisert landingsside med klar CTA. Kvalitet over kvantitet.',
-    resultat_tekst: '340 % flere kvalifiserte leads på samme budsjett på 90 dager. Nordvik Eiendom bruker nå modellen vi bygget som standard for nye markeder de skal inn i.',
-  },
-  'helios-seo': {
-    slug: 'helios-seo', title: 'Helios AS – SEO & innhold', klient: 'Helios AS',
-    kategori: 'seo-sem', aar: '2024', tags: ['SEO', 'Innhold', 'Google'],
-    image: null,
-    utfordring: 'Helios AS hadde god kunnskap om produktene sine, men lite synlighet i søk. Nettsiden var teknisk svak og innholdet var ikke optimalisert for hva kundene faktisk søker etter.',
-    losning: 'Teknisk SEO-audit og full gjennomgang av nettstedet, etterfulgt av en innholdsstrategi basert på søkedata og konkurranseanalyse. Vi produserte og publiserte artikler over seks måneder.',
-    resultat_tekst: 'Organisk trafikk firedoblet seg over seks måneder. Helios AS rangerer nå på side 1 for sine viktigste produktkategorier og har en stabil, skalérbar kilde til nye kunder.',
-  },
-  'solberg-nettside': {
-    slug: 'solberg-nettside', title: 'Solberg & Co – Nettsideredesign', klient: 'Solberg & Co',
-    kategori: 'nettsideutvikling', aar: '2024', tags: ['React', 'UX/UI', 'CRO'],
-    image: null,
-    utfordring: 'Solberg & Co hadde en utdatert nettside som ikke reflekterte kvaliteten på tjenestene deres. Besøkende forlot siden uten å ta kontakt.',
-    losning: 'Fullstendig redesign med fokus på konvertering. Vi kartla brukerreisen, forenklet navigasjonen og bygde en ny nettside med klare CTAs og profesjonelt innhold.',
-    resultat_tekst: '210 % økning i konverteringer etter lansering. Solberg & Co rapporterer at kvaliteten på henvendelsene er markant bedre enn før.',
-  },
-  'kvartett-video': {
-    slug: 'kvartett-video', title: 'Kvartett AS – Videoproduksjon', klient: 'Kvartett AS',
-    kategori: 'videoproduksjon', aar: '2024', tags: ['TikTok', 'Reels', 'Storytelling'],
-    image: null,
-    utfordring: 'Kvartett AS ville nå et yngre publikum men visste ikke hvordan de skulle kommunisere merkevaren sin på kortvideo-plattformer.',
-    losning: 'Vi utviklet et konsept som oversatte merkevarehistorien til Kvartett til TikTok- og Reels-format. Produserte en serie med videoer tilpasset plattformenes algoritmer og estetikk.',
-    resultat_tekst: '12 millioner visninger på den første serien. En av videoene gikk viralt og ga Kvartett AS sin sterkeste uke i netthandelhistorien.',
-  },
-  'nordvik-strategi': {
-    slug: 'nordvik-strategi', title: 'Nordvik Eiendom – Digital strategi', klient: 'Nordvik Eiendom',
-    kategori: 'digital-strategi', aar: '2023', tags: ['Strategi', 'Analyse', 'Vekst'],
-    image: null,
-    utfordring: 'Nordvik Eiendom brukte budsjett på tvers av mange kanaler uten en overordnet strategi. Kanalene jobbet ikke sammen og det var vanskelig å måle hva som ga avkastning.',
-    losning: 'Vi gjennomførte en full strategiprosess – kartla alle kanaler, satte klare KPIer og laget en helhetlig kanalplan der innsatsen trakk i samme retning.',
-    resultat_tekst: 'Gjennomsnittlig ROI på tvers av alle kanaler tredoblet seg. Nordvik Eiendom har nå et klart rammeverk for hvordan de allokerer markedsbudsjett fremover.',
-  },
-}
-
 // ─── WP mapper ────────────────────────────────────────────────────────────────
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -135,15 +82,8 @@ export default function ProsjektPage() {
     if (!slug) return
     wp.project(slug)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .then((post: any) => {
-        if (post) {
-          setProject(mapWpDetail(post))
-        } else {
-          // Try fallback
-          setProject(FALLBACK_DETAIL[slug] ?? null)
-        }
-      })
-      .catch(() => setProject(FALLBACK_DETAIL[slug] ?? null))
+      .then((post: any) => setProject(post ? mapWpDetail(post) : null))
+      .catch(() => setProject(null))
   }, [slug])
 
   useEffect(() => {
