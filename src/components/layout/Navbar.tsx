@@ -176,7 +176,7 @@ export default function Navbar() {
                   <span className="font-bespoke text-xs tracking-widest text-nm-accent/60 w-7 flex-shrink-0">
                     {String(i + 1).padStart(2, '0')}
                   </span>
-                  <span className="font-lora font-bold text-4xl leading-none tracking-tight group-hover:translate-x-1 transition-transform duration-200">
+                  <span className="font-erode font-bold text-4xl leading-none tracking-tight group-hover:translate-x-1 transition-transform duration-200">
                     {link.label}
                   </span>
                 </NavLink>

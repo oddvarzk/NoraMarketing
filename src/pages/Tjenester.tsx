@@ -231,7 +231,7 @@ export default function Tjenester() {
             <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-10 items-end">
               <h1
                 data-hero-el
-                className="font-lora font-bold leading-[0.88] tracking-tight text-nm-light"
+                className="font-erode font-bold leading-[0.88] tracking-tight text-nm-light"
                 style={{ fontSize: 'clamp(3rem,8vw,7rem)', opacity: 0 }}
               >
                 Tjenester som<br />
@@ -267,7 +267,7 @@ export default function Tjenester() {
                   className={`flex flex-col gap-1.5 px-6 py-6 ${i < 2 ? 'border-r border-nm-border/50' : ''}`}
                   style={{ opacity: 0 }}
                 >
-                  <span className="font-lora font-bold text-[clamp(1.5rem,3vw,2.5rem)] text-nm-accent leading-none">{item.num}</span>
+                  <span className="font-erode font-bold text-[clamp(1.5rem,3vw,2.5rem)] text-nm-accent leading-none">{item.num}</span>
                   <span className="font-cabinet text-nm-muted text-xs leading-snug">{item.label}{item.sub ? item.sub : ''}</span>
                 </div>
               ))}
@@ -355,7 +355,7 @@ export default function Tjenester() {
               </div>
               <h2
                 id="faq-heading"
-                className="font-lora font-bold text-[clamp(1.8rem,4vw,3rem)] text-nm-light leading-tight mb-5"
+                className="font-erode font-bold text-[clamp(1.8rem,4vw,3rem)] text-nm-light leading-tight mb-5"
               >
                 Ofte stilte<br />
                 <span style={{ WebkitTextStroke: '1px #F4F4F8', color: 'transparent' }}>

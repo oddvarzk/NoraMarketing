@@ -12,7 +12,7 @@ export default function NotFound() {
         </span>
 
         <div className="-mt-8 flex flex-col items-center gap-4">
-          <h1 className="font-lora font-bold text-4xl md:text-5xl text-nm-light">
+          <h1 className="font-erode font-bold text-4xl md:text-5xl text-nm-light">
             Siden finnes ikke
           </h1>
           <p className="font-cabinet text-nm-muted text-lg max-w-sm">

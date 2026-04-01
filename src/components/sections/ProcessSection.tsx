@@ -138,7 +138,7 @@ export default function ProcessSection() {
             <span className="font-bespoke text-xs tracking-widest2 text-nm-accent uppercase mb-3 block">
               Vår tilnærming
             </span>
-            <h2 className="font-lora font-bold text-4xl lg:text-[3.25rem] leading-tight text-nm-light">
+            <h2 className="font-erode font-bold text-4xl lg:text-[3.25rem] leading-tight text-nm-light">
               Enkel,{' '}
               men effektiv.
             </h2>
@@ -249,7 +249,7 @@ export default function ProcessSection() {
                 </div>
 
                 {/* Title */}
-                <h3 className="font-lora font-bold text-[clamp(2rem,4vw,3.5rem)] text-nm-light leading-tight mb-5">
+                <h3 className="font-erode font-bold text-[clamp(2rem,4vw,3.5rem)] text-nm-light leading-tight mb-5">
                   {step.title}
                 </h3>
 
@@ -281,7 +281,7 @@ export default function ProcessSection() {
           <span className="font-bespoke text-xs tracking-widest2 text-nm-accent uppercase mb-3 block">
             Vår tilnærming
           </span>
-          <h2 className="font-lora font-bold text-3xl text-nm-light leading-tight">
+          <h2 className="font-erode font-bold text-3xl text-nm-light leading-tight">
             Enkel, men effektiv.
           </h2>
         </div>
@@ -308,7 +308,7 @@ export default function ProcessSection() {
                     <div className="h-px w-8 bg-nm-accent/60" />
                     <span className="font-cabinet text-nm-muted text-xs">{step.sub}</span>
                   </div>
-                  <h3 className="font-lora font-bold text-xl text-nm-light mb-3 leading-snug">
+                  <h3 className="font-erode font-bold text-xl text-nm-light mb-3 leading-snug">
                     {step.title}
                   </h3>
                   <p className="font-cabinet text-nm-muted text-sm leading-relaxed mb-5">

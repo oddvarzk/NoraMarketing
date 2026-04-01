@@ -157,7 +157,7 @@ export default function Prosjekter() {
 
           <h1
             data-p-hero
-            className="font-lora font-bold leading-[0.88] tracking-tight mb-8"
+            className="font-erode font-bold leading-[0.88] tracking-tight mb-8"
             style={{ fontSize: 'clamp(2.8rem,8vw,8rem)', opacity: 0 }}
           >
             <span className="block text-nm-light">Noe av det</span>
@@ -222,7 +222,7 @@ export default function Prosjekter() {
       {/* ── CTA ────────────────────────────────────────────────────────── */}
       <div className="bg-nm-dark border-t border-nm-border/25 px-6 sm:px-12 lg:px-20 py-20">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-8">
-          <p className="font-lora font-bold text-[clamp(1.5rem,3vw,2.5rem)] text-nm-light leading-tight">
+          <p className="font-erode font-bold text-[clamp(1.5rem,3vw,2.5rem)] text-nm-light leading-tight">
             Klar for å bli neste<br />
             <span style={{ WebkitTextStroke: '1.5px rgba(232,232,238,0.5)', color: 'transparent' }}>
               suksesshistorie?
@@ -307,7 +307,7 @@ function CategorySection({
             {meta.number}
           </span>
           <span className="w-6 h-px bg-nm-border/50" />
-          <h2 data-cat-hdr className="font-lora font-bold text-[clamp(1.3rem,2.8vw,2.2rem)] text-nm-light tracking-tight" style={{ opacity: 0 }}>
+          <h2 data-cat-hdr className="font-erode font-bold text-[clamp(1.3rem,2.8vw,2.2rem)] text-nm-light tracking-tight" style={{ opacity: 0 }}>
             {meta.label}
           </h2>
         </div>
@@ -371,7 +371,7 @@ function ProjectCard({ project: p }: { project: Project }) {
             className="w-full h-full flex items-center justify-center bg-nm-surface"
           >
             <span
-              className="font-lora font-bold text-nm-fg/[0.06] leading-none select-none"
+              className="font-erode font-bold text-nm-fg/[0.06] leading-none select-none"
               style={{ fontSize: 'clamp(3rem,8vw,6rem)' }}
             >
               {p.klient.charAt(0)}

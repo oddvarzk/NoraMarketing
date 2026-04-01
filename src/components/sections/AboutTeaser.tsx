@@ -108,7 +108,7 @@ export default function AboutTeaser() {
               <h2
                 id="about-teaser-heading"
                 data-about-text
-                className="font-lora font-bold text-[clamp(1.9rem,4vw,3.5rem)] text-nm-light leading-[0.92] tracking-tight"
+                className="font-erode font-bold text-[clamp(1.9rem,4vw,3.5rem)] text-nm-light leading-[0.92] tracking-tight"
                 style={{ opacity: 0 }}
               >
                 Et byrå bygget på<br />resultater,{' '}
@@ -146,7 +146,7 @@ export default function AboutTeaser() {
               >
                 <span
                   ref={(el) => { counterRefs.current[i] = el }}
-                  className="font-lora font-bold text-[clamp(2rem,4vw,2.75rem)] text-nm-accent leading-none tabular-nums w-[5ch] flex-shrink-0"
+                  className="font-erode font-bold text-[clamp(2rem,4vw,2.75rem)] text-nm-accent leading-none tabular-nums w-[5ch] flex-shrink-0"
                 >
                   0{stat.suffix}
                 </span>

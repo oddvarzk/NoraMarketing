@@ -5,7 +5,7 @@ export default {
     extend: {
       fontFamily: {
         satoshi: ['Satoshi', 'sans-serif'],
-        lora: ['Lora', 'serif'],
+        erode: ['Erode', 'serif'],
         cabinet: ['Cabinet Grotesk', 'sans-serif'],
         bespoke: ['Bespoke Stencil', 'sans-serif'],
       },

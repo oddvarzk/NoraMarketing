@@ -110,7 +110,7 @@ export default function ServicesSection() {
             </div>
             <h2
               data-services-header
-              className="font-lora font-bold text-[clamp(2rem,5vw,4rem)] text-nm-light leading-[0.9] tracking-tight"
+              className="font-erode font-bold text-[clamp(2rem,5vw,4rem)] text-nm-light leading-[0.9] tracking-tight"
               style={{ opacity: 0 }}
             >
               Alt du trenger.<br />

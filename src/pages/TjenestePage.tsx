@@ -87,7 +87,7 @@ export default function TjenestePage() {
             {/* Title */}
             <h1
               data-page-el
-              className="font-lora font-bold leading-[0.88] tracking-tight mb-8"
+              className="font-erode font-bold leading-[0.88] tracking-tight mb-8"
               style={{ fontSize: 'clamp(2.5rem,7vw,6rem)', opacity: 0 }}
             >
               <span className="text-nm-light">{service.title.split(' ').slice(0, -1).join(' ')}</span>{' '}

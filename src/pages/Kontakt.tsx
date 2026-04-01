@@ -195,7 +195,7 @@ export default function Kontakt() {
             <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-12 items-end">
               <h1
                 data-hero-el
-                className="font-lora font-bold leading-[0.88] tracking-tight text-nm-light"
+                className="font-erode font-bold leading-[0.88] tracking-tight text-nm-light"
                 style={{ fontSize: 'clamp(3rem,8vw,7rem)', opacity: 0 }}
               >
                 La oss snakke om<br />
@@ -385,7 +385,7 @@ export default function Kontakt() {
                 <span className="w-8 h-px bg-nm-accent" />
                 <span className="font-bespoke text-[10px] tracking-widest2 uppercase text-nm-accent">FAQ</span>
               </div>
-              <h2 id="faq-heading" className="font-lora font-bold text-[clamp(1.6rem,3.5vw,2.5rem)] text-nm-light leading-[0.92] tracking-tight">
+              <h2 id="faq-heading" className="font-erode font-bold text-[clamp(1.6rem,3.5vw,2.5rem)] text-nm-light leading-[0.92] tracking-tight">
                 Ofte stilte<br />
                 <span style={{ WebkitTextStroke: '1px #F4F4F8', color: 'transparent' }}>spørsmål.</span>
               </h2>

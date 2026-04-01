@@ -73,7 +73,7 @@ export default function Hero() {
         <div className="mb-14" />
 
         {/* Headline */}
-        <h1 className="font-lora font-bold leading-[0.86] tracking-tight mb-14 max-w-5xl">
+        <h1 className="font-erode font-bold leading-[0.86] tracking-tight mb-14 max-w-5xl">
           <span
             data-h-line
             className="block text-nm-light"
@@ -155,7 +155,7 @@ export default function Hero() {
         <div className="px-6 sm:px-12 lg:px-20 py-6 flex items-center gap-10 sm:gap-16 lg:gap-24">
           {STATS.map(({ num, label }) => (
             <div key={label} data-stat className="flex flex-col gap-0.5" style={{ opacity: 0 }}>
-              <span className="font-lora font-bold text-[clamp(1.2rem,2.5vw,1.8rem)] leading-none text-nm-light">
+              <span className="font-erode font-bold text-[clamp(1.2rem,2.5vw,1.8rem)] leading-none text-nm-light">
                 {num}
               </span>
               <span className="font-cabinet text-[9px] sm:text-[11px] text-nm-muted/80 tracking-widest uppercase whitespace-nowrap">
