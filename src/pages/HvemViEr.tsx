@@ -147,15 +147,6 @@ export default function HvemViEr() {
       })
 
       gsap.fromTo(
-        '[data-team-card]',
-        { opacity: 0, y: 36 },
-        {
-          opacity: 1, y: 0, duration: 0.7, stagger: 0.08, ease: 'power3.out',
-          scrollTrigger: { trigger: '[data-team-card]', start: 'top 88%' },
-        },
-      )
-
-      gsap.fromTo(
         '[data-value-card]',
         { opacity: 0, y: 30 },
         {
@@ -187,6 +178,21 @@ export default function HvemViEr() {
 
     return () => ctx.revert()
   }, [])
+
+  // Run team card animation after WP data loads
+  useEffect(() => {
+    if (team.length === 0) return
+    const cards = gsap.utils.toArray<HTMLElement>('[data-team-card]')
+    if (cards.length === 0) return
+    gsap.fromTo(
+      cards,
+      { opacity: 0, y: 36 },
+      {
+        opacity: 1, y: 0, duration: 0.7, stagger: 0.08, ease: 'power3.out',
+        scrollTrigger: { trigger: cards[0], start: 'top 88%' },
+      },
+    )
+  }, [team])
 
   return (
     <>
@@ -543,7 +549,6 @@ function TeamCard({
       onMouseEnter={handleEnter}
       onMouseLeave={handleLeave}
       className={`group relative rounded-xl overflow-hidden text-left cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-nm-accent ${featured ? 'md:row-span-1' : ''}`}
-      style={{ opacity: 0 }}
       aria-label={`Les mer om ${m.name}`}
     >
       {/* Photo / placeholder */}
