@@ -171,12 +171,12 @@ export default function Hero() {
 
 function RainbowBg() {
   const LENGTH = 25
-  const ANIM   = 45
+  const ANIM   = 80
   const dark   = 'rgb(13,13,15)'
 
-  const purple = 'rgba(110,50,160,0.55)'
-  const blue   = 'rgba(55,85,210,0.55)'
-  const teal   = 'rgba(20,100,110,0.55)'
+  const purple = 'rgba(130,140,160,0.13)'
+  const blue   = 'rgba(120,135,155,0.13)'
+  const teal   = 'rgba(125,140,155,0.13)'
 
   const combos: [string, string, string][] = [
     [purple, blue,   teal  ],
@@ -231,7 +231,7 @@ function HeroBg() {
       <RainbowBg />
 
       {/* Dark overlay — keeps text readable */}
-      <div className="absolute inset-0 bg-nm-dark/75" />
+      <div className="absolute inset-0 bg-nm-dark/92" />
 
       {/* Radial accent — breaks the perfect gradient look */}
       <div
