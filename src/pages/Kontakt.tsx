@@ -1,79 +1,13 @@
-import { useEffect, useRef, useState } from 'react'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { useState } from 'react'
 import SEO from '../components/ui/SEO'
-
-gsap.registerPlugin(ScrollTrigger)
-
-const SERVICES_OPTIONS = [
-  'Innholdsmarkedsføring',
-  'Sosiale Medier',
-  'SEO & SEM',
-  'Digital Strategi',
-  'Nettsideutvikling',
-  'Videoproduksjon',
-  'Annet',
-]
+import ArrowCTA from '../components/ui/ArrowCTA'
+import CTABanner from '../components/sections/CTABanner'
+import { SERVICES, FAQS } from '../lib/data'
 
 const CF7_FORM_ID = import.meta.env.VITE_CF7_FORM_ID ?? ''
 const WP_BASE    = import.meta.env.VITE_WP_BASE_URL ?? 'https://cms.noramarketing.no'
 
-const FAQS = [
-  {
-    q: 'Hvor raskt kan jeg forvente svar?',
-    a: 'Vi svarer på alle henvendelser innen 24 timer på hverdager. Kontakter du oss i helgen, hører du fra oss første virkedag.',
-  },
-  {
-    q: 'Tilbyr dere gratis konsultasjon?',
-    a: 'Ja – vi tilbyr en gratis innledende konsultasjon på 30 minutter der vi diskuterer dine behov og hvordan vi kan hjelpe bedriften din å vokse.',
-  },
-  {
-    q: 'Jobber dere med bedrifter utenfor Oslo?',
-    a: 'Absolutt. Selv om kontoret vårt er i Oslo, jobber vi med kunder over hele Norge. De fleste tjenester leveres digitalt uten problemer.',
-  },
-  {
-    q: 'Hva er minimumskontrakten?',
-    a: 'Vi tilpasser oss dine behov. Noen prosjekter er engangsleveranser, andre er løpende samarbeid. Vi avklarer dette i den første konsultasjonen – ingen skjulte forpliktelser.',
-  },
-]
-
-const CONTACT_DETAILS = [
-  {
-    icon: (
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.67A2 2 0 012 .98h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16z" />
-      </svg>
-    ),
-    label: 'Telefon',
-    value: '+47 41 16 06 40',
-    href: 'tel:+4741160640',
-    sub: 'Man–Fre, 09:00–17:00',
-  },
-  {
-    icon: (
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-        <polyline points="22,6 12,13 2,6" />
-      </svg>
-    ),
-    label: 'E-post',
-    value: 'hei@noramarketing.no',
-    href: 'mailto:hei@noramarketing.no',
-    sub: 'Svar innen 24 timer',
-  },
-  {
-    icon: (
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
-        <circle cx="12" cy="10" r="3" />
-      </svg>
-    ),
-    label: 'Adresse',
-    value: 'Husebybakken 28B',
-    href: null,
-    sub: '0379 Oslo, Norge',
-  },
-]
+const SERVICE_CHIPS = SERVICES.map(s => s.title)
 
 interface FormState {
   name: string
@@ -84,51 +18,77 @@ interface FormState {
   message: string
 }
 
+function PageCover() {
+  return (
+    <section className="relative pt-40 pb-16 px-6 lg:px-10 border-b border-ink-500/40">
+      <div className="max-w-[1400px] mx-auto grid grid-cols-12 gap-6">
+        <div className="col-span-12 md:col-span-2 flex flex-col gap-1 font-mono text-[10px] text-ink-300 tracking-widest2 uppercase">
+          <div>Ch. 05</div>
+          <div>Svar &lt; 24t</div>
+          <div>Husebybakken 28B</div>
+        </div>
+        <div className="col-span-12 md:col-span-10">
+          <div className="font-mono text-[10px] text-accent-blue tracking-widest2 uppercase mb-8">
+            N°— Kontakt · Ch. V
+          </div>
+          <h1
+            className="font-display font-light leading-[0.88] text-ink-50 mb-10"
+            style={{ fontSize: 'clamp(2.8rem, 10vw, 9rem)' }}
+          >
+            La oss snakke
+            <br /><em className="font-normal italic text-accent-blue">om din vekst.</em>
+          </h1>
+          <p className="font-body text-ink-200 text-lg leading-relaxed max-w-2xl">
+            Enten du har et konkret prosjekt eller bare vil utforske mulighetene — vi er her.
+            Fyll ut skjemaet, så tar vi kontakt innen én virkedag.
+          </p>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function FaqRow({ f }: { f: { q: string; a: string } }) {
+  const [open, setOpen] = useState(false)
+  return (
+    <div className="border-t border-ink-500/60 last:border-b">
+      <button
+        onClick={() => setOpen(v => !v)}
+        className="w-full flex items-center justify-between py-6 text-left"
+      >
+        <span className="font-display text-ink-50 text-xl">{f.q}</span>
+        <span className={`text-accent-blue transition-transform text-2xl ${open ? 'rotate-45' : ''}`}>+</span>
+      </button>
+      <div
+        className="overflow-hidden transition-all duration-500"
+        style={{ maxHeight: open ? 200 : 0 }}
+      >
+        <p className="font-body text-ink-200 text-[15px] leading-relaxed pb-6 max-w-2xl">{f.a}</p>
+      </div>
+    </div>
+  )
+}
+
 export default function Kontakt() {
-  const pageRef = useRef<HTMLDivElement>(null)
   const [form, setForm] = useState<FormState>({
-    name: '',
-    email: '',
-    phone: '',
-    company: '',
-    service: '',
-    message: '',
+    name: '', email: '', phone: '', company: '', service: '', message: '',
   })
   const [submitted, setSubmitted] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [openFaq, setOpenFaq] = useState<number | null>(null)
 
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.set('[data-hero-el]', { opacity: 0, y: 40 })
-      gsap.timeline({ defaults: { ease: 'power4.out' } })
-        .to('[data-hero-el]', { opacity: 1, y: 0, duration: 1, stagger: 0.12 }, 0)
+  function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
+    setForm(prev => ({ ...prev, [e.target.name]: e.target.value }))
+  }
 
-      gsap.fromTo(
-        '[data-faq-item]',
-        { opacity: 0, x: -18 },
-        {
-          opacity: 1, x: 0, duration: 0.6, stagger: 0.07, ease: 'power3.out',
-          scrollTrigger: { trigger: '[data-faq-item]', start: 'top 88%' },
-        },
-      )
-    }, pageRef)
-
-    return () => ctx.revert()
-  }, [])
-
-  function handleChange(
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
-  ) {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }))
+  function toggleChip(chip: string) {
+    setForm(prev => ({ ...prev, service: prev.service === chip ? '' : chip }))
   }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     setLoading(true)
     setError(null)
-
     try {
       const body = new FormData()
       body.append('your-name',    form.name)
@@ -138,11 +98,10 @@ export default function Kontakt() {
       body.append('your-service', form.service)
       body.append('your-message', form.message)
 
-      const res = await fetch(
+      const res  = await fetch(
         `${WP_BASE}/wp-json/contact-form-7/v1/contact-forms/${CF7_FORM_ID}/feedback`,
         { method: 'POST', body },
       )
-
       const data = await res.json() as { status: string; message: string }
 
       if (data.status === 'mail_sent') {
@@ -160,270 +119,166 @@ export default function Kontakt() {
   return (
     <>
       <SEO
-        title="Ta kontakt"
-        description="Kontakt Nora Marketing for en uforpliktende konsultasjon om digital markedsføring og strategi."
+        title="Kontakt"
+        description="Ta kontakt med Nora Marketing for en uforpliktende samtale om digital markedsføring og strategi."
         canonical="/kontakt"
       />
 
-      <div ref={pageRef}>
+      <PageCover />
 
-        {/* ── HERO ──────────────────────────────────────────────────────── */}
-        <div className="relative pt-36 pb-20 px-6 sm:px-10 lg:px-16 border-b border-nm-border/30 overflow-hidden">
-          {/* Bg watermark */}
-          <div
-            className="absolute bottom-0 right-0 font-bespoke font-bold leading-none pointer-events-none select-none"
-            style={{
-              fontSize: 'clamp(100px, 18vw, 220px)',
-              color: 'transparent',
-              WebkitTextStroke: '1px rgba(75,110,245,0.05)',
-              transform: 'translate(5%, 35%)',
-              letterSpacing: '-0.02em',
-            }}
-            aria-hidden="true"
-          >
-            HALLO
-          </div>
+      {/* Form + Sidebar */}
+      <section className="px-6 lg:px-10 py-20 border-b border-ink-500/40">
+        <div className="max-w-[1400px] mx-auto grid grid-cols-12 gap-10">
 
-          <div className="max-w-7xl mx-auto">
-            <div data-hero-el className="flex items-center gap-3 mb-8" style={{ opacity: 0 }}>
-              <span className="w-8 h-px bg-nm-accent" />
-              <span className="font-bespoke text-[10px] tracking-widest2 uppercase text-nm-accent">
-                Ta kontakt
-              </span>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-12 items-end">
-              <h1
-                data-hero-el
-                className="font-erode font-bold leading-[0.88] tracking-tight text-nm-light"
-                style={{ fontSize: 'clamp(3rem,8vw,7rem)', opacity: 0 }}
-              >
-                La oss snakke om<br />
-                <span className="text-nm-accent">din vekst.</span>
-              </h1>
-
-              <div data-hero-el className="flex flex-col gap-5 lg:pb-1" style={{ opacity: 0 }}>
-                <p className="font-cabinet text-nm-muted text-base leading-relaxed">
-                  Enten du har et konkret prosjekt eller bare vil utforske mulighetene – vi er her. Fyll ut skjemaet, så tar vi kontakt innen én virkedag.
-                </p>
-                {/* Contact details inline */}
-                <div className="flex flex-col gap-3">
-                  {CONTACT_DETAILS.map((d) => (
-                    <div key={d.label} className="flex items-center gap-3">
-                      <span className="text-nm-accent/60 flex-shrink-0">{d.icon}</span>
-                      <div className="min-w-0">
-                        {d.href ? (
-                          <a href={d.href} className="font-satoshi font-medium text-nm-fg text-sm hover:text-nm-accent transition-colors duration-200">
-                            {d.value}
-                          </a>
-                        ) : (
-                          <span className="font-satoshi font-medium text-nm-fg text-sm">{d.value}</span>
-                        )}
-                        <span className="font-cabinet text-nm-muted/50 text-xs ml-2">{d.sub}</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* ── FORM + SIDEBAR ─────────────────────────────────��──────────── */}
-        <div className="py-20 px-6 sm:px-10 lg:px-16">
-          <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-10 lg:gap-16">
-
-            {/* Form */}
-            <div data-hero-el style={{ opacity: 0 }}>
-              {submitted ? (
-                <div className="flex flex-col gap-5 items-start py-16 px-10 bg-nm-surface/30 border border-nm-border/50 rounded-2xl">
-                  <span className="font-bespoke font-bold text-6xl text-nm-accent">Takk!</span>
-                  <p className="font-cabinet text-nm-muted text-lg leading-relaxed">
-                    Vi har mottatt henvendelsen din og tar kontakt innen én virkedag.
-                  </p>
-                </div>
-              ) : (
-                <form
-                  onSubmit={handleSubmit}
-                  noValidate
-                  className="flex flex-col gap-5 bg-nm-surface/20 border border-nm-border/50 rounded-2xl p-8"
+          {/* Form */}
+          <div className="col-span-12 lg:col-span-8">
+            {submitted ? (
+              <div className="border border-ink-500/60 p-16 flex flex-col gap-6">
+                <span
+                  className="font-display text-accent-blue leading-none"
+                  style={{ fontSize: 'clamp(4rem, 10vw, 8rem)', fontStyle: 'italic', fontWeight: 300 }}
                 >
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                    <Field label="Navn" id="name" name="name" value={form.name} onChange={handleChange} required placeholder="Ditt fulle navn" autoComplete="name" />
-                    <Field label="E-post" id="email" name="email" type="email" value={form.email} onChange={handleChange} required placeholder="din@epost.no" autoComplete="email" />
-                  </div>
+                  Takk.
+                </span>
+                <p className="font-body text-ink-200 text-lg leading-relaxed max-w-lg">
+                  Vi har mottatt henvendelsen din og tar kontakt innen én virkedag.
+                </p>
+                <ArrowCTA to="/" variant="line">Tilbake til forsiden</ArrowCTA>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} noValidate className="border border-ink-500/60 p-10 flex flex-col gap-8">
+                <div className="font-mono text-[10px] text-ink-300 tracking-widest2 uppercase">§ I — Dine opplysninger</div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                    <Field label="Telefon" id="phone" name="phone" type="tel" value={form.phone} onChange={handleChange} required placeholder="+47 123 45 678" autoComplete="tel" />
-                    <Field label="Bedrift" id="company" name="company" value={form.company} onChange={handleChange} placeholder="Bedriftsnavn (valgfritt)" autoComplete="organization" />
-                  </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  <Field label="Navn" id="name" name="name" value={form.name} onChange={handleChange} required placeholder="Ditt fulle navn" autoComplete="name" />
+                  <Field label="E-post" id="email" name="email" type="email" value={form.email} onChange={handleChange} required placeholder="din@epost.no" autoComplete="email" />
+                  <Field label="Telefon" id="phone" name="phone" type="tel" value={form.phone} onChange={handleChange} placeholder="+47 123 45 678" autoComplete="tel" />
+                  <Field label="Bedrift" id="company" name="company" value={form.company} onChange={handleChange} placeholder="Bedriftsnavn (valgfritt)" autoComplete="organization" />
+                </div>
 
-                  <div className="flex flex-col gap-2">
-                    <label htmlFor="service" className="font-cabinet text-sm text-nm-muted">
-                      Tjeneste av interesse
-                    </label>
-                    <div className="relative">
-                      <select
-                        id="service"
-                        name="service"
-                        value={form.service}
-                        onChange={handleChange}
-                        className="w-full bg-nm-surface border border-nm-border/60 focus:border-nm-accent rounded-xl px-4 py-3 text-nm-fg font-cabinet text-sm outline-none transition-colors duration-200 appearance-none pr-10"
+                <div>
+                  <div className="font-mono text-[10px] text-ink-300 tracking-widest2 uppercase mb-5">§ II — Tjeneste av interesse</div>
+                  <div className="flex flex-wrap gap-3">
+                    {SERVICE_CHIPS.map(chip => (
+                      <button
+                        key={chip}
+                        type="button"
+                        onClick={() => toggleChip(chip)}
+                        className={`px-4 py-2 border font-mono text-[10px] tracking-widest uppercase transition-colors ${
+                          form.service === chip
+                            ? 'border-accent-blue bg-accent-blue/10 text-accent-blue'
+                            : 'border-ink-500/60 text-ink-300 hover:border-ink-400 hover:text-ink-200'
+                        }`}
                       >
-                        <option value="">Velg en tjeneste (valgfritt)</option>
-                        {SERVICES_OPTIONS.map((s) => (
-                          <option key={s} value={s}>{s}</option>
-                        ))}
-                      </select>
-                      <svg className="absolute right-3 top-1/2 -translate-y-1/2 text-nm-muted pointer-events-none" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                        <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
-                    </div>
+                        {chip}
+                      </button>
+                    ))}
                   </div>
+                </div>
 
-                  <div className="flex flex-col gap-2">
-                    <label htmlFor="message" className="font-cabinet text-sm text-nm-muted">
-                      Melding <span className="text-nm-accent">*</span>
-                    </label>
-                    <textarea
-                      id="message"
-                      name="message"
-                      rows={5}
-                      value={form.message}
-                      onChange={handleChange}
-                      required
-                      placeholder="Fortell oss om ditt prosjekt eller hvordan vi kan hjelpe deg…"
-                      className="bg-nm-surface border border-nm-border/60 focus:border-nm-accent rounded-xl px-4 py-3 text-nm-fg font-cabinet text-sm outline-none transition-colors duration-200 resize-none placeholder:text-nm-muted/40"
-                    />
-                  </div>
+                <div>
+                  <div className="font-mono text-[10px] text-ink-300 tracking-widest2 uppercase mb-5">§ III — Melding</div>
+                  <label htmlFor="message" className="sr-only">Melding</label>
+                  <textarea
+                    id="message"
+                    name="message"
+                    rows={6}
+                    value={form.message}
+                    onChange={handleChange}
+                    required
+                    placeholder="Fortell oss om prosjektet ditt…"
+                    className="w-full bg-transparent border border-ink-500/60 focus:border-accent-blue px-5 py-4 font-body text-ink-100 text-[15px] outline-none transition-colors placeholder:text-ink-500 resize-none"
+                  />
+                </div>
 
-                  <p className="font-cabinet text-xs text-nm-muted/50">
-                    * Påkrevde felt. Vi svarer vanligvis innen 24 timer på hverdager.
+                {error && (
+                  <p className="font-body text-sm text-red-400 border border-red-400/30 px-5 py-3">
+                    {error}
                   </p>
+                )}
 
-                  {error && (
-                    <p className="font-cabinet text-sm text-red-400 bg-red-400/10 border border-red-400/20 rounded-xl px-4 py-3">
-                      {error}
-                    </p>
-                  )}
-
+                <div className="flex items-center gap-8">
                   <button
                     type="submit"
                     disabled={loading}
-                    className="inline-flex items-center justify-center gap-2 px-6 py-4 bg-nm-accent text-white font-satoshi font-semibold text-sm rounded-xl hover:bg-nm-accent-light transition-colors duration-200 disabled:opacity-60 disabled:cursor-not-allowed"
+                    className="inline-flex items-center gap-3 px-8 py-4 bg-accent-blue text-ink-50 font-ui font-medium text-sm tracking-wide hover:bg-accent-blueL transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {loading ? 'Sender…' : 'Send melding'}
-                    {!loading && (
-                      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-                        <path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
-                    )}
+                    {!loading && <span className="text-base">→</span>}
                   </button>
-                </form>
-              )}
-            </div>
-
-            {/* Sidebar */}
-            <div className="flex flex-col gap-5">
-              {/* Office card */}
-              <div
-                data-hero-el
-                className="p-7 bg-nm-surface/20 border border-nm-border/50 rounded-2xl"
-                style={{ opacity: 0 }}
-              >
-                <p className="font-bespoke text-[9px] tracking-widest2 uppercase text-nm-accent mb-4">Kontor</p>
-                <p className="font-satoshi font-semibold text-nm-fg text-sm leading-snug mb-1">
-                  Nora Marketing Hub
-                </p>
-                <p className="font-cabinet text-nm-muted text-sm leading-relaxed">
-                  Husebybakken 28B<br />0379 Oslo, Norge
-                </p>
-                <div className="mt-5 pt-5 border-t border-nm-border/40">
-                  <p className="font-bespoke text-[9px] tracking-widest2 uppercase text-nm-muted/50 mb-2">Åpningstider</p>
-                  <p className="font-cabinet text-nm-muted text-sm">Man–Fre: 09:00–17:00</p>
+                  <p className="font-mono text-[10px] text-ink-400 tracking-widest2">
+                    * Svar innen 24 timer på hverdager
+                  </p>
                 </div>
+              </form>
+            )}
+          </div>
+
+          {/* Sidebar */}
+          <div className="col-span-12 lg:col-span-4 flex flex-col gap-6">
+            <div className="border border-ink-500/60 p-8">
+              <div className="font-mono text-[10px] text-accent-blue tracking-widest2 uppercase mb-6">Kontor</div>
+              <div className="flex flex-col gap-1 mb-6">
+                <span className="font-ui text-ink-50 text-sm font-medium">Nora Marketing</span>
+                <span className="font-body text-ink-300 text-[14px]">Husebybakken 28B</span>
+                <span className="font-body text-ink-300 text-[14px]">0379 Oslo, Norge</span>
               </div>
-
-              {/* Social links */}
-              <div
-                data-hero-el
-                className="p-7 bg-nm-surface/20 border border-nm-border/50 rounded-2xl"
-                style={{ opacity: 0 }}
-              >
-                <p className="font-bespoke text-[9px] tracking-widest2 uppercase text-nm-accent mb-5">Sosiale medier</p>
-                <div className="flex flex-col gap-3">
-                  {[
-                    { name: 'LinkedIn', handle: '@noramarketing', href: 'https://linkedin.com' },
-                    { name: 'Instagram', handle: '@noramarketing', href: 'https://instagram.com' },
-                    { name: 'TikTok', handle: '@noramarketing', href: 'https://tiktok.com' },
-                  ].map((s) => (
-                    <a
-                      key={s.name}
-                      href={s.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="group flex items-center justify-between py-2 hover:text-nm-fg transition-colors duration-200"
-                    >
-                      <span className="font-satoshi font-medium text-nm-fg text-sm">{s.name}</span>
-                      <span className="font-cabinet text-nm-muted/50 text-xs group-hover:text-nm-accent transition-colors duration-200">
-                        {s.handle} →
-                      </span>
-                    </a>
-                  ))}
-                </div>
+              <div className="border-t border-ink-500/40 pt-6 flex flex-col gap-3">
+                <a href="tel:+4741160640" className="font-ui text-ink-200 text-sm hover:text-ink-50 transition-colors">
+                  +47 41 16 06 40
+                </a>
+                <a href="mailto:hei@noramarketing.no" className="font-body text-ink-300 text-[13px] hover:text-ink-100 transition-colors">
+                  hei@noramarketing.no
+                </a>
+                <span className="font-mono text-[10px] text-ink-400 tracking-widest2 uppercase">Man–Fre · 09:00–17:00</span>
               </div>
             </div>
+
+            <div className="border border-ink-500/60 p-8">
+              <div className="font-mono text-[10px] text-accent-blue tracking-widest2 uppercase mb-6">Følg oss</div>
+              <div className="flex flex-col gap-4">
+                {[
+                  { name: 'LinkedIn', handle: '@noramarketing', href: 'https://linkedin.com/company/noramarketing' },
+                  { name: 'Instagram', handle: '@noramarketing', href: 'https://instagram.com/noramarketing' },
+                  { name: 'TikTok', handle: '@noramarketing', href: 'https://tiktok.com/@noramarketing' },
+                ].map(s => (
+                  <a
+                    key={s.name}
+                    href={s.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-between group"
+                  >
+                    <span className="font-ui text-ink-200 text-sm group-hover:text-ink-50 transition-colors">{s.name}</span>
+                    <span className="font-mono text-[10px] text-ink-400 tracking-widest group-hover:text-accent-blue transition-colors">{s.handle} →</span>
+                  </a>
+                ))}
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="px-6 lg:px-10 py-28 border-b border-ink-500/40">
+        <div className="max-w-[1400px] mx-auto grid grid-cols-12 gap-10">
+          <div className="col-span-12 md:col-span-4">
+            <div className="font-mono text-[10px] text-accent-blue tracking-widest2 uppercase mb-4">FAQ</div>
+            <h2
+              className="font-display font-light text-ink-50 leading-[0.95]"
+              style={{ fontSize: 'clamp(2rem, 3.5vw, 3rem)' }}
+            >
+              Ofte stilte<br /><em className="font-normal italic">spørsmål.</em>
+            </h2>
+          </div>
+          <div className="col-span-12 md:col-span-8">
+            {FAQS.map((f, i) => <FaqRow key={i} f={f} />)}
           </div>
         </div>
+      </section>
 
-        {/* ── FAQ ──────────────────────────────────────────────────────────── */}
-        <section aria-labelledby="faq-heading" className="py-20 px-6 sm:px-10 lg:px-16 border-t border-nm-border/30">
-          <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-12 lg:gap-20">
-
-            <div>
-              <div className="flex items-center gap-3 mb-5">
-                <span className="w-8 h-px bg-nm-accent" />
-                <span className="font-bespoke text-[10px] tracking-widest2 uppercase text-nm-accent">FAQ</span>
-              </div>
-              <h2 id="faq-heading" className="font-erode font-bold text-[clamp(1.6rem,3.5vw,2.5rem)] text-nm-light leading-[0.92] tracking-tight">
-                Ofte stilte<br />
-                <span style={{ WebkitTextStroke: '1px #F4F4F8', color: 'transparent' }}>spørsmål.</span>
-              </h2>
-            </div>
-
-            <div className="border border-nm-border/50 rounded-2xl overflow-hidden divide-y divide-nm-border/50">
-              {FAQS.map((faq, i) => (
-                <div key={i} data-faq-item style={{ opacity: 0 }}>
-                  <button
-                    onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                    className={`w-full flex items-center justify-between gap-4 px-7 py-5 text-left transition-colors duration-200 hover:bg-nm-surface/50 ${openFaq === i ? 'bg-nm-surface/30' : ''}`}
-                    aria-expanded={openFaq === i}
-                  >
-                    <span className="font-satoshi font-semibold text-nm-fg text-[15px] pr-4 leading-snug">
-                      {faq.q}
-                    </span>
-                    <span className={`flex-shrink-0 text-nm-accent transition-transform duration-300 ${openFaq === i ? 'rotate-45' : ''}`}>
-                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                        <path d="M8 3v10M3 8h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-                      </svg>
-                    </span>
-                  </button>
-
-                  <div
-                    className="overflow-hidden transition-all duration-300 ease-in-out"
-                    style={{ maxHeight: openFaq === i ? '180px' : '0px' }}
-                  >
-                    <p className="font-cabinet text-nm-muted text-sm leading-relaxed px-7 pb-5 pt-1">
-                      {faq.a}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-      </div>
+      <CTABanner />
     </>
   )
 }
@@ -435,14 +290,13 @@ function Field({
 }: { label: string; id: string } & React.InputHTMLAttributes<HTMLInputElement>) {
   return (
     <div className="flex flex-col gap-2">
-      <label htmlFor={id} className="font-cabinet text-sm text-nm-muted">
-        {label}
-        {props.required && <span className="text-nm-accent ml-0.5">*</span>}
+      <label htmlFor={id} className="font-mono text-[10px] text-ink-300 tracking-widest2 uppercase">
+        {label}{props.required && <span className="text-accent-blue ml-1">*</span>}
       </label>
       <input
         id={id}
         {...props}
-        className="bg-nm-surface border border-nm-border/60 focus:border-nm-accent rounded-xl px-4 py-3 text-nm-fg font-cabinet text-sm outline-none transition-colors duration-200 placeholder:text-nm-muted/40"
+        className="bg-transparent border border-ink-500/60 focus:border-accent-blue px-5 py-4 font-body text-ink-100 text-[15px] outline-none transition-colors placeholder:text-ink-500"
       />
     </div>
   )

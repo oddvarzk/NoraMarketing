@@ -1,78 +1,36 @@
-/**
- * Auto-scrolling partner logo banner.
- * Uses styled SVG text-marks that look like real brand logos.
- * Replace with <img src={logo} /> when real assets are available.
- */
-
-interface Partner {
-  name: string
-  src?: string
-  style?: 'serif' | 'sans' | 'mono' | 'stencil'
-}
-
-const PARTNERS: Partner[] = [
-  { name: 'Nordvik', style: 'sans' },
-  { name: 'Bergström', style: 'serif' },
-  { name: 'Helios AS', style: 'mono' },
-  { name: 'Apex Group', style: 'stencil' },
-  { name: 'Kvartett', style: 'sans' },
-  { name: 'Solberg & Co', style: 'serif' },
-  { name: 'Forma Studio', style: 'mono' },
-  { name: 'Vind Digital', style: 'stencil' },
+const PARTNERS = [
+  { name: 'Nordvik',       style: 'italic font-display text-2xl' },
+  { name: 'Bergström',     style: 'font-display text-2xl' },
+  { name: 'HELIOS',        style: 'font-mono tracking-widest text-lg' },
+  { name: 'APEX /',        style: 'font-ui font-bold text-xl tracking-wide' },
+  { name: 'Kvartett',      style: 'italic font-display text-2xl' },
+  { name: 'Solberg & Co.', style: 'font-display text-xl' },
+  { name: 'FORMA',         style: 'font-ui font-semibold tracking-[0.3em] text-lg' },
+  { name: 'vind.',         style: 'italic font-display text-2xl' },
 ]
 
-interface Props {
-  heading?: string
-}
+const doubled = [...PARTNERS, ...PARTNERS]
 
-export default function LogoBanner({ heading = 'Tillit fra utallige byråer **i hele Norden**' }: Props) {
-  const doubled = [...PARTNERS, ...PARTNERS]
-
+export default function LogoBanner() {
   return (
-    <div className="py-14 border-y border-nm-border/25 overflow-hidden">
-      <p className="text-center font-cabinet text-nm-muted text-sm mb-10 px-6">
-        {heading.split('**').map((part, i) =>
-          i % 2 === 1 ? (
-            <strong key={i} className="text-nm-fg font-semibold">{part}</strong>
-          ) : (
-            part
-          ),
-        )}
-      </p>
-
-      <div className="relative flex overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_12%,black_88%,transparent)]">
-        <div className="marquee-track">
+    <div className="py-14 border-y border-ink-500/40 overflow-hidden">
+      <div className="text-center mb-8">
+        <span className="font-mono text-[10px] text-ink-300 tracking-widest2 uppercase">
+          Utvalgte klienter — Norden
+        </span>
+      </div>
+      <div className="relative flex overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]">
+        <div className="marquee">
           {doubled.map((p, i) => (
-            <LogoItem key={i} partner={p} />
+            <span
+              key={i}
+              className={`mx-14 text-ink-200 whitespace-nowrap ${p.style}`}
+            >
+              {p.name}
+            </span>
           ))}
         </div>
       </div>
-    </div>
-  )
-}
-
-const styleMap = {
-  sans:    'font-satoshi font-bold text-base tracking-tight',
-  serif:   'font-erode font-bold text-base italic tracking-tight',
-  mono:    'font-cabinet font-bold text-sm tracking-widest uppercase',
-  stencil: 'font-bespoke font-bold text-base tracking-wide uppercase',
-}
-
-function LogoItem({ partner }: { partner: Partner }) {
-  return (
-    <div className="flex items-center justify-center mx-14 flex-shrink-0 h-10 opacity-40 hover:opacity-80 transition-opacity duration-300">
-      {partner.src ? (
-        <img
-          src={partner.src}
-          alt={partner.name}
-          className="h-7 w-auto object-contain grayscale hover:grayscale-0 transition-all duration-300"
-          loading="lazy"
-        />
-      ) : (
-        <span className={`text-nm-fg whitespace-nowrap ${styleMap[partner.style ?? 'sans']}`}>
-          {partner.name}
-        </span>
-      )}
     </div>
   )
 }

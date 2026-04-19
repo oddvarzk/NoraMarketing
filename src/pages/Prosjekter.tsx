@@ -1,400 +1,165 @@
-/**
- * Prosjekter – portfolio page
- *
- * Data source: WordPress CPT "prosjekter" (via wp.projects())
- * Falls back to FALLBACK_PROJECTS if WP is not yet configured.
- *
- * Each WP post should have:
- *   - Title          → project / client name
- *   - Featured Image → card image
- *   - Excerpt        → short description shown on hover
- *   - ACF fields:
- *       kategori  (text/select) e.g. "sosiale-medier"
- *       klient    (text)        client name
- *       aar       (text)        year e.g. "2024"
- *       tags      (text)        comma-separated: "Meta Ads, Kreativ"
- */
-
-import { useRef, useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { useEffect, useState } from 'react'
 import SEO from '../components/ui/SEO'
+import ArrowCTA from '../components/ui/ArrowCTA'
+import CTABanner from '../components/sections/CTABanner'
+import { CASES } from '../lib/data'
 import { wp } from '../lib/wordpress'
 
-gsap.registerPlugin(ScrollTrigger)
-
-// ─── Types ────────────────────────────────────────────────────────────────────
-
-interface Project {
-  id: number
-  slug: string
-  title: string
-  excerpt: string
-  image: string | null
-  kategori: string   // e.g. "sosiale-medier"
-  klient: string
-  aar: string
+interface WpCase {
+  idx: string
+  client: string
+  sector: string
+  year: string
+  headline: string
+  metric: string
+  metricLabel: string
+  sub: string
   tags: string[]
+  image?: string | null
 }
-
-// ─── Category definitions ─────────────────────────────────────────────────────
-
-const CATEGORY_META: Record<string, { label: string; number: string }> = {
-  'sosiale-medier':         { label: 'Sosiale Medier',       number: '01' },
-  'seo-sem':                { label: 'SEO & SEM',            number: '02' },
-  'innholdsmarkedsforing':  { label: 'Innholdsmarkedsføring', number: '03' },
-  'nettsideutvikling':      { label: 'Nettsideutvikling',    number: '04' },
-  'digital-strategi':       { label: 'Digital Strategi',     number: '05' },
-  'videoproduksjon':        { label: 'Videoproduksjon',      number: '06' },
-}
-
-const CATEGORY_ORDER = Object.keys(CATEGORY_META)
-
-// ─── WP data mapper ───────────────────────────────────────────────────────────
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function mapWpProject(post: any): Project {
+function mapWpCase(post: any): WpCase {
   const acf = post.acf ?? {}
-  const embedded = post._embedded ?? {}
-  const media = embedded['wp:featuredmedia']?.[0]
-  const image = media?.source_url ?? null
-
+  const media = post._embedded?.['wp:featuredmedia']?.[0]
   return {
-    id: post.id,
-    slug: post.slug,
-    title: post.title?.rendered ?? '',
-    excerpt: post.excerpt?.rendered?.replace(/<[^>]+>/g, '').trim() ?? '',
-    image,
-    kategori: acf.kategori ?? 'sosiale-medier',
-    klient: acf.klient ?? post.title?.rendered ?? '',
-    aar: acf.aar ?? '',
-    tags: typeof acf.tags === 'string'
-      ? acf.tags.split(',').map((t: string) => t.trim()).filter(Boolean)
-      : [],
+    idx:         acf.idx          ?? `N°${String(post.id).padStart(2, '0')}`,
+    client:      acf.klient       ?? post.title?.rendered ?? '',
+    sector:      acf.sektor       ?? '',
+    year:        acf.aar          ?? '',
+    headline:    post.title?.rendered ?? '',
+    metric:      acf.metric       ?? '',
+    metricLabel: acf.metric_label ?? '',
+    sub:         acf.sub          ?? '',
+    tags:        typeof acf.tags === 'string' ? acf.tags.split(',').map((t: string) => t.trim()) : [],
+    image:       media?.source_url ?? null,
   }
 }
 
-// ─── Page ────────────────────────────────────────────────────────────────────
-
-export default function Prosjekter() {
-  const heroRef = useRef<HTMLDivElement>(null)
-  const [projects, setProjects] = useState<Project[]>([])
-  const [loading, setLoading] = useState(true)
-  const [activeFilter, setActiveFilter] = useState<string | null>(null)
-
-  useEffect(() => {
-    wp.projects()
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .then((posts) => setProjects((posts as any[]).map(mapWpProject)))
-      .catch(() => setProjects([]))
-      .finally(() => setLoading(false))
-  }, [])
-
-  // Hero entrance
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.set('[data-p-hero]', { opacity: 0, y: 40 })
-      gsap.timeline({ defaults: { ease: 'power4.out' } })
-        .to('[data-p-hero]', { opacity: 1, y: 0, duration: 1.1, stagger: 0.1 }, 0)
-    }, heroRef)
-    return () => ctx.revert()
-  }, [])
-
-  // Group by category in the defined order
-  const grouped = CATEGORY_ORDER.reduce<Record<string, Project[]>>((acc, key) => {
-    const list = projects.filter((p) => p.kategori === key)
-    if (list.length > 0) acc[key] = list
-    return acc
-  }, {})
-
-  const visibleKeys = activeFilter
-    ? ([activeFilter].filter((k) => grouped[k]))
-    : Object.keys(grouped)
-
+function PageCover() {
   return (
-    <>
-      <SEO
-        title="Prosjekter"
-        description="Et utvalg av hva vi har bygget, skapt og levert – på tvers av sosiale medier, SEO, innhold, strategi, nettside og video."
-        canonical="/prosjekter"
-      />
-
-      {/* ── Hero ───────────────────────────────────────────────────────── */}
-      <section
-        ref={heroRef}
-        className="relative flex flex-col justify-end overflow-hidden bg-nm-dark px-6 sm:px-12 lg:px-20 pb-16 pt-40"
-      >
-        <div className="relative z-10 max-w-7xl mx-auto w-full">
-          <div className="flex items-center gap-3 mb-6" data-p-hero style={{ opacity: 0 }}>
-            <span className="w-8 h-px bg-nm-accent" />
-            <span className="font-bespoke text-[10px] tracking-widest2 uppercase text-nm-accent">
-              Prosjekter
-            </span>
+    <section className="relative pt-40 pb-16 px-6 lg:px-10 border-b border-ink-500/40">
+      <div className="max-w-[1400px] mx-auto grid grid-cols-12 gap-6">
+        <div className="col-span-12 md:col-span-2 flex flex-col gap-1 font-mono text-[10px] text-ink-300 tracking-widest2 uppercase">
+          <div>Ch. 03</div>
+          <div>6 cases</div>
+          <div>2023 — 2024</div>
+        </div>
+        <div className="col-span-12 md:col-span-10">
+          <div className="font-mono text-[10px] text-accent-blue tracking-widest2 uppercase mb-8">
+            N°— Prosjekter · Ch. III
           </div>
-
           <h1
-            data-p-hero
-            className="font-erode font-bold leading-[0.88] tracking-tight mb-8"
-            style={{ fontSize: 'clamp(2.8rem,8vw,8rem)', opacity: 0 }}
+            className="font-display font-light leading-[0.88] text-ink-50 mb-10"
+            style={{ fontSize: 'clamp(2.8rem, 10vw, 9rem)' }}
           >
-            <span className="block text-nm-light">Noe av det</span>
-            <span
-              className="block"
-              style={{ WebkitTextStroke: '2px rgba(232,232,238,0.55)', color: 'transparent' }}
-            >
-              vi har gjort.
-            </span>
+            Utvalgt <em className="font-normal italic text-accent-blue">arbeid</em>,
+            <br />som snakker for seg selv.
           </h1>
-
-          <p
-            data-p-hero
-            className="font-cabinet text-nm-muted text-lg leading-relaxed max-w-lg"
-            style={{ opacity: 0 }}
-          >
-            Et utvalg prosjekter vi har jobbet med – forskjellige kunder, forskjellige utfordringer.
+          <p className="font-body text-ink-200 text-lg leading-relaxed max-w-2xl">
+            Seks prosjekter, seks bransjer, seks ulike utfordringer.
+            Fellesnevner: strategi før eksekvering, og resultater du kan tallfeste.
           </p>
-        </div>
-
-        <div
-          className="absolute bottom-0 left-0 right-0 h-32 pointer-events-none"
-          style={{ background: 'linear-gradient(to bottom, transparent, #0D0D0F)' }}
-        />
-      </section>
-
-      {/* ── Filter bar ─────────────────────────────────────────────────── */}
-      <div className="sticky top-[60px] z-30 bg-nm-dark/90 backdrop-blur-sm border-b border-nm-border/30">
-        <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-20">
-          <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none py-3">
-            <FilterBtn label="Alle" active={activeFilter === null} onClick={() => setActiveFilter(null)} />
-            {CATEGORY_ORDER.filter((k) => grouped[k]).map((key) => (
-              <FilterBtn
-                key={key}
-                label={CATEGORY_META[key].label}
-                active={activeFilter === key}
-                onClick={() => setActiveFilter(activeFilter === key ? null : key)}
-              />
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* ── Content ────────────────────────────────────────────────────── */}
-      <main className="bg-nm-dark pb-32">
-        {loading ? (
-          <div className="flex items-center justify-center py-40">
-            <span className="font-cabinet text-nm-muted/50 text-sm tracking-wide">Laster prosjekter…</span>
-          </div>
-        ) : (
-          visibleKeys.map((key) => (
-            <CategorySection
-              key={key}
-              categoryKey={key}
-              meta={CATEGORY_META[key]}
-              projects={grouped[key]}
-            />
-          ))
-        )}
-      </main>
-
-      {/* ── CTA ────────────────────────────────────────────────────────── */}
-      <div className="bg-nm-dark border-t border-nm-border/25 px-6 sm:px-12 lg:px-20 py-20">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-8">
-          <p className="font-erode font-bold text-[clamp(1.5rem,3vw,2.5rem)] text-nm-light leading-tight">
-            Klar for å bli neste<br />
-            <span style={{ WebkitTextStroke: '1.5px rgba(232,232,238,0.5)', color: 'transparent' }}>
-              suksesshistorie?
-            </span>
-          </p>
-          <Link to="/kontakt" className="inline-flex items-center gap-3 group flex-shrink-0">
-            <span className="font-satoshi font-semibold text-nm-fg text-sm tracking-wide group-hover:text-nm-accent transition-colors duration-200">
-              Start et prosjekt
-            </span>
-            <span className="h-9 w-9 flex items-center justify-center rounded-full border border-nm-border/60 group-hover:border-nm-accent/40 transition-colors duration-300">
-              <svg className="w-3.5 h-3.5 text-nm-muted group-hover:text-nm-accent transition-colors duration-200" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <path d="M1 6h10M7 2l4 4-4 4" />
-              </svg>
-            </span>
-          </Link>
-        </div>
-      </div>
-    </>
-  )
-}
-
-// ─── Filter button ────────────────────────────────────────────────────────────
-
-function FilterBtn({ label, active, onClick }: { label: string; active: boolean; onClick: () => void }) {
-  return (
-    <button
-      onClick={onClick}
-      className={`flex-shrink-0 font-cabinet text-xs px-4 py-1.5 rounded-full border transition-all duration-200 ${
-        active
-          ? 'bg-nm-accent/10 border-nm-accent/50 text-nm-accent'
-          : 'border-nm-border/50 text-nm-muted/70 hover:text-nm-fg hover:border-nm-border'
-      }`}
-    >
-      {label}
-    </button>
-  )
-}
-
-// ─── Category section ─────────────────────────────────────────────────────────
-
-function CategorySection({
-  categoryKey,
-  meta,
-  projects,
-}: {
-  categoryKey: string
-  meta: { label: string; number: string }
-  projects: Project[]
-}) {
-  const sectionRef = useRef<HTMLElement>(null)
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        '[data-cat-hdr]',
-        { opacity: 0, y: 20 },
-        { opacity: 1, y: 0, duration: 0.65, stagger: 0.07, ease: 'power3.out',
-          scrollTrigger: { trigger: '[data-cat-hdr]', start: 'top 88%' } },
-      )
-      gsap.fromTo(
-        '[data-proj-card]',
-        { opacity: 0, y: 36 },
-        { opacity: 1, y: 0, duration: 0.7, stagger: 0.09, ease: 'power3.out',
-          scrollTrigger: { trigger: '[data-proj-card]', start: 'top 91%' } },
-      )
-    }, sectionRef)
-    return () => ctx.revert()
-  }, [])
-
-  return (
-    <section
-      ref={sectionRef}
-      id={categoryKey}
-      className="border-t border-nm-border/25 px-6 sm:px-12 lg:px-20 pt-18 pb-6"
-      style={{ paddingTop: '4.5rem' }}
-    >
-      <div className="max-w-7xl mx-auto">
-
-        {/* Header */}
-        <div className="flex items-center gap-5 mb-10">
-          <span data-cat-hdr className="font-bespoke text-[10px] tracking-widest2 uppercase text-nm-accent/60 tabular-nums" style={{ opacity: 0 }}>
-            {meta.number}
-          </span>
-          <span className="w-6 h-px bg-nm-border/50" />
-          <h2 data-cat-hdr className="font-erode font-bold text-[clamp(1.3rem,2.8vw,2.2rem)] text-nm-light tracking-tight" style={{ opacity: 0 }}>
-            {meta.label}
-          </h2>
-        </div>
-
-        {/* Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-5 pb-14">
-          {projects.map((project) => (
-            <ProjectCard key={project.id} project={project} />
-          ))}
         </div>
       </div>
     </section>
   )
 }
 
-// ─── Project card (image-first) ───────────────────────────────────────────────
+export default function Prosjekter() {
+  const [cases, setCases] = useState<WpCase[]>([])
+  const [loading, setLoading] = useState(true)
 
-function ProjectCard({ project: p }: { project: Project }) {
-  const cardRef = useRef<HTMLAnchorElement>(null)
+  useEffect(() => {
+    wp.projects()
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .then((posts: any[]) => setCases(posts.map(mapWpCase)))
+      .catch(() => setCases([]))
+      .finally(() => setLoading(false))
+  }, [])
 
-  const handleEnter = () => {
-    const card = cardRef.current
-    if (!card) return
-    gsap.to(card.querySelector('[data-card-overlay]'), { opacity: 1, duration: 0.35, ease: 'power2.out' })
-    gsap.to(card.querySelector('[data-card-info]'), { y: 0, opacity: 1, duration: 0.4, ease: 'power3.out' })
-    gsap.to(card.querySelector('[data-card-img]'), { scale: 1.04, duration: 0.6, ease: 'power2.out' })
-  }
-
-  const handleLeave = () => {
-    const card = cardRef.current
-    if (!card) return
-    gsap.to(card.querySelector('[data-card-overlay]'), { opacity: 0, duration: 0.3 })
-    gsap.to(card.querySelector('[data-card-info]'), { y: 12, opacity: 0, duration: 0.3, ease: 'power2.in' })
-    gsap.to(card.querySelector('[data-card-img]'), { scale: 1, duration: 0.5, ease: 'power2.out' })
-  }
+  const displayCases: WpCase[] = loading
+    ? []
+    : cases.length > 0
+    ? cases
+    : CASES.map(c => ({ ...c, metricLabel: '', image: null }))
 
   return (
-    <Link
-      to={`/prosjekter/${p.slug}`}
-      ref={cardRef}
-      data-proj-card
-      onMouseEnter={handleEnter}
-      onMouseLeave={handleLeave}
-      className="group relative rounded-xl overflow-hidden bg-nm-surface border border-nm-border/50 hover:border-nm-accent/40 transition-colors duration-300 block"
-      style={{ opacity: 0 }}
-    >
-      {/* Image area */}
-      <div className="relative aspect-[4/3] overflow-hidden">
-        {p.image ? (
-          <img
-            data-card-img
-            src={p.image}
-            alt={p.title}
-            className="w-full h-full object-cover"
-            loading="lazy"
-          />
-        ) : (
-          /* Placeholder when no image is set yet */
-          <div
-            data-card-img
-            className="w-full h-full flex items-center justify-center bg-nm-surface"
-          >
-            <span
-              className="font-erode font-bold text-nm-fg/[0.06] leading-none select-none"
-              style={{ fontSize: 'clamp(3rem,8vw,6rem)' }}
-            >
-              {p.klient.charAt(0)}
-            </span>
-          </div>
-        )}
+    <>
+      <SEO
+        title="Prosjekter"
+        description="Utvalgt arbeid fra Nora Marketing — digital strategi, SEO, innhold, annonsering og nettsider som leverer resultater."
+        canonical="/prosjekter"
+      />
 
-        {/* Hover overlay */}
-        <div
-          data-card-overlay
-          className="absolute inset-0 bg-nm-dark/75 backdrop-blur-[2px] flex flex-col justify-end p-5"
-          style={{ opacity: 0 }}
-        >
-          <div data-card-info style={{ opacity: 0, transform: 'translateY(12px)' }}>
-            <p className="font-cabinet text-nm-muted/80 text-xs leading-relaxed mb-3">
-              {p.excerpt}
-            </p>
-            <div className="flex flex-wrap gap-1.5">
-              {p.tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="font-cabinet text-[10px] text-nm-fg/60 border border-nm-border/60 bg-nm-dark/60 px-2.5 py-0.5 rounded-full tracking-wide"
-                >
-                  {tag}
-                </span>
-              ))}
+      <PageCover />
+
+      <section className="px-6 lg:px-10 py-20 border-b border-ink-500/40">
+        <div className="max-w-[1400px] mx-auto">
+          {loading ? (
+            <div className="flex items-center justify-center py-40">
+              <span className="font-mono text-[10px] text-ink-300 tracking-widest2 uppercase">Laster…</span>
             </div>
-          </div>
-        </div>
-      </div>
+          ) : (
+            displayCases.map((c, i) => (
+              <article
+                key={c.idx}
+                className={`grid grid-cols-12 gap-6 py-16 border-b border-ink-500/60 ${i === 0 ? 'pt-6' : ''}`}
+              >
+                {/* Image */}
+                <div className={`col-span-12 md:col-span-${i % 2 === 0 ? 7 : 5} md:order-${i % 2 === 0 ? 1 : 2}`}>
+                  {c.image ? (
+                    <img
+                      src={c.image}
+                      alt={c.client}
+                      className="w-full aspect-[4/3] object-cover"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <div
+                      className="ph aspect-[4/3]"
+                      data-label={`${c.idx} · ${c.client}`}
+                    />
+                  )}
+                </div>
 
-      {/* Card footer – always visible */}
-      <div className="flex items-center justify-between px-4 py-3 border-t border-nm-border/40">
-        <div>
-          <p className="font-satoshi font-semibold text-nm-fg text-sm leading-snug">
-            {p.klient}
-          </p>
-          <p className="font-cabinet text-nm-muted/60 text-[11px] mt-0.5">
-            {CATEGORY_META[p.kategori]?.label ?? p.kategori}
-          </p>
+                {/* Text */}
+                <div className={`col-span-12 md:col-span-${i % 2 === 0 ? 5 : 7} md:order-${i % 2 === 0 ? 2 : 1} flex flex-col justify-center`}>
+                  <div className="font-mono text-[10px] text-ink-300 tracking-widest2 uppercase mb-5">
+                    {c.idx} · {c.sector} · {c.year}
+                  </div>
+                  <h3
+                    className="font-display font-normal text-ink-50 leading-[0.95] mb-6"
+                    style={{ fontSize: 'clamp(2rem, 4vw, 3.5rem)' }}
+                  >
+                    {c.headline}
+                  </h3>
+                  {c.metric && (
+                    <div className="flex items-end gap-6 mb-6">
+                      <span
+                        className="font-display text-accent-blue leading-none"
+                        style={{ fontSize: 'clamp(3rem, 6vw, 5rem)', fontStyle: 'italic', fontWeight: 300 }}
+                      >
+                        {c.metric}
+                      </span>
+                      <div className="pb-2">
+                        <div className="font-ui text-ink-50 text-sm">{c.client}</div>
+                        <div className="font-body text-ink-300 text-[12px]">{c.sub}</div>
+                      </div>
+                    </div>
+                  )}
+                  <div className="flex flex-wrap gap-x-5 gap-y-2 font-mono text-[10px] text-ink-300 tracking-widest uppercase mb-6">
+                    {c.tags.map(t => <span key={t}>/ {t}</span>)}
+                  </div>
+                  <ArrowCTA to="/prosjekter">Les hele casen</ArrowCTA>
+                </div>
+              </article>
+            ))
+          )}
         </div>
-        <span className="font-bespoke text-[10px] text-nm-muted/40 tracking-widest flex-shrink-0">
-          {p.aar}
-        </span>
-      </div>
-    </Link>
+      </section>
+
+      <CTABanner />
+    </>
   )
 }

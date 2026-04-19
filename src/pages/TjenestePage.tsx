@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
 import SEO from '../components/ui/SEO'
 import CTABanner from '../components/sections/CTABanner'
-import { SERVICES } from '../components/sections/ServicesSection'
+import { SERVICES } from '../lib/data'
 import NotFound from './NotFound'
 
 export default function TjenestePage() {
@@ -52,7 +52,7 @@ export default function TjenestePage() {
             }}
             aria-hidden="true"
           >
-            {service.number}
+            {service.num}
           </div>
 
           <div className="max-w-5xl mx-auto">
@@ -72,7 +72,7 @@ export default function TjenestePage() {
             <div data-page-el className="flex items-center gap-3 mb-6" style={{ opacity: 0 }}>
               <span className="w-8 h-px bg-nm-accent" />
               <span className="font-bespoke text-[10px] tracking-widest2 uppercase text-nm-accent">
-                {service.number}
+                {service.num}
               </span>
               {service.category && (
                 <>

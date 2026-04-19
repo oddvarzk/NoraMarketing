@@ -3,7 +3,11 @@
  * Set WP_BASE_URL in .env: VITE_WP_BASE_URL=https://cms.noramarketing.no
  */
 
-const BASE_URL = import.meta.env.VITE_WP_BASE_URL ?? 'https://cms.noramarketing.no'
+// In dev, use a relative path so the Vite proxy handles the request (avoids CORS).
+// In production the full URL is used directly.
+const BASE_URL = import.meta.env.DEV
+  ? ''
+  : (import.meta.env.VITE_WP_BASE_URL ?? 'https://cms.noramarketing.no')
 
 async function wpFetch<T>(path: string): Promise<T> {
   const res = await fetch(`${BASE_URL}/wp-json/wp/v2${path}`)

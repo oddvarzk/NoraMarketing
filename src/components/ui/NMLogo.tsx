@@ -1,58 +1,28 @@
 interface Props {
   className?: string
-  size?: 'sm' | 'md' | 'lg'
+  compact?: boolean
 }
 
-const sizes = {
-  sm: { box: 28, text: 13 },
-  md: { box: 36, text: 16 },
-  lg: { box: 48, text: 22 },
-}
-
-export default function NMLogo({ className = '', size = 'md' }: Props) {
-  const { box, text } = sizes[size]
-
+export default function NMLogo({ className = '', compact = false }: Props) {
   return (
-    <div className={`flex items-center gap-2.5 select-none ${className}`}>
-      {/* Mark */}
-      <svg
-        width={box}
-        height={box}
-        viewBox="0 0 36 36"
-        fill="none"
-        aria-hidden="true"
+    <div className={`flex items-center gap-3 select-none ${className}`}>
+      <div
+        className="flex items-baseline gap-0 leading-none"
+        style={{ fontFamily: "'Fraunces', serif", fontWeight: 700 }}
       >
-        {/* N */}
-        <text
-          x="2"
-          y="27"
-          fontFamily="'Bespoke Stencil', sans-serif"
-          fontWeight="700"
-          fontSize="24"
-          fill="white"
-        >
-          N
-        </text>
-        {/* M – accent colour */}
-        <text
-          x="17"
-          y="27"
-          fontFamily="'Bespoke Stencil', sans-serif"
-          fontWeight="700"
-          fontSize="24"
-          fill="#1456CC"
-        >
-          M
-        </text>
-      </svg>
-
-      {/* Wordmark */}
-      <span
-        style={{ fontSize: text }}
-        className="font-satoshi font-semibold tracking-wide text-nm-fg leading-none"
-      >
-        Nora Marketing
-      </span>
+        <span className="text-ink-50 text-[22px] leading-none italic">N</span>
+        <span className="text-accent-blue text-[22px] leading-none italic">m</span>
+      </div>
+      {!compact && (
+        <div className="flex flex-col leading-none">
+          <span className="font-ui font-semibold text-[13px] text-ink-50 tracking-wide">
+            Nora Marketing
+          </span>
+          <span className="font-mono text-[8px] text-ink-300 tracking-widest2 uppercase mt-1">
+            Oslo · Est. 2020
+          </span>
+        </div>
+      )}
     </div>
   )
 }
